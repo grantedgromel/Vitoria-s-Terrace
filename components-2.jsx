@@ -17,9 +17,9 @@ function VTPorto({ t, lang }) {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr)", gap: "clamp(32px, 5vw, 72px)", alignItems: "start" }}>
-          <div className="img-frame" style={{ aspectRatio: "4/3", width: "100%" }}>
-            <img src="assets/porto-view.jpg" alt="" className="img-cover" />
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr)", gap: "clamp(32px, 5vw, 72px)", alignItems: "stretch" }}>
+          <div className="img-frame" style={{ width: "100%", height: "100%", minHeight: 480 }}>
+            <img src="assets/porto-section.jpg" alt="Azulejo façade in Porto's old town" className="img-cover" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
@@ -90,7 +90,17 @@ function VTReviews({ t }) {
   const quotes = VT_DATA.reviewQuotes;
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
-  const totalCount = scores.reduce((s, x) => s + (x.count || 0), 0);
+  // Sum review counts across platforms, but only count each shared upstream feed once
+  // (e.g. Hotels.com + Expedia both serve the Expedia Group review pool — counting both
+  // would double the aggregate). Platforms without `sharedFeed` are unique by definition.
+  const _seenFeeds = new Set();
+  const totalCount = scores.reduce((sum, x) => {
+    if (x.count == null) return sum;
+    const key = x.sharedFeed || x.platform;
+    if (_seenFeeds.has(key)) return sum;
+    _seenFeeds.add(key);
+    return sum + x.count;
+  }, 0);
 
   useEffect(() => {
     if (paused) return;
@@ -122,12 +132,18 @@ function VTReviews({ t }) {
               onMouseLeave={(e) => e.currentTarget.style.background = "var(--paper)"}>
               <div className="eyebrow" style={{ color: "var(--ochre-deep)" }}>{s.platform}</div>
               <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                <span className="serif italic" style={{ fontSize: 56, lineHeight: 0.95, letterSpacing: "-0.01em" }}>{s.score}</span>
+                <span className="serif italic" style={{ fontSize: 56, lineHeight: 0.95, letterSpacing: "-0.01em", color: s.score == null ? "var(--granite-2)" : "var(--ink)" }}>
+                  {s.score == null ? "—" : s.score}
+                </span>
                 <span className="serif" style={{ fontSize: 18, color: "var(--granite)", fontStyle: "italic" }}>/ {s.outOf}</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--ochre-deep)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, color: s.score == null ? "var(--rule)" : "var(--ochre-deep)" }}>
                 {"★★★★★".split("").map((c, j) => <span key={j} style={{ fontSize: 11 }}>{c}</span>)}
-                <span style={{ fontSize: 11, color: "var(--granite)", marginLeft: 4 }}>· {s.count.toLocaleString()} {s.count === 1 ? t.reviews.reviewsLabelOne : t.reviews.reviewsLabel}</span>
+                <span style={{ fontSize: 11, color: "var(--granite)", marginLeft: 4 }}>
+                  {s.count == null
+                    ? `· ${t.reviews.reviewsLabel}`
+                    : `· ${s.count.toLocaleString()} ${s.count === 1 ? t.reviews.reviewsLabelOne : t.reviews.reviewsLabel}`}
+                </span>
               </div>
               <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px solid var(--rule-soft)" }}>
                 <div style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500, color: "var(--porto)", marginBottom: 4 }}>{s.badge}</div>
@@ -148,6 +164,7 @@ function VTReviews({ t }) {
             <span className="serif italic" style={{ fontSize: 32, color: "var(--ink)" }}>{totalCount.toLocaleString()}+</span>
             <span className="eyebrow">{t.reviews.reviewsLabel} {t.reviews.acrossLabel} {scores.length} {scores.length === 1 ? "platform" : "platforms"}</span>
           </div>
+          {/* Note: total dedupes shared upstream feeds — Hotels.com/Expedia counted once via sharedFeed. */}
         </div>
 
         {/* Quote — single, auto-rotating, large prev/next chevrons flanking the quote */}
@@ -199,8 +216,9 @@ function VTReviews({ t }) {
               </div>
             </div>
 
-            {/* Position indicator + progress bar */}
-            <div style={{ marginTop: 36, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+            {/* Subtle progress bar — no numeric counter; we don't want the carousel
+                 to imply we only have N hand-picked reviews. */}
+            <div style={{ marginTop: 36, display: "flex", justifyContent: "center" }}>
               <div style={{ width: "min(280px, 80%)", height: 1, background: "var(--rule)", position: "relative", overflow: "hidden" }}>
                 <div style={{
                   position: "absolute", inset: 0,
@@ -208,9 +226,6 @@ function VTReviews({ t }) {
                   background: "var(--ink)",
                   transition: "width 0.5s ease"
                 }} />
-              </div>
-              <div className="eyebrow" style={{ fontSize: 10, color: "var(--granite)" }}>
-                {String(i + 1).padStart(2, "0")} / {String(quotes.length).padStart(2, "0")}
               </div>
             </div>
           </div>

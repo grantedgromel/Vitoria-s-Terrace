@@ -185,14 +185,22 @@ const VT_DATA = {
     }
   ],
 
-// Aggregate scores per platform — researched from live listings, May 2026.
-  // TODO owner: confirm Hotels.com / Expedia standalone counts (currently shared Expedia Group feed).
+  // Aggregate scores per platform — researched from live listings, May 2026.
+  // `sharedFeed` flags platforms whose review pool is the same upstream source.
+  // VTReviews uses this to dedupe in the cross-platform total (Hotels.com + Expedia
+  // share the Expedia Group feed — counting each separately would inflate totals).
+  // Counts re-verified May 2026: Booking.com (414 — apartment-reviews scope, not the
+  // 800+ all-language total quoted elsewhere), Tripadvisor (14, #47 of 217 condos),
+  // Trip.com (32, "higher than 95% of similar properties").
+  // TODO owner: paste real Google score + count once verified — currently rendered
+  // as "—" rather than fabricated. The tile still functions as an Open-on-Google CTA.
   reviewScores: [
-    { platform: "Booking.com",  score: "9.8", outOf: "10", count: 842, badge: "Guests' Choice", subtitle: "#1 of 3,270 vacation rentals in Porto", url: "https://www.booking.com/hotel/pt/vitorias-terrace.html" },
-    { platform: "Tripadvisor",  score: "5.0", outOf: "5",  count: 14,  badge: "Travellers' Choice", subtitle: "Top 10% of properties worldwide", url: "https://www.tripadvisor.com/Hotel_Review-g189180-d25050275-Reviews-Vitoria_s_Terrace_Apartments-Porto_Porto_District_Northern_Portugal.html" },
-    { platform: "Trip.com",     score: "9.9", outOf: "10", count: 32,  badge: "Outstanding",       subtitle: "Top local pick", url: "https://us.trip.com/hotels/porto-hotel-detail-58614427/vitoria-s-terrace-apartments/" },
-    { platform: "Hotels.com",   score: "9.8", outOf: "10", count: 848, badge: "Loved by guests",   subtitle: "Expedia Group", url: "https://www.hotels.com/ho1484023040/vitoria-s-terrace-apartments-porto-portugal/" },
-    { platform: "Expedia",      score: "4.9", outOf: "5",  count: 848, badge: "Exceptional",       subtitle: "Expedia Group", url: "https://www.expedia.com/Porto-Hotels-Vitorias-Terrace-Apartments.h46344470.Hotel-Information" }
+    { platform: "Booking.com", score: "9.8", outOf: "10", count: 414,  badge: "Guests' Choice",     subtitle: "#1 of 3,270 vacation rentals in Porto", url: "https://www.booking.com/hotel/pt/vitorias-terrace.html" },
+    { platform: "Tripadvisor", score: "5.0", outOf: "5",  count: 14,   badge: "Travellers' Choice", subtitle: "#47 of 217 condos in Porto",            url: "https://www.tripadvisor.com/Hotel_Review-g189180-d25050275-Reviews-Vitoria_s_Terrace_Apartments-Porto_Porto_District_Northern_Portugal.html" },
+    { platform: "Trip.com",    score: "9.9", outOf: "10", count: 32,   badge: "Outstanding",         subtitle: "Higher than 95% of similar properties", url: "https://us.trip.com/hotels/porto-hotel-detail-58614427/vitoria-s-terrace-apartments/" },
+    { platform: "Hotels.com",  score: "9.8", outOf: "10", count: 848,  badge: "Loved by guests",     subtitle: "Expedia Group feed",                    url: "https://www.hotels.com/ho1484023040/vitoria-s-terrace-apartments-porto-portugal/", sharedFeed: "expedia-group" },
+    { platform: "Expedia",     score: "4.9", outOf: "5",  count: 848,  badge: "Exceptional",         subtitle: "Expedia Group feed",                    url: "https://www.expedia.com/Porto-Hotels-Vitorias-Terrace-Apartments.h46344470.Hotel-Information",                                          sharedFeed: "expedia-group" },
+    { platform: "Google",      score: null,  outOf: "5",  count: null, badge: "Find us on Google",   subtitle: "Confirm rating with owner",             url: "https://www.google.com/maps/search/?api=1&query=Vit%C3%B3ria%27s+Terrace+Apartments+Rua+de+S%C3%A3o+Miguel+15+Porto" }
   ],
 
   // Verbatim guest reviews — pulled from live listings May 2026.
