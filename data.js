@@ -191,171 +191,129 @@ const VT_DATA = {
     instagram: "@vitoriasterrace"
   },
 
-  // From Rita's printed guide. Place names + street addresses are canon. Coordinates are approximate
-  // (derived from Google Maps lookups, May 2026) — owner should verify exact lat/lng before launch.
-  // Note: per-item `note` is wrapped in {EN, PT, ES, FR, KR} so language switching translates Rita's notes too.
-  // Apartment origin used for walking-directions deep links: Rua de São Miguel 15, Porto (41.1428, -8.6155).
+  // Shared sub-tag dictionary — items reference a slug; we look up translations here.
+  // Renders on each card as small uppercase meta (e.g. "TRADITIONAL · 6 MIN").
+  subTags: {
+    traditional:  { EN: "Traditional",      PT: "Tradicional",         ES: "Tradicional",         FR: "Traditionnel",      KR: "전통" },
+    modern:       { EN: "Modern",           PT: "Moderno",             ES: "Moderno",             FR: "Moderne",           KR: "모던" },
+    francesinha:  { EN: "Francesinha",      PT: "Francesinha",         ES: "Francesinha",         FR: "Francesinha",       KR: "프란세지냐" },
+    breakfast:    { EN: "Breakfast",        PT: "Pequeno-almoço",      ES: "Desayuno",            FR: "Petit-déjeuner",    KR: "조식" },
+    market:       { EN: "Market",           PT: "Mercado",             ES: "Mercado",             FR: "Marché",            KR: "시장" },
+    gaia:         { EN: "Across the river", PT: "Outro lado do rio",   ES: "Otro lado del río",   FR: "Autre côté",        KR: "강 건너편" },
+    tower:        { EN: "Tower",            PT: "Torre",               ES: "Torre",               FR: "Tour",              KR: "탑" },
+    bookshop:     { EN: "Bookshop",         PT: "Livraria",            ES: "Librería",            FR: "Librairie",         KR: "서점" },
+    cathedral:    { EN: "Cathedral",        PT: "Catedral",            ES: "Catedral",            FR: "Cathédrale",        KR: "대성당" },
+    riverside:    { EN: "Riverside",        PT: "Beira-rio",           ES: "Junto al río",        FR: "Bord du fleuve",    KR: "강변" },
+    bridge:       { EN: "Bridge",           PT: "Ponte",               ES: "Puente",              FR: "Pont",              KR: "다리" },
+    wine:         { EN: "Port wine",        PT: "Vinho do Porto",      ES: "Vino de Oporto",      FR: "Vin de Porto",      KR: "포트 와인" },
+    tiles:        { EN: "Tiles",            PT: "Azulejos",            ES: "Azulejos",            FR: "Azulejos",          KR: "타일" },
+    street:       { EN: "Street",           PT: "Rua",                 ES: "Calle",               FR: "Rue",               KR: "거리" },
+    avenue:       { EN: "Avenue",           PT: "Avenida",             ES: "Avenida",             FR: "Avenue",            KR: "대로" },
+    cafe:         { EN: "Café",             PT: "Café",                ES: "Café",                FR: "Café",              KR: "카페" },
+    fado:         { EN: "Fado",             PT: "Fado",                ES: "Fado",                FR: "Fado",              KR: "파두" },
+    walkingTour:  { EN: "Walking tour",     PT: "Visita guiada",       ES: "Visita guiada",       FR: "Visite guidée",     KR: "도보 투어" },
+    dayTrip:      { EN: "Day trip",         PT: "Excursão",            ES: "Excursión",           FR: "Excursion",         KR: "당일 여행" },
+    minimarket:   { EN: "Mini-market",      PT: "Mercearia",           ES: "Tienda local",        FR: "Épicerie",          KR: "미니마트" },
+    supermarket:  { EN: "Supermarket",      PT: "Supermercado",        ES: "Supermercado",        FR: "Supermarché",       KR: "슈퍼마켓" },
+    laundry:      { EN: "Laundry",          PT: "Lavandaria",          ES: "Lavandería",          FR: "Laverie",           KR: "빨래방" }
+  },
+
+  // 4 super-sections from Rita's guide. Each item: name + addr (canon), coords (approx), walk time,
+  // optional reserveAhead flag, optional Rita note (translated), image (assets/recs/<slug>.jpg), subTag (slug → subTags above).
+  // Apartment origin for walking-directions deep links: Rua de São Miguel 15 (41.1428, -8.6155).
   recommendations: [
     {
-      id: "traditional",
-      title: { EN: "Traditional Restaurants", PT: "Restaurantes Tradicionais", ES: "Restaurantes Tradicionales", FR: "Restaurants Traditionnels", KR: "전통 레스토랑" },
-      kind:  { EN: "Where the locals still go", PT: "Onde os locais ainda vão", ES: "Donde aún van los locales", FR: "Où vont encore les locaux", KR: "현지인들이 여전히 찾는 곳" },
-      tag: "Eat",
-      icon: "01",
+      id: "eat",
+      title: { EN: "Eat & Drink",       PT: "Comer & Beber",        ES: "Comer & Beber",         FR: "Manger & Boire",         KR: "먹고 마시기" },
+      kind:  { EN: "Where the locals still go, and where we go ourselves.",
+               PT: "Onde os locais ainda vão, e onde nós vamos.",
+               ES: "Donde aún van los locales, y donde vamos nosotros.",
+               FR: "Où vont encore les locaux, et où nous allons aussi.",
+               KR: "현지인들이 여전히 찾는 곳, 그리고 우리도 가는 곳." },
       items: [
-        { name: "Taberna Santo António",         addr: "R. das Virtudes 32, 4050-630 Porto",                      coords: [41.1444, -8.6178], walk: "6 min", reserveAhead: false },
-        { name: "Taberna d'Avó",                  addr: "R. de São Bento da Vitória 48, 4050-542 Porto",           coords: [41.1453, -8.6155], walk: "5 min", reserveAhead: true },
-        { name: "Casa Bragança",                  addr: "R. do Arquitecto Nicolau Nasoni 16, 4050-423 Porto",      coords: [41.1462, -8.6147], walk: "6 min", reserveAhead: false },
-        { name: "Restaurante Abadia do Porto",    addr: "R. do Ateneu Comercial do Porto 22, 4000-380 Porto",       coords: [41.1486, -8.6112], walk: "10 min", reserveAhead: true }
+        { id: "taberna-santo-antonio",  name: "Taberna Santo António",        addr: "R. das Virtudes 32, 4050-630 Porto",                                  coords: [41.1444, -8.6178], walk: "6 min",  subTag: "traditional", image: "assets/recs/taberna-santo-antonio.jpg" },
+        { id: "taberna-davo",           name: "Taberna d'Avó",                 addr: "R. de São Bento da Vitória 48, 4050-542 Porto",                       coords: [41.1453, -8.6155], walk: "5 min",  subTag: "traditional", reserveAhead: true,  image: "assets/recs/taberna-davo.jpg" },
+        { id: "casa-braganca",          name: "Casa Bragança",                 addr: "R. do Arquitecto Nicolau Nasoni 16, 4050-423 Porto",                  coords: [41.1462, -8.6147], walk: "6 min",  subTag: "traditional", image: "assets/recs/casa-braganca.jpg" },
+        { id: "abadia-do-porto",        name: "Restaurante Abadia do Porto",   addr: "R. do Ateneu Comercial do Porto 22, 4000-380 Porto",                  coords: [41.1486, -8.6112], walk: "10 min", subTag: "traditional", reserveAhead: true,  image: "assets/recs/abadia-do-porto.jpg" },
+        { id: "mistu",                  name: "MISTU",                         addr: "R. do Comércio do Porto 161, 4050-430 Porto",                         coords: [41.1416, -8.6148], walk: "8 min",  subTag: "modern",      reserveAhead: true,  image: "assets/recs/mistu.jpg" },
+        { id: "cantinho-avillez",       name: "Cantinho do Avillez (Porto)",   addr: "R. de Mouzinho da Silveira 166, 4050-416 Porto",                      coords: [41.1426, -8.6131], walk: "6 min",  subTag: "modern",      reserveAhead: true,  image: "assets/recs/cantinho-avillez.jpg" },
+        { id: "flow",                   name: "Flow",                          addr: "Rua da Conceição 63, 4050-215 Porto",                                 coords: [41.1471, -8.6168], walk: "6 min",  subTag: "modern",      reserveAhead: true,  image: "assets/recs/flow-porto.jpg" },
+        { id: "the-door",               name: "The Door",                      addr: "Rua das Taipas 94–96, 4050-598 Porto",                                coords: [41.1452, -8.6162], walk: "3 min",  subTag: "modern",      reserveAhead: true,  image: "assets/recs/the-door-porto.jpg" },
+        { id: "cafe-santiago",          name: "Café Santiago",                 addr: "R. de Passos Manuel 226, 4000-382 Porto",                             coords: [41.1492, -8.6079], walk: "12 min", subTag: "francesinha", image: "assets/recs/cafe-santiago.jpg" },
+        { id: "brasao",                 name: "Brasão",                        addr: "R. de Ramalho Ortigão 28, 4000-407 Porto",                            coords: [41.1488, -8.6115], walk: "10 min", subTag: "francesinha", reserveAhead: true,  image: "assets/recs/brasao.jpg" },
+        { id: "muralhas-olival",        name: "Muralhas Olival",               addr: "Campo dos Mártires da Pátria 117, 4050-367 Porto",                    coords: [41.1467, -8.6175], walk: "5 min",  subTag: "breakfast",   image: "assets/recs/muralhas-olival.jpg" },
+        { id: "padaria-ribeiro",        name: "Padaria Ribeiro",               addr: "P. de Guilherme Gomes Fernandes 21, 4050-526 Porto",                  coords: [41.1478, -8.6128], walk: "8 min",  subTag: "breakfast",   image: "assets/recs/padaria-ribeiro.jpg" },
+        { id: "time-out-market",        name: "Time-Out Market Porto",         addr: "Ala Sul da Estação Ferroviária de São Bento, Praça de Almeida Garrett", coords: [41.1456, -8.6105], walk: "10 min", subTag: "market",      image: "assets/recs/time-out-market.jpg" },
+        { id: "pastel-bacalhau",        name: "Casa Portuguesa do Pastel de Bacalhau", addr: "Av. de Diogo Leite 122, 4400-111 Vila Nova de Gaia",          coords: [41.1390, -8.6097], walk: "15 min", subTag: "gaia",        image: "assets/recs/pastel-bacalhau.jpg" }
       ]
     },
     {
-      id: "cool",
-      title: { EN: "Cool Restaurants", PT: "Restaurantes Modernos", ES: "Restaurantes Modernos", FR: "Restaurants Modernes", KR: "모던 레스토랑" },
-      kind:  { EN: "Newer, design-led", PT: "Mais recentes, com design", ES: "Más nuevos, con diseño", FR: "Plus récents, design-led", KR: "디자인이 돋보이는 신생 식당" },
-      tag: "Eat",
-      icon: "02",
+      id: "see",
+      title: { EN: "See",        PT: "Ver",          ES: "Ver",          FR: "Voir",          KR: "둘러보기" },
+      kind:  { EN: "Iconic Porto, on foot.",
+               PT: "O Porto icónico, a pé.",
+               ES: "El Oporto icónico, a pie.",
+               FR: "Le Porto iconique, à pied.",
+               KR: "걸어서 만나는, 포르투의 상징." },
       items: [
-        { name: "MISTU",                          addr: "R. do Comércio do Porto 161, 4050-430 Porto",              coords: [41.1416, -8.6148], walk: "8 min", reserveAhead: true },
-        { name: "Cantinho do Avillez (Porto)",    addr: "R. de Mouzinho da Silveira 166, 4050-416 Porto",           coords: [41.1426, -8.6131], walk: "6 min", reserveAhead: true },
-        { name: "Flow",                           addr: "Rua da Conceição 63, 4050-215 Porto",                      coords: [41.1471, -8.6168], walk: "6 min", reserveAhead: true },
-        { name: "The Door",                       addr: "Rua das Taipas 94–96, 4050-598 Porto",                     coords: [41.1452, -8.6162], walk: "3 min", reserveAhead: true }
+        { id: "clerigos",         name: "Torre dos Clérigos",            addr: "R. de São Filipe de Nery, 4050-546 Porto",   coords: [41.1453, -8.6131], walk: "3 min",  subTag: "tower",     image: "assets/recs/clerigos-tower.jpg" },
+        { id: "lello",            name: "Livraria Lello",                addr: "R. das Carmelitas 144, 4050-161 Porto",      coords: [41.1466, -8.6149], walk: "5 min",  subTag: "bookshop",  reserveAhead: true,  image: "assets/recs/livraria-lello.jpg" },
+        { id: "se",               name: "Sé Cathedral",                  addr: "Terreiro da Sé, 4050-573 Porto",             coords: [41.1431, -8.6112], walk: "8 min",  subTag: "cathedral", image: "assets/recs/se-cathedral.jpg" },
+        { id: "ribeira",          name: "Ribeira",                       addr: "Cais da Ribeira, 4050-510 Porto",            coords: [41.1410, -8.6131], walk: "8 min",  subTag: "riverside", image: "assets/recs/ribeira.jpg",
+          note: { EN: "Beautiful to walk through — we don't advise eating there because it's very touristic.",
+                  PT: "Lindo para passear — não recomendamos comer aí porque é muito turístico.",
+                  ES: "Precioso para pasear — no recomendamos comer allí porque es muy turístico.",
+                  FR: "Magnifique pour s'y promener — on déconseille d'y manger, c'est trop touristique.",
+                  KR: "걷기에는 아름답지만, 너무 관광지화되어 식사는 권하지 않습니다." } },
+        { id: "ponte-luis",       name: "Dom Luís I Bridge",             addr: "Ponte Dom Luís I, Porto",                    coords: [41.1399, -8.6109], walk: "10 min", subTag: "bridge",    image: "assets/recs/ponte-dom-luis.jpg" },
+        { id: "port-cellars",     name: "Port wine cellars",             addr: "Vila Nova de Gaia",                          coords: [41.1379, -8.6116], walk: "12 min", subTag: "wine",      image: "assets/recs/port-cellars.jpg" },
+        { id: "sao-bento",        name: "Estação de São Bento",          addr: "Praça Almeida Garrett, 4000-069 Porto",      coords: [41.1456, -8.6101], walk: "5 min",  subTag: "tiles",     image: "assets/recs/sao-bento-station.jpg" },
+        { id: "carmo",            name: "Igreja do Carmo",               addr: "R. do Carmo, 4050-164 Porto",                coords: [41.1474, -8.6142], walk: "5 min",  subTag: "tiles",     image: "assets/recs/igreja-do-carmo.jpg" },
+        { id: "rua-flores",       name: "Rua das Flores",                addr: "Rua das Flores, Porto",                      coords: [41.1444, -8.6118], walk: "5 min",  subTag: "street",    image: "assets/recs/rua-das-flores.jpg" },
+        { id: "mouzinho",         name: "R. de Mouzinho da Silveira",    addr: "R. de Mouzinho da Silveira, Porto",          coords: [41.1437, -8.6131], walk: "6 min",  subTag: "avenue",    image: "assets/recs/mouzinho-da-silveira.jpg" },
+        { id: "aliados",          name: "Avenida dos Aliados",           addr: "Avenida dos Aliados, 4000-066 Porto",        coords: [41.1494, -8.6107], walk: "6 min",  subTag: "avenue",    image: "assets/recs/avenida-aliados.jpg" },
+        { id: "bolhao",           name: "Mercado do Bolhão",             addr: "R. de Fernandes Tomás 506, 4000-211 Porto",  coords: [41.1494, -8.6072], walk: "10 min", subTag: "market",    image: "assets/recs/mercado-bolhao.jpg" },
+        { id: "majestic",         name: "Café Majestic",                 addr: "R. de Santa Catarina 112, 4000-442 Porto",   coords: [41.1493, -8.6058], walk: "12 min", subTag: "cafe",      image: "assets/recs/cafe-majestic.jpg" }
       ]
     },
     {
-      id: "francesinha",
-      title: { EN: "For the local dish Francesinha", PT: "Para a Francesinha", ES: "Para la Francesinha", FR: "Pour la Francesinha", KR: "프란세지냐" },
-      kind:  { EN: "Porto's iconic sandwich", PT: "A sanduíche icónica do Porto", ES: "El sándwich icónico de Oporto", FR: "Le sandwich emblématique de Porto", KR: "포르투의 상징적인 샌드위치" },
-      tag: "Eat",
-      icon: "03",
+      id: "do",
+      title: { EN: "Do",      PT: "Fazer",   ES: "Hacer",    FR: "Faire",      KR: "체험하기" },
+      kind:  { EN: "A few hand-arranged things.",
+               PT: "Algumas coisas feitas à medida.",
+               ES: "Algunas cosas hechas a mano.",
+               FR: "Quelques expériences soigneusement choisies.",
+               KR: "정성껏 골라낸 몇 가지 경험." },
       items: [
-        { name: "Café Santiago",                  addr: "R. de Passos Manuel 226, 4000-382 Porto",                  coords: [41.1492, -8.6079], walk: "12 min", reserveAhead: false },
-        { name: "Brasão",                         addr: "R. de Ramalho Ortigão 28, 4000-407 Porto",                 coords: [41.1488, -8.6115], walk: "10 min", reserveAhead: true }
+        { id: "fado-real",        name: "Taberna Real do Fado",          addr: "R. do Dr. Barbosa de Castro 58, 4050-090 Porto", coords: [41.1455, -8.6172], walk: "4 min",  subTag: "fado",        reserveAhead: true,  image: "assets/recs/fado.jpg",
+          note: { EN: "With dinner.",                       PT: "Com jantar.",                  ES: "Con cena.",                   FR: "Avec dîner.",               KR: "저녁 식사 포함." } },
+        { id: "fado-mariquinhas", name: "Casa da Mariquinhas",           addr: "R. de São Sebastião 25, Porto",                coords: [41.1480, -8.6168], walk: "7 min",  subTag: "fado",        reserveAhead: true,  image: "assets/recs/fado.jpg",
+          note: { EN: "With dinner.",                       PT: "Com jantar.",                  ES: "Con cena.",                   FR: "Avec dîner.",               KR: "저녁 식사 포함." } },
+        { id: "fado-maior",       name: "Fado Maior do Porto",           addr: "Rua de Miragaia 54, 4050-386 Porto",           coords: [41.1421, -8.6203], walk: "9 min",  subTag: "fado",        reserveAhead: true,  image: "assets/recs/fado.jpg",
+          note: { EN: "Afternoon performance, no dinner.",  PT: "Sessão à tarde, sem jantar.", ES: "Función por la tarde, sin cena.", FR: "Spectacle l'après-midi, sans dîner.", KR: "오후 공연, 식사 없음." } },
+        { id: "civitatis",        name: "Civitatis · Free walking tour", addr: "civitatis.com",                                external: "https://www.civitatis.com/en/porto/", subTag: "walkingTour", reserveAhead: true,  image: "assets/recs/walking-tours.jpg" },
+        { id: "guruwalk",         name: "GuruWalk · Free walking tour",  addr: "guruwalk.com",                                 external: "https://www.guruwalk.com/porto",     subTag: "walkingTour", reserveAhead: true,  image: "assets/recs/walking-tours.jpg" },
+        { id: "douro-cruise",     name: "Day cruise · Douro Valley",     addr: "Book via GetYourGuide",                        external: "https://www.getyourguide.com/s/?q=douro+valley+from+porto", subTag: "dayTrip", reserveAhead: true,  image: "assets/recs/douro-valley.jpg" }
       ]
     },
     {
-      id: "breakfast",
-      title: { EN: "For Breakfast", PT: "Para o Pequeno-Almoço", ES: "Para el Desayuno", FR: "Pour le Petit-Déjeuner", KR: "아침 식사" },
-      kind:  { EN: "Coffee, pastries, the morning paper", PT: "Café, doces, o jornal da manhã", ES: "Café, dulces, el periódico de la mañana", FR: "Café, viennoiseries, le journal du matin", KR: "커피, 페이스트리, 아침의 여유" },
-      tag: "Eat",
-      icon: "04",
+      id: "practical",
+      title: { EN: "Practical",     PT: "Prático",        ES: "Práctico",        FR: "Pratique",        KR: "생활 정보" },
+      kind:  { EN: "For longer stays.",
+               PT: "Para estadias longas.",
+               ES: "Para estancias largas.",
+               FR: "Pour les longs séjours.",
+               KR: "장기 투숙객을 위해." },
       items: [
-        { name: "Muralhas Olival",                addr: "Campo dos Mártires da Pátria 117, 4050-367 Porto",         coords: [41.1467, -8.6175], walk: "5 min", reserveAhead: false },
-        { name: "Padaria Ribeiro",                addr: "P. de Guilherme Gomes Fernandes 21, 4050-526 Porto",       coords: [41.1478, -8.6128], walk: "8 min", reserveAhead: false }
-      ]
-    },
-    {
-      id: "market",
-      title: { EN: "Time-Out Food Market", PT: "Mercado Time-Out", ES: "Mercado Time-Out", FR: "Marché Time-Out", KR: "타임아웃 푸드 마켓" },
-      kind:  { EN: "All of Porto's best food, one room", PT: "O melhor da gastronomia do Porto, num só sítio", ES: "Lo mejor de Oporto, todo en una sala", FR: "Le meilleur de Porto, dans une seule salle", KR: "포르투 최고의 음식이 한 곳에" },
-      tag: "Eat",
-      icon: "05",
-      items: [
-        { name: "Time-Out Market Porto",          addr: "Ala Sul da Estação Ferroviária de São Bento, Praça de Almeida Garrett", coords: [41.1456, -8.6105], walk: "10 min", reserveAhead: false }
-      ]
-    },
-    {
-      id: "gaia",
-      title: { EN: "Codfish cakes in Gaia", PT: "Pastéis de Bacalhau em Gaia", ES: "Pastel de bacalao en Gaia", FR: "Pastel de morue à Gaia", KR: "가이아의 대구 크로켓" },
-      kind:  { EN: "Across the river, worth the walk", PT: "Do outro lado do rio, vale a caminhada", ES: "Al otro lado del río, vale la caminata", FR: "De l'autre côté du fleuve, ça vaut le détour", KR: "강 건너편, 걸어볼 만한 거리" },
-      tag: "Eat",
-      icon: "06",
-      items: [
-        { name: "Casa Portuguesa do Pastel de Bacalhau", addr: "Av. de Diogo Leite 122, 4400-111 Vila Nova de Gaia", coords: [41.1390, -8.6097], walk: "15 min", reserveAhead: false }
-      ]
-    },
-    {
-      id: "minimarket",
-      title: { EN: "Local mini-market", PT: "Mercearia local", ES: "Tienda local", FR: "Épicerie locale", KR: "동네 미니마트" },
-      kind:  { EN: "Ask for Lola", PT: "Pergunte pela Lola", ES: "Pregunta por Lola", FR: "Demandez Lola", KR: "롤라를 찾으세요" },
-      tag: "Shop",
-      icon: "07",
-      items: [
-        { name: "Mercearia Garrett",              addr: "R. do Dr. Barbosa de Castro 35, 4050-091 Porto",           coords: [41.1453, -8.6171], walk: "4 min", reserveAhead: false,
-          note: { EN: "Ask for Lola.", PT: "Pergunte pela Lola.", ES: "Pregunta por Lola.", FR: "Demandez Lola.", KR: "롤라에게 물어보세요." } }
-      ]
-    },
-    {
-      id: "supermarket",
-      title: { EN: "Supermarket", PT: "Supermercado", ES: "Supermercado", FR: "Supermarché", KR: "슈퍼마켓" },
-      kind:  { EN: "For the apartment kitchen", PT: "Para a cozinha do apartamento", ES: "Para la cocina del apartamento", FR: "Pour la cuisine de l'appartement", KR: "객실 주방용 장보기" },
-      tag: "Shop",
-      icon: "08",
-      items: [
-        { name: "Minipreço",                      addr: "Largo dos Lóios 46, 4050-338 Porto",                       coords: [41.1465, -8.6116], walk: "7 min", reserveAhead: false }
-      ]
-    },
-    {
-      id: "fado",
-      title: { EN: "Fado", PT: "Fado", ES: "Fado", FR: "Fado", KR: "파두" },
-      kind:  { EN: "Porto's quieter answer to Lisbon", PT: "A resposta discreta do Porto a Lisboa", ES: "La respuesta tranquila de Oporto a Lisboa", FR: "La réponse discrète de Porto à Lisbonne", KR: "리스본에 비해 조용한, 포르투의 답" },
-      tag: "Hear",
-      icon: "09",
-      items: [
-        { name: "Taberna Real do Fado",           addr: "R. do Dr. Barbosa de Castro 58, 4050-090 Porto",           coords: [41.1455, -8.6172], walk: "4 min", reserveAhead: true,
-          note: { EN: "With dinner.", PT: "Com jantar.", ES: "Con cena.", FR: "Avec dîner.", KR: "저녁 식사 포함." } },
-        { name: "Casa da Mariquinhas",            addr: "R. de São Sebastião 25, Porto",                            coords: [41.1480, -8.6168], walk: "7 min", reserveAhead: true,
-          note: { EN: "With dinner.", PT: "Com jantar.", ES: "Con cena.", FR: "Avec dîner.", KR: "저녁 식사 포함." } },
-        { name: "Fado Maior do Porto",            addr: "Rua de Miragaia 54, 4050-386 Porto",                       coords: [41.1421, -8.6203], walk: "9 min", reserveAhead: true,
-          note: { EN: "Afternoon performance, no dinner.", PT: "Sessão à tarde, sem jantar.", ES: "Función por la tarde, sin cena.", FR: "Spectacle l'après-midi, sans dîner.", KR: "오후 공연, 식사 없음." } }
-      ]
-    },
-    {
-      id: "laundry",
-      title: { EN: "Self-service laundry", PT: "Lavandaria self-service", ES: "Lavandería autoservicio", FR: "Laverie self-service", KR: "셀프 빨래방" },
-      kind:  { EN: "For longer stays", PT: "Para estadias longas", ES: "Para estancias largas", FR: "Pour les longs séjours", KR: "장기 투숙객을 위해" },
-      tag: "Practical",
-      icon: "10",
-      items: [
-        { name: "LavandaRIA Self-Service Laundry", addr: "Rua dos Caldeireiros 91, 4050-140 Porto",                  coords: [41.1452, -8.6135], walk: "6 min", reserveAhead: false }
-      ]
-    },
-    {
-      id: "tours",
-      title: { EN: "Free Tours", PT: "Tours Gratuitos", ES: "Tours Gratuitos", FR: "Visites Gratuites", KR: "무료 투어" },
-      kind:  { EN: "A first-day orientation", PT: "Para o primeiro dia", ES: "Para el primer día", FR: "Pour le premier jour", KR: "첫날의 도시 안내" },
-      tag: "Do",
-      icon: "11",
-      items: [
-        { name: "Civitatis", addr: "civitatis.com", external: "https://www.civitatis.com/en/porto/", reserveAhead: true },
-        { name: "GuruWalk",  addr: "guruwalk.com",  external: "https://www.guruwalk.com/porto",     reserveAhead: true }
-      ]
-    },
-    {
-      id: "douro",
-      title: { EN: "Day cruise · Douro Valley", PT: "Cruzeiro de um dia · Douro", ES: "Crucero de un día · Duero", FR: "Croisière d'une journée · Douro", KR: "도루 밸리 당일 크루즈" },
-      kind:  { EN: "The vineyards, by river", PT: "As vinhas, pelo rio", ES: "Los viñedos, por el río", FR: "Les vignes, par le fleuve", KR: "강을 따라, 포도밭으로" },
-      tag: "Do",
-      icon: "12",
-      items: [
-        { name: "Book via GetYourGuide", addr: "getyourguide.com", external: "https://www.getyourguide.com/s/?q=douro+valley+from+porto", reserveAhead: true }
-      ]
-    },
-    {
-      id: "visit",
-      title: { EN: "What to visit", PT: "O que visitar", ES: "Qué visitar", FR: "Que visiter", KR: "둘러볼 곳들" },
-      kind:  { EN: "A short, opinionated list", PT: "Uma lista breve e pessoal", ES: "Una lista breve y personal", FR: "Une liste courte et assumée", KR: "짧고 솔직한 추천" },
-      tag: "Do",
-      icon: "13",
-      items: [
-        { name: "Torre dos Clérigos",             addr: "R. de São Filipe de Nery, 4050-546 Porto", coords: [41.1453, -8.6131], walk: "3 min" },
-        { name: "Livraria Lello",                 addr: "R. das Carmelitas 144, 4050-161 Porto",     coords: [41.1466, -8.6149], walk: "5 min" },
-        { name: "Sé Cathedral",                   addr: "Terreiro da Sé, 4050-573 Porto",            coords: [41.1431, -8.6112], walk: "8 min" },
-        { name: "Ribeira neighborhood",           addr: "Cais da Ribeira, 4050-510 Porto",           coords: [41.1410, -8.6131], walk: "8 min",
-          note: { EN: "Beautiful to walk through — we don't advise eating there because it's very touristic.", PT: "Lindo para passear — não recomendamos comer aí porque é muito turístico.", ES: "Precioso para pasear — no recomendamos comer allí porque es muy turístico.", FR: "Magnifique pour s'y promener — on déconseille d'y manger, c'est trop touristique.", KR: "걷기에는 아름답지만, 너무 관광지화되어 식사는 권하지 않습니다." } },
-        { name: "Walk D. Luís I bridge to Gaia",  addr: "Ponte Dom Luís I",                          coords: [41.1399, -8.6109], walk: "10 min" },
-        { name: "Visit a Port wine cellar",       addr: "Vila Nova de Gaia",                         coords: [41.1379, -8.6116], walk: "12 min" },
-        { name: "Estação de São Bento — the tiles", addr: "Praça Almeida Garrett, 4000-069 Porto",  coords: [41.1456, -8.6101], walk: "5 min" },
-        { name: "Igreja do Carmo — the tiled façade", addr: "R. do Carmo, 4050-164 Porto",          coords: [41.1474, -8.6142], walk: "5 min" },
-        { name: "Rua das Flores",                 addr: "Rua das Flores, Porto",                     coords: [41.1444, -8.6118], walk: "5 min" },
-        { name: "R. de Mouzinho da Silveira",     addr: "R. de Mouzinho da Silveira, Porto",          coords: [41.1437, -8.6131], walk: "6 min" },
-        { name: "Avenida dos Aliados",            addr: "Avenida dos Aliados, 4000-066 Porto",        coords: [41.1494, -8.6107], walk: "6 min" },
-        { name: "Mercado do Bolhão",              addr: "R. de Fernandes Tomás 506, 4000-211 Porto",  coords: [41.1494, -8.6072], walk: "10 min" },
-        { name: "Café Majestic",                  addr: "R. de Santa Catarina 112, 4000-442 Porto",   coords: [41.1493, -8.6058], walk: "12 min" }
+        { id: "mercearia-garrett", name: "Mercearia Garrett",             addr: "R. do Dr. Barbosa de Castro 35, 4050-091 Porto", coords: [41.1453, -8.6171], walk: "4 min", subTag: "minimarket",
+          note: { EN: "Ask for Lola.", PT: "Pergunte pela Lola.", ES: "Pregunta por Lola.", FR: "Demandez Lola.", KR: "롤라에게 물어보세요." } },
+        { id: "minipreco",         name: "Minipreço",                     addr: "Largo dos Lóios 46, 4050-338 Porto",            coords: [41.1465, -8.6116], walk: "7 min", subTag: "supermarket" },
+        { id: "lavandaria",        name: "LavandaRIA Self-Service Laundry", addr: "Rua dos Caldeireiros 91, 4050-140 Porto",     coords: [41.1452, -8.6135], walk: "6 min", subTag: "laundry" }
       ]
     }
   ]
 };
+
 
 const VT_I18N = {
   EN: {
@@ -401,7 +359,7 @@ const VT_I18N = {
       eyebrow: "Our Recommendations",
       heading: "A short letter,\nfrom Rita.",
       byline: "\"These are the places we send our friends to, and the places we go ourselves. Print this, save it, ask us anything.\" — R.",
-      filter: "Filter", all: "All", print: "⌃ Print this guide",
+      filter: "Filter", all: "All", print: "Print this guide",
       showLess: "Show less", more: "more",
       whatsappEyebrow: "One more thing",
       whatsappTitle: "We're a WhatsApp away during your stay.",
@@ -483,7 +441,7 @@ const VT_I18N = {
       eyebrow: "As Nossas Recomendações",
       heading: "Uma carta breve,\nda Rita.",
       byline: "\"São os sítios que recomendamos aos amigos, e os sítios para onde vamos. Imprima, guarde, pergunte-nos qualquer coisa.\" — R.",
-      filter: "Filtrar", all: "Tudo", print: "⌃ Imprimir guia",
+      filter: "Filtrar", all: "Tudo", print: "Imprimir guia",
       showLess: "Ver menos", more: "mais",
       whatsappEyebrow: "Mais uma coisa",
       whatsappTitle: "Estamos a um WhatsApp de distância durante a sua estadia.",
@@ -565,7 +523,7 @@ const VT_I18N = {
       eyebrow: "Nuestras Recomendaciones",
       heading: "Una breve carta,\nde Rita.",
       byline: "\"Son los sitios que recomendamos a los amigos, y a los que vamos nosotras. Imprime, guarda, pregúntanos lo que sea.\" — R.",
-      filter: "Filtrar", all: "Todo", print: "⌃ Imprimir guía",
+      filter: "Filtrar", all: "Todo", print: "Imprimir guía",
       showLess: "Ver menos", more: "más",
       whatsappEyebrow: "Una cosa más",
       whatsappTitle: "Estamos a un WhatsApp durante tu estancia.",
@@ -630,7 +588,7 @@ const VT_I18N = {
       eyebrow: "Nos Recommandations",
       heading: "Une courte lettre,\nde Rita.",
       byline: "\"Ce sont les adresses que nous recommandons à nos amis, et où nous allons nous-mêmes. Imprimez, gardez, demandez-nous tout.\" — R.",
-      filter: "Filtrer", all: "Tout", print: "⌃ Imprimer le guide",
+      filter: "Filtrer", all: "Tout", print: "Imprimer le guide",
       showLess: "Voir moins", more: "de plus",
       whatsappEyebrow: "Encore une chose",
       whatsappTitle: "Nous sommes à un WhatsApp pendant votre séjour.",
@@ -695,7 +653,7 @@ const VT_I18N = {
       eyebrow: "우리의 추천",
       heading: "리타가 보내는\n짧은 편지.",
       byline: "\"친구들에게 권하는, 그리고 우리가 직접 가는 곳들이에요. 인쇄해 두시고, 무엇이든 물어보세요.\" — R.",
-      filter: "필터", all: "전체", print: "⌃ 가이드 인쇄",
+      filter: "필터", all: "전체", print: "가이드 인쇄",
       showLess: "접기", more: "더 보기",
       whatsappEyebrow: "한 가지 더",
       whatsappTitle: "머무시는 동안, WhatsApp으로 언제든 연락 주세요.",

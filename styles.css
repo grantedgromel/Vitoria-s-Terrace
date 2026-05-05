@@ -316,198 +316,207 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ─────────────────────────────────────────────────────────
-   RECOMMENDATIONS — map, cards, drawer, print
+   RECOMMENDATIONS — image-led, 4 super-sections
    ───────────────────────────────────────────────────────── */
 
 /* Print-only nodes are invisible by default; revealed in @media print */
 .vt-print-only { display: none; }
 
 /* Section header */
-.vt-recs__head { margin-bottom: 40px; }
+.vt-recs__head { margin-bottom: 32px; }
 .vt-recs__byline {
   max-width: 360px; font-size: 15px; font-style: italic; color: var(--ink-soft);
 }
 
-/* Map */
-.vt-recs__map-wrap {
-  position: relative;
-  height: clamp(320px, 46vh, 480px);
+/* Print-button bar (right-aligned, no longer crammed with filter chips) */
+.vt-recs__print-bar {
+  display: flex; justify-content: flex-end;
+  padding: 16px 0 32px;
+  border-top: 1px solid var(--rule);
   margin-bottom: 56px;
-  border: 1px solid var(--rule);
-  background: var(--bone);
+}
+.vt-print-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 9px 16px 9px 14px;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+.vt-print-btn:hover { background: var(--ink); color: var(--bone); }
+.vt-print-btn:active { transform: translateY(1px); }
+.vt-print-btn:focus-visible { outline: 2px solid var(--porto); outline-offset: 2px; }
+.vt-print-icon { display: block; flex-shrink: 0; color: currentColor; }
+
+/* ── SECTION BLOCK ─────────────────────────────────────── */
+.vt-rec-section { margin-bottom: clamp(64px, 8vw, 112px); }
+.vt-rec-section:last-child { margin-bottom: 56px; }
+
+.vt-rec-section__head {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+.vt-rec-section__num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ochre-deep);
+  letter-spacing: 0.05em;
+}
+.vt-rec-section__title {
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.vt-rec-section__kind {
+  font-size: 15px; font-style: italic; color: var(--granite);
+}
+@media (max-width: 720px) {
+  .vt-rec-section__head { grid-template-columns: 1fr; gap: 8px; margin-bottom: 24px; padding-bottom: 16px; }
+}
+
+/* ── IMAGE-CARD GRID ──────────────────────────────────── */
+.vt-rec-section__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-auto-flow: dense;
+  gap: clamp(16px, 1.6vw, 28px);
+}
+
+.vt-rec-card {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  cursor: pointer;
+  display: flex; flex-direction: column;
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.3s ease;
   overflow: hidden;
 }
-.vt-map { position: absolute; inset: 0; }
-.maplibregl-ctrl-attrib { font-size: 9px !important; }
-
-/* Map pins */
-.vt-pin {
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  border: 2px solid var(--paper);
-  box-shadow: 0 1px 3px rgba(20,18,15,0.35);
-  cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+.vt-rec-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -16px rgba(20, 18, 21, 0.18);
+  border-color: var(--rule);
 }
-.vt-pin--cat { background: var(--pin); padding: 0; }
-.vt-pin--cat:hover { transform: scale(1.4); }
-.vt-pin--apartment {
-  width: 18px; height: 18px;
-  background: var(--ink);
-  border: 2px solid var(--bone);
-  box-shadow: 0 0 0 4px rgba(26,24,21,0.15), 0 1px 4px rgba(20,18,15,0.4);
-}
-.vt-pin--apartment::after {
-  content: ""; position: absolute; inset: 4px;
-  border-radius: 50%; background: var(--ochre);
-}
-.vt-pin--bright { transform: scale(1.5); box-shadow: 0 0 0 6px rgba(0,0,0,0.08), 0 2px 6px rgba(20,18,15,0.5); }
-.vt-pin--dim { opacity: 0.25; }
-
-/* Map legend overlay */
-.vt-recs__map-legend {
-  position: absolute; bottom: 14px; left: 14px;
-  background: var(--paper);
-  padding: 10px 14px;
-  display: grid; gap: 6px;
-  font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--ink-soft);
-  border: 1px solid var(--rule);
-  z-index: 1;
-}
-.vt-legend-row { display: flex; align-items: center; gap: 8px; }
-.vt-legend-pin { width: 9px; height: 9px; border-radius: 50%; }
-@media (max-width: 720px) { .vt-recs__map-legend { display: none; } }
-
-/* Filter / print bar */
-.vt-recs__filter-bar {
-  display: flex; gap: 8px; flex-wrap: wrap;
-  padding-block: 20px; margin-bottom: 48px;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  align-items: center;
-}
-.vt-chip {
-  padding: 8px 18px;
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
-  border: 1px solid var(--rule);
-  background: transparent;
-  color: var(--ink-soft);
-  transition: all 0.3s ease;
-}
-.vt-chip.is-active { border-color: var(--ink); background: var(--ink); color: var(--bone); }
-.vt-chip__count { margin-left: 8px; opacity: 0.6; font-size: 10px; }
-.vt-print-btn {
-  padding: 8px 18px;
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
-  color: var(--granite); border: 1px solid transparent;
-  transition: color 0.2s ease, border-color 0.2s ease;
-}
-.vt-print-btn:hover { color: var(--ink); border-color: var(--rule); }
-
-/* Tag pill */
-.vt-tag {
-  font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--tag, var(--ochre-deep));
-  border: 1px solid var(--tag, var(--ochre));
-  padding: 4px 10px;
+.vt-rec-card.is-featured { grid-column: span 2; }
+@media (max-width: 880px) {
+  .vt-rec-card.is-featured { grid-column: span 1; }
 }
 
-/* Card grid */
-.vt-recs__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1px;
-  background: var(--rule);
-  border: 1px solid var(--rule);
-  margin-bottom: 56px;
-}
-.vt-rec-card {
-  background: var(--paper);
-  padding: 32px 32px 28px;
-  display: flex; flex-direction: column;
-  cursor: pointer;
-  transition: background 0.3s ease;
+.vt-rec-card__photo {
   position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--bone-2);
 }
-.vt-rec-card:hover { background: var(--bone); }
-.vt-rec-card__head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
-.vt-rec-card__title {
-  font-size: 24px; font-style: italic; line-height: 1.15; margin-bottom: 6px; color: var(--ink);
+.vt-rec-card__photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1.2s cubic-bezier(.2, .8, .2, 1), filter 0.4s ease;
+  filter: saturate(0.92) contrast(0.98);
 }
-.vt-rec-card__kind {
-  font-size: 13px; color: var(--granite); font-style: italic; margin-bottom: 22px;
-}
-.vt-rec-card__items { list-style: none; display: grid; gap: 12px; margin-top: auto; }
-.vt-rec-card__items li { padding-top: 12px; border-top: 1px solid var(--rule-soft); }
-.vt-rec-card__item-name { font-size: 16px; color: var(--ink); margin-bottom: 2px; }
-.vt-rec-card__item-addr {
-  font-family: var(--mono); font-size: 11px; color: var(--granite-2); letter-spacing: 0.02em;
-}
-.vt-rec-card__cta {
-  margin-top: 18px; padding-top: 14px;
-  border-top: 1px solid var(--rule-soft);
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
-  color: var(--porto);
-  display: flex; align-items: center; gap: 10px;
+.vt-rec-card:hover .vt-rec-card__photo img {
+  transform: scale(1.04);
+  filter: saturate(1) contrast(1);
 }
 
-/* "What to visit" — full-width long-list */
-.vt-visit {
-  margin-bottom: 56px;
-  padding: clamp(28px, 4vw, 48px);
-  background: var(--paper);
-  border: 1px solid var(--rule);
+.vt-rec-card__body {
+  padding: 18px 20px 22px;
+  display: flex; flex-direction: column; gap: 6px;
 }
-.vt-visit__head {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 24px;
-  align-items: end;
-  padding-bottom: 28px;
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 28px;
+.vt-rec-card__name {
+  font-size: 21px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--ink);
+  letter-spacing: -0.005em;
 }
-.vt-visit__title { font-size: 32px; font-style: italic; line-height: 1.1; margin-bottom: 4px; }
-.vt-visit__kind { font-size: 14px; font-style: italic; color: var(--granite); }
-.vt-visit__open {
-  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
-  color: var(--porto); align-self: end;
+.vt-rec-card__meta {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--granite);
 }
-.vt-visit__list {
+.vt-rec-card__reserve { color: var(--porto); }
+
+/* ── PRACTICAL — utility list, no photos ──────────────── */
+.vt-practical {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 24px 32px;
+  gap: 1px;
+  background: var(--rule-soft);
+  border: 1px solid var(--rule-soft);
 }
-.vt-visit__item { padding-top: 14px; border-top: 1px solid var(--rule-soft); }
-.vt-visit__name {
-  font-size: 17px; color: var(--ink); display: inline-flex; align-items: baseline; gap: 8px;
+.vt-practical__item {
+  background: var(--paper);
+  padding: 22px 28px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 16px;
+  align-items: baseline;
+}
+@media (max-width: 720px) {
+  .vt-practical__item { grid-template-columns: 1fr; gap: 6px; }
+}
+.vt-practical__name {
+  font-size: 22px;
+  font-style: italic;
+  color: var(--ink);
   text-decoration: none;
-  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  transition: color 0.25s ease;
 }
-.vt-visit__name:hover { color: var(--porto); }
-.vt-visit__arrow { font-size: 11px; opacity: 0.6; }
-.vt-visit__walk {
-  font-family: var(--mono); font-size: 11px; color: var(--granite-2);
-  letter-spacing: 0.04em; margin-top: 4px;
+.vt-practical__name:hover { color: var(--porto); }
+.vt-practical__arrow { font-size: 12px; opacity: 0.5; }
+.vt-practical__addr {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--granite-2);
+  letter-spacing: 0.02em;
+  margin-top: 4px;
 }
-.vt-visit__note { font-size: 13px; font-style: italic; color: var(--ink-soft); margin-top: 8px; }
+.vt-practical__meta {
+  display: flex; flex-direction: column; gap: 6px;
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--granite);
+}
+.vt-practical__note {
+  font-size: 13px; font-style: italic; color: var(--ink-soft);
+  text-transform: none; letter-spacing: 0;
+}
 
-/* WhatsApp aside */
+/* ── WHATSAPP ASIDE ──────────────────────────────────── */
 .vt-whatsapp {
+  margin-top: clamp(48px, 6vw, 80px);
   padding: 32px 36px;
   border: 1px solid var(--rule);
   background: var(--paper);
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
 }
 .vt-whatsapp__title { font-size: 22px; font-style: italic; }
 
-/* ── DRAWER ─────────────────────────────────────────────── */
+/* ── DRAWER ──────────────────────────────────────────── */
 .vt-drawer-shade {
   position: fixed; inset: 0;
-  background: rgba(20,18,15, 0.55);
+  background: rgba(20, 18, 15, 0.55);
   backdrop-filter: blur(6px);
   z-index: 150;
   opacity: 0; pointer-events: none;
@@ -515,170 +524,273 @@ a { color: inherit; text-decoration: none; }
 }
 .vt-drawer-shade.open { opacity: 1; pointer-events: auto; }
 .vt-drawer {
-  position: fixed; top: 0; right: 0; bottom: 0;
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
   width: min(560px, 100%);
   background: var(--paper);
   overflow-y: auto;
-  padding: 36px 40px 56px;
-  animation: slide 0.45s cubic-bezier(.2,.8,.2,1);
-}
-.vt-drawer__head {
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-  padding-bottom: 24px; border-bottom: 1px solid var(--rule);
+  animation: slide 0.45s cubic-bezier(.2, .8, .2, 1);
 }
 .vt-drawer__close {
-  margin-left: auto;
+  position: absolute; top: 20px; right: 24px;
+  z-index: 2;
   font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--granite);
+  color: var(--bone);
+  background: rgba(20, 18, 15, 0.55);
+  padding: 8px 14px;
+  border-radius: 100px;
+  transition: background 0.25s ease;
 }
-.vt-rec-item { padding-top: 16px; border-top: 1px solid var(--rule-soft); }
-.vt-rec-item__name {
-  font-size: 22px; font-style: italic; color: var(--ink);
-  display: inline-flex; align-items: baseline; gap: 10px;
-  text-decoration: none;
-  transition: color 0.2s ease;
+.vt-drawer__close:hover { background: var(--ink); }
+.vt-drawer__photo {
+  aspect-ratio: 4 / 3;
+  background: var(--bone-2);
+  overflow: hidden;
 }
-.vt-rec-item__name:hover { color: var(--porto); }
-.vt-rec-item__arrow { font-size: 13px; opacity: 0.5; }
-.vt-rec-item__addr {
-  font-family: var(--mono); font-size: 11px; color: var(--granite-2);
-  letter-spacing: 0.02em; margin-top: 6px;
+.vt-drawer__photo img { width: 100%; height: 100%; object-fit: cover; }
+.vt-drawer__body {
+  padding: 32px 40px 56px;
+  display: flex; flex-direction: column; gap: 14px;
 }
-.vt-rec-item__meta {
-  display: flex; gap: 16px; margin-top: 8px;
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--granite);
+.vt-drawer__subtag { color: var(--ochre-deep); }
+.vt-drawer__name {
+  font-size: 36px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--ink);
+  letter-spacing: -0.005em;
 }
-.vt-rec-item__note {
-  margin-top: 10px; font-size: 14px; font-style: italic; color: var(--ink-soft);
+.vt-drawer__addr {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--granite-2);
+  letter-spacing: 0.02em;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule-soft);
 }
+.vt-drawer__reserve {
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500;
+  color: var(--porto);
+}
+.vt-drawer__note {
+  font-size: 15px; font-style: italic; color: var(--ink-soft); line-height: 1.5;
+}
+.vt-drawer__cta { margin-top: 12px; align-self: flex-start; }
 
 /* ─────────────────────────────────────────────────────────
-   PRINT STYLESHEET — branded one-pager
+   PRINT STYLESHEET — branded one-pager (no photos in print)
    ───────────────────────────────────────────────────────── */
 @media print {
   @page { size: A4; margin: 14mm 12mm; }
 
-  /* Hide everything except the recommendations section */
-  body > * { visibility: hidden; height: 0 !important; overflow: hidden !important; }
-  #recs { visibility: visible; height: auto !important; overflow: visible !important; }
-  #recs * { visibility: visible; }
-  /* Reset positioning so the section flows from page top */
+  html, body {
+    background: #fff !important;
+    color: #1A1815 !important;
+    font-family: var(--serif);
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide everything that isn't the recommendations section. */
+  nav,
+  header[id="top"],
+  section:not(#recs),
+  footer,
+  .book-modal,
+  .vt-drawer-shade,
+  [class*="tweaks-panel"],
+  [class^="tweaks"]                    { display: none !important; }
+
+  /* Promote #recs to fill the page. */
   #recs {
     position: static !important;
-    background: white !important;
+    background: #fff !important;
     padding: 0 !important;
-    color: #1A1815;
+    margin: 0 !important;
+    width: 100% !important;
+    color: #1A1815 !important;
   }
-  #recs .container { padding: 0 !important; max-width: none !important; }
+  #recs .container { padding: 0 !important; margin: 0 !important; max-width: none !important; }
 
-  /* Reveal print-only header & footer; hide screen-only chrome */
   .vt-print-only { display: block !important; }
-  .vt-recs__head, .vt-recs__map-wrap, .vt-recs__filter-bar,
-  .vt-whatsapp, .vt-drawer-shade, .vt-rec-card__cta,
-  .vt-print-btn, .vt-visit__open { display: none !important; }
 
-  /* Print header: wordmark + tagline */
+  /* Hide screen-only chrome */
+  .vt-recs__head,
+  .vt-recs__print-bar,
+  .vt-print-btn,
+  .vt-whatsapp,
+  .vt-rec-card__photo,
+  .vt-practical__arrow                 { display: none !important; }
+
+  /* ── PRINT HEADER ─── */
   .vt-print-header {
     text-align: center;
     padding-bottom: 12pt;
-    border-bottom: 1px solid #1A1815;
     margin-bottom: 18pt;
+    page-break-after: avoid;
+    break-after: avoid;
   }
   .vt-print-logo {
     font-family: var(--serif);
-    font-size: 24pt; font-style: italic; letter-spacing: 0.18em;
-    margin-bottom: 6pt;
+    font-size: 22pt; font-style: italic; font-weight: 400;
+    letter-spacing: 0.22em;
+    margin-bottom: 5pt; color: #1A1815;
   }
   .vt-print-tagline {
-    font-size: 9pt; letter-spacing: 0.28em; text-transform: uppercase;
+    font-family: var(--sans);
+    font-size: 8pt; letter-spacing: 0.30em; text-transform: uppercase;
+    color: #4A463E; margin-bottom: 14pt;
+  }
+  .vt-print-divider {
+    height: 4pt; margin: 0 auto 14pt; width: 60mm;
+    background-image:
+      linear-gradient(90deg, #B89150 0 8pt, transparent 8pt 16pt),
+      linear-gradient(90deg, #2A3F8F 0 4pt, transparent 4pt 8pt);
+    background-size: 16pt 4pt, 8pt 4pt;
+    background-position: 0 0, 2pt 0;
+    opacity: 0.85;
+  }
+  .vt-print-byline {
+    font-family: var(--serif); font-style: italic;
+    font-size: 11pt; line-height: 1.45;
     color: #4A463E;
+    max-width: 130mm;
+    margin: 0 auto;
   }
 
-  /* Two-column dense layout */
-  .vt-recs__grid, .vt-visit__list {
-    columns: 2;
-    column-gap: 14mm;
-    column-rule: 0.5px solid #ccc;
+  /* ── SECTION BLOCKS ─── */
+  .vt-rec-section { margin-bottom: 12pt !important; break-inside: avoid; }
+  .vt-rec-section__head {
     display: block !important;
-    border: 0 !important;
-    background: transparent !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    gap: 0 !important;
+    padding-bottom: 4pt !important;
+    margin-bottom: 6pt !important;
+    border-bottom: 0.75pt solid #1A1815 !important;
+    grid-template-columns: none !important;
   }
-
-  .vt-rec-card, .vt-visit {
-    background: transparent !important;
-    border: 0 !important;
-    padding: 0 0 10pt 0 !important;
-    margin-bottom: 10pt !important;
-    break-inside: avoid;
-    page-break-inside: avoid;
-    display: block !important;
+  .vt-rec-section__num {
+    font-family: var(--serif); font-style: italic;
+    font-size: 9pt; color: #B89150;
+    margin-bottom: 2pt; display: inline-block;
   }
-
-  /* Card-level print typography */
-  .vt-rec-card__head { padding: 0 !important; margin-bottom: 4pt !important; display: flex !important; align-items: baseline; gap: 8pt; }
-  .vt-rec-card__head .numeral { font-size: 9pt; color: #7A7468; }
-  .vt-tag {
-    border: 0 !important; padding: 0 !important;
-    font-size: 7pt; color: #7A7468 !important;
-  }
-  .vt-rec-card__title, .vt-visit__title {
-    font-family: var(--serif);
-    font-size: 13pt !important; font-style: italic;
+  .vt-rec-section__title {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: 16pt !important; line-height: 1.1 !important;
     margin: 2pt 0 1pt !important;
     color: #1A1815 !important;
   }
-  .vt-rec-card__kind, .vt-visit__kind {
-    font-size: 8pt !important; color: #4A463E !important;
-    margin-bottom: 4pt !important; font-style: italic;
+  .vt-rec-section__kind {
+    font-family: var(--serif); font-style: italic;
+    font-size: 9pt !important; color: #4A463E !important;
+    margin-bottom: 4pt !important;
   }
-  .vt-rec-card__items { display: block !important; margin: 0 !important; }
-  .vt-rec-card__items li, .vt-visit__item {
-    padding: 3pt 0 !important;
-    border-top: 0.5px solid #d8d3c7 !important;
+
+  /* ── ITEM CARDS — multi-column flow ─── */
+  .vt-rec-section__grid {
+    column-count: 2;
+    column-gap: 10mm;
+    column-rule: 0.5pt solid #d8d3c7;
+    display: block !important;
+    border: 0 !important;
+    background: transparent !important;
+    margin: 0 0 4pt 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+  .vt-rec-card {
+    background: transparent !important;
+    border: 0 !important;
+    padding: 4pt 0 !important;
+    margin: 0 0 4pt 0 !important;
     break-inside: avoid;
+    page-break-inside: avoid;
+    display: block !important;
+    cursor: auto;
+    box-shadow: none !important;
+    transform: none !important;
   }
-  .vt-rec-card__item-name, .vt-visit__name {
+  .vt-rec-card.is-featured { display: block !important; grid-column: auto !important; }
+  .vt-rec-card__body { padding: 0 !important; gap: 1pt !important; }
+  .vt-rec-card__name {
     font-family: var(--serif);
-    font-size: 10pt !important; color: #1A1815 !important;
+    font-size: 11pt !important;
+    line-height: 1.2 !important;
+    color: #1A1815 !important;
+    margin: 0 !important;
+  }
+  .vt-rec-card__meta {
+    font-family: var(--sans);
+    font-size: 7pt !important;
+    letter-spacing: 0.14em;
+    color: #7A7468 !important;
+    margin-top: 1pt !important;
+    gap: 4pt !important;
+  }
+  .vt-rec-card__reserve { color: #4A463E !important; }
+
+  /* ── PRACTICAL — already a list, lighter styling ─── */
+  .vt-practical {
+    border: 0 !important;
+    background: transparent !important;
+    gap: 0 !important;
+  }
+  .vt-practical__item {
+    background: transparent !important;
+    padding: 4pt 0 !important;
+    border-top: 0.5pt solid #d8d3c7 !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4pt !important;
+  }
+  .vt-practical__name {
+    font-family: var(--serif);
+    font-size: 11pt !important;
+    color: #1A1815 !important;
     text-decoration: none !important;
     display: block;
   }
-  .vt-rec-card__item-addr, .vt-visit__walk {
+  .vt-practical__addr {
     font-family: var(--mono);
-    font-size: 7pt !important; color: #7A7468 !important;
+    font-size: 7pt !important;
+    color: #7A7468 !important;
     margin-top: 1pt !important;
   }
-  .vt-visit__arrow, .vt-rec-item__arrow { display: none !important; }
-  .vt-visit__note {
-    font-size: 8pt !important; font-style: italic; color: #4A463E !important;
-    margin-top: 2pt !important;
+  .vt-practical__meta {
+    font-size: 7pt !important;
+    color: #7A7468 !important;
+    letter-spacing: 0.14em;
+  }
+  .vt-practical__note {
+    font-size: 8pt !important;
+    color: #4A463E !important;
+    font-style: italic;
   }
 
-  /* Special "What to visit" — full-width inside the column flow */
-  .vt-visit {
-    column-span: all;
-    border-top: 0.5px solid #1A1815 !important;
-    padding-top: 10pt !important;
-    margin-top: 8pt !important;
-  }
-  .vt-visit__head {
-    display: block !important; padding: 0 !important; border: 0 !important; margin-bottom: 6pt !important;
-  }
-
-  /* Print footer: address line */
+  /* ── PRINT FOOTER ─── */
   .vt-print-footer {
     margin-top: 14pt;
     padding-top: 10pt;
-    border-top: 1px solid #1A1815;
-    font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase;
-    color: #4A463E;
     text-align: center;
     line-height: 1.6;
+    page-break-before: avoid;
+  }
+  .vt-print-footer .vt-print-divider {
+    width: 60mm; margin-bottom: 10pt;
+  }
+  .vt-print-footer__line {
+    font-family: var(--sans);
+    font-size: 8pt; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #1A1815;
+  }
+  .vt-print-footer__brand {
+    font-family: var(--sans);
+    font-size: 7pt; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #7A7468;
+    margin-top: 4pt;
   }
 
-  /* Don't print interactive controls on links */
-  a, a:link, a:visited { color: #1A1815 !important; text-decoration: none !important; }
+  a, a:link, a:visited {
+    color: #1A1815 !important;
+    text-decoration: none !important;
+    border: 0 !important;
+  }
 }
