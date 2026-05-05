@@ -95,7 +95,6 @@ function VTReviews({ t }) {
   // would double the aggregate). Platforms without `sharedFeed` are unique by definition.
   const _seenFeeds = new Set();
   const totalCount = scores.reduce((sum, x) => {
-    if (x.count == null) return sum;
     const key = x.sharedFeed || x.platform;
     if (_seenFeeds.has(key)) return sum;
     _seenFeeds.add(key);
@@ -132,18 +131,12 @@ function VTReviews({ t }) {
               onMouseLeave={(e) => e.currentTarget.style.background = "var(--paper)"}>
               <div className="eyebrow" style={{ color: "var(--ochre-deep)" }}>{s.platform}</div>
               <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                <span className="serif italic" style={{ fontSize: 56, lineHeight: 0.95, letterSpacing: "-0.01em", color: s.score == null ? "var(--granite-2)" : "var(--ink)" }}>
-                  {s.score == null ? "—" : s.score}
-                </span>
+                <span className="serif italic" style={{ fontSize: 56, lineHeight: 0.95, letterSpacing: "-0.01em" }}>{s.score}</span>
                 <span className="serif" style={{ fontSize: 18, color: "var(--granite)", fontStyle: "italic" }}>/ {s.outOf}</span>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, color: s.score == null ? "var(--rule)" : "var(--ochre-deep)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--ochre-deep)" }}>
                 {"★★★★★".split("").map((c, j) => <span key={j} style={{ fontSize: 11 }}>{c}</span>)}
-                <span style={{ fontSize: 11, color: "var(--granite)", marginLeft: 4 }}>
-                  {s.count == null
-                    ? `· ${t.reviews.reviewsLabel}`
-                    : `· ${s.count.toLocaleString()} ${s.count === 1 ? t.reviews.reviewsLabelOne : t.reviews.reviewsLabel}`}
-                </span>
+                <span style={{ fontSize: 11, color: "var(--granite)", marginLeft: 4 }}>· {s.count.toLocaleString()} {s.count === 1 ? t.reviews.reviewsLabelOne : t.reviews.reviewsLabel}</span>
               </div>
               <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px solid var(--rule-soft)" }}>
                 <div style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500, color: "var(--porto)", marginBottom: 4 }}>{s.badge}</div>
