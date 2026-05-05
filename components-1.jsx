@@ -194,12 +194,9 @@ function VTHero({ t, onBook }) {
         paddingBottom: "clamp(40px, 7vh, 72px)",
         gap: "clamp(48px, 8vh, 96px)"
       }}>
-        <div style={{ alignSelf: "center", maxWidth: 1100 }}>
-          <div className="eyebrow" style={{ color: "rgba(250,248,244,0.85)", marginBottom: 32 }}>{t.hero.eyebrow}</div>
-          <h1 className="display-xl" style={{ fontStyle: "italic", letterSpacing: "-0.025em" }}>
-            {t.hero.title1}<br />
-            <span style={{ fontStyle: "normal" }}>{t.hero.title2}</span><br />
-            <span style={{ fontStyle: "italic" }}>{t.hero.title3}</span>
+        <div style={{ alignSelf: "center", width: "100%" }}>
+          <h1 className="display-xl" style={{ fontStyle: "italic", letterSpacing: "-0.025em", whiteSpace: "pre-line" }}>
+            {t.hero.title}
           </h1>
           <p className="body-lg" style={{ color: "rgba(250,248,244,0.85)", maxWidth: 540, marginTop: 36 }}>
             {t.hero.sub}

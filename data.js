@@ -353,11 +353,8 @@ const VT_I18N = {
   EN: {
     nav: { stays: "Stays", story: "Our Story", porto: "Porto", recs: "Recommendations", contact: "Contact", book: "Book a stay" },
     hero: {
-      eyebrow: "Porto · A 19th-century house",
-      title1: "The best",
-      title2: "view in town,",
-      title3: "from a quiet street.",
-      sub: "Four apartments above the Douro. Quietly restored, rented one party at a time.",
+      title: "A quiet refuge\nin the heart of Porto.",
+      sub: "Above the Douro. Apart from the crowd.",
       cta: "Check availability",
       ctaAlt: "View listings"
     },
@@ -434,11 +431,8 @@ const VT_I18N = {
   PT: {
     nav: { stays: "Estadias", story: "A Casa", porto: "Porto", recs: "Recomendações", contact: "Contactos", book: "Reservar" },
     hero: {
-      eyebrow: "Porto · Casa do séc. XIX",
-      title1: "A melhor vista",
-      title2: "da cidade,",
-      title3: "de uma rua tranquila.",
-      sub: "Quatro apartamentos sobre o Douro. Restaurada com calma, alugada uma família de cada vez.",
+      title: "Um refúgio tranquilo\nno coração do Porto.",
+      sub: "Sobre o Douro. Longe do bulício.",
       cta: "Ver disponibilidade",
       ctaAlt: "Ver os apartamentos"
     },
@@ -515,11 +509,8 @@ const VT_I18N = {
   ES: {
     nav: { stays: "Estancias", story: "La Casa", porto: "Oporto", recs: "Recomendaciones", contact: "Contacto", book: "Reservar" },
     hero: {
-      eyebrow: "Oporto · Casa del s. XIX",
-      title1: "La mejor vista",
-      title2: "de la ciudad,",
-      title3: "desde una calle tranquila.",
-      sub: "Cuatro apartamentos sobre el Duero. Restaurada con calma, alquilada de una familia en una.",
+      title: "Un refugio tranquilo\nen el corazón de Oporto.",
+      sub: "Sobre el Duero. Lejos del bullicio.",
       cta: "Ver disponibilidad",
       ctaAlt: "Ver los apartamentos"
     },
@@ -580,11 +571,8 @@ const VT_I18N = {
   FR: {
     nav: { stays: "Séjours", story: "La Maison", porto: "Porto", recs: "Recommandations", contact: "Contact", book: "Réserver" },
     hero: {
-      eyebrow: "Porto · Maison du XIXᵉ",
-      title1: "La plus belle vue",
-      title2: "sur la ville,",
-      title3: "depuis une rue paisible.",
-      sub: "Quatre appartements au-dessus du Douro. Restaurée doucement, louée à une famille à la fois.",
+      title: "Un refuge paisible\nau cœur de Porto.",
+      sub: "Au-dessus du Douro. À l'écart de la foule.",
       cta: "Voir les disponibilités", ctaAlt: "Voir les appartements"
     },
     secStay: { num: "i.", label: "Les Séjours", title: "Quatre appartements,\nquatre tempéraments." },
@@ -644,11 +632,8 @@ const VT_I18N = {
   KR: {
     nav: { stays: "객실", story: "이 집", porto: "포르투", recs: "추천", contact: "문의", book: "예약하기" },
     hero: {
-      eyebrow: "포르투 · 19세기 가옥",
-      title1: "도시에서",
-      title2: "가장 아름다운 풍경,",
-      title3: "조용한 골목에서.",
-      sub: "도루 강 위의 네 개 아파트. 천천히 복원되어, 한 번에 한 팀씩만 맞이합니다.",
+      title: "포르투 중심의\n조용한 안식처.",
+      sub: "도루 강 위, 인파에서 한 걸음 떨어져.",
       cta: "예약 가능 확인", ctaAlt: "객실 보기"
     },
     secStay: { num: "i.", label: "객실", title: "네 개의 아파트,\n네 개의 분위기." },
@@ -708,11 +693,8 @@ const VT_I18N = {
   JA: {
     nav: { stays: "客室", story: "このお家", porto: "ポルト", recs: "おすすめ", contact: "お問い合わせ", book: "ご予約" },
     hero: {
-      eyebrow: "ポルト · 19世紀の家",
-      title1: "街でいちばん",
-      title2: "美しい眺めを、",
-      title3: "静かな路地から。",
-      sub: "ドウロ川を見下ろす4つのアパートメント。静かに修復され、一度に一組だけをお迎えします。",
+      title: "ポルトの中心に、\n静かな隠れ家。",
+      sub: "ドウロ川の上、喧騒を離れて。",
       cta: "空室を確認", ctaAlt: "客室を見る"
     },
     secStay:    { num: "i.",  label: "客室",         title: "4つのアパートメント、\n4つの趣。" },
