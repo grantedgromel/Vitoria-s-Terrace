@@ -71,7 +71,7 @@ function App() {
 
         <window.TweakSection label="Language preview">
           <window.TweakSelect label="Locale" value={lang}
-            options={["EN", "PT", "ES", "FR", "KR"]}
+            options={["EN", "PT", "ES", "FR", "KR", "JA"]}
             onChange={(v) => setLang(v)} />
         </window.TweakSection>
       </window.TweaksPanel>

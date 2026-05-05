@@ -34,8 +34,8 @@ function VTRecDrawer({ item, subTags, lang, t, onClose }) {
   if (!item) return null;
   const subTagLabel = item.subTag && subTags[item.subTag] ? tr(subTags[item.subTag], lang) : "";
   const note = item.note ? tr(item.note, lang) : null;
-  const ctaLabel = tr({ EN: "Walking directions", PT: "Direções a pé", ES: "Cómo llegar", FR: "Itinéraire à pied", KR: "길찾기" }, lang);
-  const reserveLabel = tr({ EN: "Reservation recommended", PT: "Reserva recomendada", ES: "Reserva recomendada", FR: "Réservation recommandée", KR: "예약 권장" }, lang);
+  const ctaLabel = tr({ EN: "Walking directions", PT: "Direções a pé", ES: "Cómo llegar", FR: "Itinéraire à pied", KR: "길찾기", JA: "道順を見る" }, lang);
+  const reserveLabel = tr({ EN: "Reservation recommended", PT: "Reserva recomendada", ES: "Reserva recomendada", FR: "Réservation recommandée", KR: "예약 권장", JA: "事前予約推奨" }, lang);
 
   return (
     <div className="vt-drawer-shade open" onClick={onClose}>
@@ -78,7 +78,7 @@ function VTRecCard({ item, subTags, lang, onOpen, featured }) {
         <div className="vt-rec-card__meta">
           {subTagLabel && <span>{subTagLabel}</span>}
           {item.walk && <span>· {item.walk}</span>}
-          {item.reserveAhead && <span className="vt-rec-card__reserve">· {tr({EN:"Reserve",PT:"Reservar",ES:"Reservar",FR:"Réserver",KR:"예약"}, lang)}</span>}
+          {item.reserveAhead && <span className="vt-rec-card__reserve">· {tr({EN:"Reserve",PT:"Reservar",ES:"Reservar",FR:"Réserver",KR:"예약",JA:"要予約"}, lang)}</span>}
         </div>
       </div>
     </article>
@@ -229,7 +229,7 @@ function VTRecommendations({ t, lang }) {
         <div className="vt-print-footer__line">{window.VT_DATA.meta.address} · {window.VT_DATA.meta.phone}</div>
         <div className="vt-print-footer__line">{window.VT_DATA.meta.email} · {window.VT_DATA.meta.instagram}</div>
         <div className="vt-print-footer__brand">
-          {tr({EN:"Made in Porto", PT:"Feito no Porto", ES:"Hecho en Oporto", FR:"Fait à Porto", KR:"포르투에서 만들어짐"}, lang)} · vitoriasterraceapartments.com
+          {tr({EN:"Made in Porto", PT:"Feito no Porto", ES:"Hecho en Oporto", FR:"Fait à Porto", KR:"포르투에서 만들어짐", JA:"ポルトで生まれました"}, lang)} · vitoriasterraceapartments.com
         </div>
       </div>
     </section>

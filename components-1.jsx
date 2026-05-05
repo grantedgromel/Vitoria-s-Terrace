@@ -96,7 +96,7 @@ function VTNav({ t, lang, onLang, onBook, scrolled }) {
                 background: "var(--paper)", border: "1px solid var(--rule)",
                 padding: "8px 0", minWidth: 120, color: "var(--ink)"
               }}>
-                {["EN", "PT", "ES", "FR", "KR"].map((l) => (
+                {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
                   <button key={l}
                     onClick={() => { onLang(l); setLangOpen(false); }}
                     style={{
@@ -104,7 +104,7 @@ function VTNav({ t, lang, onLang, onBook, scrolled }) {
                       ...navBtn, fontWeight: l === lang ? 600 : 400,
                       color: l === lang ? "var(--porto)" : "var(--ink)"
                     }}>
-                    {({ EN: "English", PT: "Português", ES: "Español", FR: "Français", KR: "한국어" })[l]}
+                    {({ EN: "English", PT: "Português", ES: "Español", FR: "Français", KR: "한국어", JA: "日本語" })[l]}
                   </button>
                 ))}
               </div>

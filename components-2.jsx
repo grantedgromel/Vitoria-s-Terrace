@@ -271,7 +271,7 @@ function VTFooter({ t, lang, onLang, onBook }) {
 
             <div className="eyebrow" style={{ color: "var(--ochre)", marginTop: 32, marginBottom: 16 }}>{t.footer.language}</div>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              {["EN", "PT", "ES", "FR", "KR"].map((l) => (
+              {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
                 <button key={l} onClick={() => onLang(l)}
                   style={{
                     fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase",
