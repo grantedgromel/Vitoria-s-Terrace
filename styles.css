@@ -1,0 +1,316 @@
+/* Vitoria's Terrace — design tokens & base */
+:root {
+  --bone: oklch(0.97 0.005 80);
+  --bone-2: oklch(0.94 0.008 80);
+  --paper: oklch(0.99 0.003 80);
+  --ink: oklch(0.18 0.01 60);
+  --ink-soft: oklch(0.28 0.01 60);
+  --granite: oklch(0.5 0.005 50);
+  --granite-2: oklch(0.7 0.005 50);
+  --rule: oklch(0.85 0.005 60);
+  --rule-soft: oklch(0.9 0.005 60);
+  --porto: oklch(0.38 0.13 265);
+  --porto-deep: oklch(0.32 0.14 265);
+  --ochre: oklch(0.78 0.09 80);
+  --ochre-deep: oklch(0.6 0.1 75);
+
+  --serif: "Cormorant Garamond", "Cormorant", Georgia, serif;
+  --sans: "Inter", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body { overflow-x: hidden; }
+
+img { display: block; max-width: 100%; }
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+a { color: inherit; text-decoration: none; }
+
+::selection { background: var(--porto); color: var(--bone); }
+
+/* ── Type system ─────────────────────────────────── */
+.serif { font-family: var(--serif); font-weight: 400; }
+.sans  { font-family: var(--sans); }
+.mono  { font-family: var(--mono); }
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--granite);
+}
+
+.numeral {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--ochre-deep);
+  letter-spacing: 0.05em;
+}
+
+.display-xl {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(56px, 8.5vw, 132px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.display-lg {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(44px, 5.5vw, 84px);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+.display-md {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(32px, 3.6vw, 54px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.display-sm {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(22px, 2.2vw, 30px);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+}
+
+.body-lg {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.body { font-size: 15px; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
+
+.italic { font-style: italic; }
+
+/* ── Container / grid ────────────────────────────── */
+.container {
+  max-width: 1440px;
+  padding-inline: clamp(20px, 4vw, 64px);
+  margin-inline: auto;
+}
+
+.section { padding-block: clamp(72px, 11vw, 160px); }
+
+.rule { height: 1px; background: var(--rule); border: 0; }
+
+/* ── Buttons ─────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 26px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: var(--ink);
+  transition: background 0.4s ease, color 0.4s ease;
+  border-radius: 0;
+}
+.btn:hover { background: var(--ink); color: var(--bone); }
+
+.btn--primary {
+  background: var(--ink);
+  color: var(--bone);
+  border-color: var(--ink);
+}
+.btn--primary:hover { background: var(--porto); border-color: var(--porto); }
+
+.btn--ghost {
+  border-color: var(--bone);
+  color: var(--bone);
+}
+.btn--ghost:hover { background: var(--bone); color: var(--ink); }
+
+.btn--sm { padding: 12px 18px; font-size: 11px; }
+
+/* arrow */
+.arr { display: inline-block; width: 20px; height: 1px; background: currentColor; position: relative; }
+.arr::after {
+  content: ""; position: absolute; right: 0; top: -3px;
+  width: 7px; height: 7px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+
+/* ── Section headers ─────────────────────────────── */
+.sec-head {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 24px;
+  align-items: baseline;
+  margin-bottom: 56px;
+}
+
+.sec-head .num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ochre-deep);
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 720px) {
+  .sec-head { grid-template-columns: 1fr; gap: 8px; margin-bottom: 36px; }
+}
+
+/* ── Image utilities ─────────────────────────────── */
+.img-cover { width: 100%; height: 100%; object-fit: cover; }
+
+.img-frame { overflow: hidden; background: var(--bone-2); position: relative; }
+
+.cap {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--granite);
+  margin-top: 14px;
+  letter-spacing: 0.02em;
+}
+
+/* fade in on scroll */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 1s ease, transform 1s ease; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ── Marquee ─────────────────────────────────────── */
+@keyframes marq {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee {
+  display: flex;
+  gap: 56px;
+  width: max-content;
+  animation: marq 40s linear infinite;
+}
+
+/* ── Booking widget specifics in components ──────── */
+
+/* ── Lightbox ────────────────────────────────────── */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(20,18,15, 0.92);
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 4vh 4vw;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.lightbox.open { opacity: 1; pointer-events: auto; }
+.lightbox img { max-height: 92vh; max-width: 100%; object-fit: contain; }
+.lightbox .close {
+  position: absolute; top: 24px; right: 28px;
+  color: var(--bone); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.lightbox .nav { position: absolute; top: 50%; transform: translateY(-50%); color: var(--bone); padding: 12px; font-size: 24px; }
+.lightbox .nav.prev { left: 16px; }
+.lightbox .nav.next { right: 16px; }
+
+/* ── Booking modal ───────────────────────────────── */
+.book-modal {
+  position: fixed; inset: 0;
+  background: rgba(20,18,15, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 150;
+  display: none;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+.book-modal.open { display: flex; }
+.book-modal__panel {
+  width: min(560px, 100%);
+  background: var(--paper);
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+  animation: slide 0.45s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes slide { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* azulejo pattern – CSS only stripe pattern for accents */
+.azulejo-strip {
+  height: 4px;
+  background-image:
+    linear-gradient(90deg, var(--ochre) 0 16px, transparent 16px 32px),
+    linear-gradient(90deg, var(--porto) 0 8px, transparent 8px 16px);
+  background-size: 32px 4px, 16px 4px;
+  background-position: 0 0, 4px 0;
+  opacity: 0.7;
+}
+
+/* tile motif divider */
+.tile-divider {
+  display: flex; gap: 4px; justify-content: center;
+  padding-block: 12px;
+}
+.tile-divider span {
+  width: 6px; height: 6px;
+  background: var(--ochre);
+  transform: rotate(45deg);
+}
+.tile-divider span:nth-child(even) { background: var(--porto); }
+
+/* small caps utility */
+.smallcaps { font-variant-caps: all-small-caps; letter-spacing: 0.18em; }
+
+/* loaders for images */
+.img-frame::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  background-size: 200% 100%;
+  animation: shim 1.6s infinite;
+  pointer-events: none;
+  opacity: 0;
+}
+
+@keyframes shim {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* hide scrollbar nicely */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bone); }
+::-webkit-scrollbar-thumb { background: var(--rule); }
+::-webkit-scrollbar-thumb:hover { background: var(--granite-2); }
+
+/* mobile nav helpers */
+@media (max-width: 880px) {
+  .hide-mobile { display: none !important; }
+}
+@media (min-width: 881px) {
+  .show-mobile { display: none !important; }
+}

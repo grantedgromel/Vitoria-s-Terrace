@@ -1,0 +1,24 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local dev tooling
+node_modules/
+.vscode/
+.idea/
+
+# Local env / secrets
+.env
+.env.*
+!.env.example
+
+# Claude harness — keep launch.json so the preview server config travels with the repo,
+# but ignore everything else under .claude/
+.claude/*
+!.claude/launch.json
