@@ -194,27 +194,10 @@ function VTHero({ t, onBook }) {
           fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.85
         }}>
           <div>41.143° N · 8.614° W</div>
-          <div className="hide-mobile">Rua de São Miguel 15</div>
           <div>Scroll ↓</div>
         </div>
       </div>
     </header>
-  );
-}
-
-// ── MARQUEE STRIP ───────────────────────────────────────
-function VTMarquee() {
-  const items = ["A 19th-century house", "★ 9.8 on Booking.com", "Direct booking · best rate", "UNESCO Historic Centre", "Three years to restore", "Four apartments only", "A 19th-century house", "★ 9.8 on Booking.com", "Direct booking · best rate", "UNESCO Historic Centre", "Three years to restore", "Four apartments only"];
-  return (
-    <div style={{ borderBlock: "1px solid var(--rule)", padding: "20px 0", overflow: "hidden", background: "var(--bone-2)" }}>
-      <div className="marquee">
-        {items.map((it, i) => (
-          <span key={i} className="serif italic" style={{ fontSize: 22, color: "var(--ink-soft)", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 56 }}>
-            {it} <span style={{ display: "inline-block", width: 6, height: 6, background: "var(--ochre)", transform: "rotate(45deg)" }}></span>
-          </span>
-        ))}
-      </div>
-    </div>
   );
 }
 
@@ -235,9 +218,6 @@ function VTStory({ t }) {
           </div>
 
           <div ref={r2} className="reveal" style={{ paddingTop: 32 }}>
-            <p className="display-sm" style={{ color: "var(--ink)", marginBottom: 32, textWrap: "balance" }}>
-              {t.storyLead}
-            </p>
             <div style={{ display: "grid", gap: 20, color: "var(--ink-soft)", fontSize: 16, lineHeight: 1.7 }}>
               {t.storyBody.map((p, i) => <p key={i}>{p}</p>)}
             </div>
@@ -370,5 +350,5 @@ function VTApartments({ t, lang, onBook }) {
 }
 
 Object.assign(window, {
-  VTNav, VTHero, VTMarquee, VTStory, VTApartments, useReveal, SecHead
+  VTNav, VTHero, VTStory, VTApartments, useReveal, SecHead
 });

@@ -352,7 +352,7 @@ const VT_I18N = {
       title1: "The best",
       title2: "view in town,",
       title3: "from a quiet street.",
-      sub: "Four apartments in a 19th-century granite house in Porto's UNESCO old town. Quietly restored, rented one party at a time.",
+      sub: "Four apartments above the Douro. Quietly restored, rented one party at a time.",
       cta: "Check availability",
       ctaAlt: "View listings"
     },
@@ -363,7 +363,6 @@ const VT_I18N = {
     secReviews: { num: "vi.", label: "What guests say", title: "Across every platform,\nthe same story." },
     apt: { perNight: "Per night, low season", reserve: "Reserve", guests: "guests", bed: "bed", beds: "beds", bath: "bath", baths: "baths", from: "from" },
     storyCaption: "The doors at nº 15–17, restored to their original cobalt",
-    storyLead: "A 19th-century house in the UNESCO old town — a fine example of Porto's bourgeois functional architecture, a few minutes' walk from the Douro.",
     storyBody: [
       "The owner was born and raised on Rua da Vitória, the street that gives this house its name. Acquiring the building was a long-held dream; restoring it took close to three years. From the start, it mattered that the soul of the house remain — the cobalt doors, the granite stonework, the yellow and white tiles at the threshold, the wooden arches above the staircase, and the handrail you reach for, instinctively, on the way up.",
       "All of it preserved. All of it still here.",
@@ -373,7 +372,7 @@ const VT_I18N = {
     portoLead: "We sit on Rua de São Miguel — a quiet granite street in the UNESCO old town, minutes from the Clérigos tower and the Douro.",
     portoAddressLabel: "Address",
     walkingDistances: [["3 min", "Clérigos Tower"], ["5 min", "Livraria Lello"], ["5 min", "São Bento Station"], ["8 min", "Ribeira & the Douro"], ["10 min", "Dom Luís I Bridge"], ["12 min", "Port lodges, Gaia"]],
-    amenitiesIntro: "Direct booking includes everything below. No upsells, no add-ons at check-in.",
+    amenitiesIntro: "Everything below is included. No upsells, no add-ons at check-in.",
     amenities: [
       { label: "Concierge",        note: "Daily, 8 → 20h" },
       { label: "Welcome basket",   note: "Port, pastel de nata, fruit" },
@@ -397,7 +396,7 @@ const VT_I18N = {
       tags: { Eat: "Eat", Shop: "Shop", Hear: "Hear", Practical: "Practical", Do: "Do" }
     },
     reviews: { acrossLabel: "across", reviewsLabel: "reviews", reviewsLabelOne: "review" },
-    footer: { visit: "Visit", contact: "Contact", wander: "Wander", language: "Language", reserve: "Reserve a stay", tagline: "Four apartments in a 19th-century granite house in the UNESCO old town. Direct bookings always include the best available rate, no fees, and a welcome basket." },
+    footer: { visit: "Visit", contact: "Contact", wander: "Wander", language: "Language", reserve: "Reserve a stay", tagline: "Direct booking always includes the best available rate, no fees, and a welcome basket." },
     book: {
       title: "Reserve",
       sub: "Direct booking · best rate guaranteed",
@@ -434,7 +433,7 @@ const VT_I18N = {
       title1: "A melhor vista",
       title2: "da cidade,",
       title3: "de uma rua tranquila.",
-      sub: "Quatro apartamentos numa casa burguesa do século XIX, no centro histórico do Porto. Restaurada com calma, alugada uma família de cada vez.",
+      sub: "Quatro apartamentos sobre o Douro. Restaurada com calma, alugada uma família de cada vez.",
       cta: "Ver disponibilidade",
       ctaAlt: "Ver os apartamentos"
     },
@@ -445,7 +444,6 @@ const VT_I18N = {
     secReviews: { num: "vi.", label: "O que dizem os hóspedes", title: "Em cada plataforma,\na mesma história." },
     apt: { perNight: "Por noite, época baixa", reserve: "Reservar", guests: "hóspedes", bed: "cama", beds: "camas", bath: "casa de banho", baths: "casas de banho", from: "desde" },
     storyCaption: "As portas dos nº 15–17, restauradas no seu azul cobalto original",
-    storyLead: "Uma casa do século XIX no centro histórico classificado pela UNESCO — um belo exemplo da arquitetura burguesa funcional do Porto, a poucos minutos do Douro.",
     storyBody: [
       "O proprietário nasceu e cresceu na Rua da Vitória, a rua que dá nome a esta casa. Adquirir o edifício foi um sonho longamente acalentado; restaurá-lo levou cerca de três anos. Desde o início, era importante que a alma da casa permanecesse — as portas cobalto, a cantaria em granito, os azulejos amarelos e brancos da soleira, os arcos de madeira sobre a escadaria, e o corrimão em que se apoia, instintivamente, ao subir.",
       "Tudo preservado. Tudo ainda aqui.",
@@ -455,7 +453,7 @@ const VT_I18N = {
     portoLead: "Estamos na Rua de São Miguel — uma rua de granito tranquila no centro histórico classificado pela UNESCO, a poucos minutos da Torre dos Clérigos e do Douro.",
     portoAddressLabel: "Morada",
     walkingDistances: [["3 min", "Torre dos Clérigos"], ["5 min", "Livraria Lello"], ["5 min", "Estação de São Bento"], ["8 min", "Ribeira & o Douro"], ["10 min", "Ponte Dom Luís I"], ["12 min", "Caves do Porto, Gaia"]],
-    amenitiesIntro: "A reserva direta inclui tudo o que se segue. Sem custos adicionais, sem extras no check-in.",
+    amenitiesIntro: "Tudo o que se segue está incluído. Sem custos adicionais, sem extras no check-in.",
     amenities: [
       { label: "Acolhimento",      note: "Diário, 8h → 20h" },
       { label: "Cesto de boas-vindas", note: "Vinho do Porto, pastéis de nata, fruta" },
@@ -479,7 +477,7 @@ const VT_I18N = {
       tags: { Eat: "Comer", Shop: "Comprar", Hear: "Ouvir", Practical: "Prático", Do: "Fazer" }
     },
     reviews: { acrossLabel: "em", reviewsLabel: "avaliações", reviewsLabelOne: "avaliação" },
-    footer: { visit: "Visitar", contact: "Contactos", wander: "Explorar", language: "Idioma", reserve: "Reservar estadia", tagline: "Quatro apartamentos numa casa de granito do século XIX no centro histórico classificado pela UNESCO. As reservas directas incluem sempre a melhor tarifa disponível, sem comissões e com cesto de boas-vindas." },
+    footer: { visit: "Visitar", contact: "Contactos", wander: "Explorar", language: "Idioma", reserve: "Reservar estadia", tagline: "A reserva directa inclui sempre a melhor tarifa disponível, sem comissões e com cesto de boas-vindas." },
     book: {
       title: "Reservar",
       sub: "Reserva directa · melhor preço garantido",
@@ -516,7 +514,7 @@ const VT_I18N = {
       title1: "La mejor vista",
       title2: "de la ciudad,",
       title3: "desde una calle tranquila.",
-      sub: "Cuatro apartamentos en una casa burguesa del siglo XIX, en el centro histórico de Oporto. Restaurada con calma, alquilada de una familia en una.",
+      sub: "Cuatro apartamentos sobre el Duero. Restaurada con calma, alquilada de una familia en una.",
       cta: "Ver disponibilidad",
       ctaAlt: "Ver los apartamentos"
     },
@@ -527,7 +525,6 @@ const VT_I18N = {
     secReviews: { num: "vi.", label: "Lo que dicen los huéspedes", title: "En cada plataforma,\nla misma historia." },
     apt: { perNight: "Por noche, temporada baja", reserve: "Reservar", guests: "huéspedes", bed: "cama", beds: "camas", bath: "baño", baths: "baños", from: "desde" },
     storyCaption: "Las puertas de los nº 15–17, restauradas a su cobalto original",
-    storyLead: "Una casa del siglo XIX en el casco antiguo declarado Patrimonio de la Humanidad — un magnífico ejemplo de la arquitectura burguesa funcional de Oporto, a pocos minutos del Duero.",
     storyBody: [
       "El propietario nació y se crio en la Rua da Vitória, la calle que da nombre a esta casa. Adquirir el edificio fue un sueño largamente acariciado; restaurarlo llevó casi tres años. Desde el principio, importó que el alma de la casa permaneciera — las puertas cobalto, la cantería de granito, los azulejos amarillos y blancos del umbral, los arcos de madera sobre la escalera, y el pasamanos al que uno se aferra, instintivamente, al subir.",
       "Todo conservado. Todo aún aquí.",
@@ -537,7 +534,7 @@ const VT_I18N = {
     portoLead: "Estamos en la Rua de São Miguel — una calle tranquila de granito en el casco antiguo declarado Patrimonio de la Humanidad, a pocos minutos de la Torre de los Clérigos y del Duero.",
     portoAddressLabel: "Dirección",
     walkingDistances: [["3 min", "Torre de los Clérigos"], ["5 min", "Librería Lello"], ["5 min", "Estación de São Bento"], ["8 min", "Ribera & el Duero"], ["10 min", "Puente D. Luís I"], ["12 min", "Bodegas de Oporto, Gaia"]],
-    amenitiesIntro: "La reserva directa incluye todo lo siguiente. Sin extras, sin sorpresas al llegar.",
+    amenitiesIntro: "Todo lo siguiente está incluido. Sin extras, sin sorpresas al llegar.",
     amenities: [
       { label: "Conserjería",       note: "Diaria, 8h → 20h" },
       { label: "Cesta de bienvenida", note: "Oporto, pastel de nata, fruta" },
@@ -561,7 +558,7 @@ const VT_I18N = {
       tags: { Eat: "Comer", Shop: "Comprar", Hear: "Escuchar", Practical: "Práctico", Do: "Hacer" }
     },
     reviews: { acrossLabel: "en", reviewsLabel: "reseñas", reviewsLabelOne: "reseña" },
-    footer: { visit: "Visitar", contact: "Contacto", wander: "Explorar", language: "Idioma", reserve: "Reservar estancia", tagline: "Cuatro apartamentos en una casa de granito del s. XIX en el casco antiguo declarado Patrimonio de la Humanidad. Las reservas directas siempre incluyen la mejor tarifa, sin comisiones y con cesta de bienvenida." },
+    footer: { visit: "Visitar", contact: "Contacto", wander: "Explorar", language: "Idioma", reserve: "Reservar estancia", tagline: "La reserva directa siempre incluye la mejor tarifa, sin comisiones y con cesta de bienvenida." },
     book: {
       title: "Reservar", sub: "Reserva directa · mejor precio garantizado",
       checkin: "Llegada", checkout: "Salida", guests: "Huéspedes",
@@ -582,7 +579,7 @@ const VT_I18N = {
       title1: "La plus belle vue",
       title2: "sur la ville,",
       title3: "depuis une rue paisible.",
-      sub: "Quatre appartements dans une maison bourgeoise du XIXᵉ siècle, au cœur du Porto historique classé UNESCO. Restaurée doucement, louée à une famille à la fois.",
+      sub: "Quatre appartements au-dessus du Douro. Restaurée doucement, louée à une famille à la fois.",
       cta: "Voir les disponibilités", ctaAlt: "Voir les appartements"
     },
     secStay: { num: "i.", label: "Les Séjours", title: "Quatre appartements,\nquatre tempéraments." },
@@ -592,7 +589,6 @@ const VT_I18N = {
     secReviews: { num: "vi.", label: "Ce que disent les hôtes", title: "Sur chaque plateforme,\nla même histoire." },
     apt: { perNight: "Par nuit, basse saison", reserve: "Réserver", guests: "voyageurs", bed: "lit", beds: "lits", bath: "salle de bain", baths: "salles de bain", from: "à partir de" },
     storyCaption: "Les portes des nº 15–17, restaurées dans leur cobalt d'origine",
-    storyLead: "Une maison du XIXᵉ siècle au cœur du Porto historique classé UNESCO — un bel exemple de l'architecture bourgeoise fonctionnelle de Porto, à quelques minutes du Douro.",
     storyBody: [
       "Le propriétaire est né et a grandi sur la Rua da Vitória, la rue qui donne son nom à cette maison. Acquérir le bâtiment était un rêve longuement caressé ; le restaurer a pris près de trois ans. Dès le départ, il importait que l'âme de la maison demeure — les portes cobalt, la pierre de granit, les azulejos jaunes et blancs du seuil, les arches en bois au-dessus de l'escalier, et la rampe que l'on saisit, instinctivement, en montant.",
       "Tout est préservé. Tout est encore là.",
@@ -602,7 +598,7 @@ const VT_I18N = {
     portoLead: "Nous sommes Rua de São Miguel — une rue de granit paisible au cœur du Porto historique classé UNESCO, à quelques minutes de la Tour des Clercs et du Douro.",
     portoAddressLabel: "Adresse",
     walkingDistances: [["3 min", "Tour des Clercs"], ["5 min", "Librairie Lello"], ["5 min", "Gare de São Bento"], ["8 min", "Ribeira & le Douro"], ["10 min", "Pont D. Luís I"], ["12 min", "Caves à Porto, Gaia"]],
-    amenitiesIntro: "La réservation directe inclut tout ce qui suit. Sans frais cachés, sans extras à l'arrivée.",
+    amenitiesIntro: "Tout ce qui suit est inclus. Sans frais cachés, sans extras à l'arrivée.",
     amenities: [
       { label: "Accueil",          note: "Tous les jours, 8h → 20h" },
       { label: "Panier d'accueil", note: "Porto, pastel de nata, fruits" },
@@ -626,7 +622,7 @@ const VT_I18N = {
       tags: { Eat: "Manger", Shop: "Acheter", Hear: "Écouter", Practical: "Pratique", Do: "Faire" }
     },
     reviews: { acrossLabel: "sur", reviewsLabel: "avis", reviewsLabelOne: "avis" },
-    footer: { visit: "Visiter", contact: "Contact", wander: "Flâner", language: "Langue", reserve: "Réserver un séjour", tagline: "Quatre appartements dans une maison de granit du XIXᵉ siècle au cœur du Porto historique classé UNESCO. Les réservations directes incluent toujours le meilleur tarif disponible, sans frais et avec un panier d'accueil." },
+    footer: { visit: "Visiter", contact: "Contact", wander: "Flâner", language: "Langue", reserve: "Réserver un séjour", tagline: "La réservation directe inclut toujours le meilleur tarif disponible, sans frais et avec un panier d'accueil." },
     book: {
       title: "Réserver", sub: "Réservation directe · meilleur tarif garanti",
       checkin: "Arrivée", checkout: "Départ", guests: "Voyageurs",
@@ -647,7 +643,7 @@ const VT_I18N = {
       title1: "도시에서",
       title2: "가장 아름다운 풍경,",
       title3: "조용한 골목에서.",
-      sub: "유네스코 세계유산 포르투 구시가지에 자리한 19세기 화강암 저택의 네 개 아파트. 천천히 복원되어, 한 번에 한 팀씩만 맞이합니다.",
+      sub: "도루 강 위의 네 개 아파트. 천천히 복원되어, 한 번에 한 팀씩만 맞이합니다.",
       cta: "예약 가능 확인", ctaAlt: "객실 보기"
     },
     secStay: { num: "i.", label: "객실", title: "네 개의 아파트,\n네 개의 분위기." },
@@ -657,7 +653,6 @@ const VT_I18N = {
     secReviews: { num: "vi.", label: "손님들의 이야기", title: "어느 플랫폼에서나,\n같은 이야기." },
     apt: { perNight: "1박 기준, 비수기", reserve: "예약", guests: "명", bed: "침대", beds: "침대", bath: "욕실", baths: "욕실", from: "부터" },
     storyCaption: "15–17번지의 문, 본래의 코발트색으로 복원되었습니다",
-    storyLead: "유네스코 세계유산 구시가지에 자리한 19세기 가옥 — 포르투의 부르주아 기능주의 건축의 아름다운 사례이며, 도루 강에서 도보 몇 분 거리에 있습니다.",
     storyBody: [
       "주인은 이 집에 이름을 준 거리, 히베이라 다 비토리아에서 태어나고 자랐습니다. 이 건물을 사들이는 것은 오래 품어온 꿈이었고, 복원에는 약 3년이 걸렸습니다. 처음부터 가장 중요했던 것은 집의 영혼을 그대로 두는 일이었습니다 — 코발트색 문, 화강암의 벽, 입구의 노랗고 흰 타일, 계단 위의 목조 아치, 그리고 오를 때 무심코 손이 가닿는 그 난간까지.",
       "모두 보존되었습니다. 모두 여기 있습니다.",
@@ -667,7 +662,7 @@ const VT_I18N = {
     portoLead: "우리는 상 미겔 거리에 있습니다 — 유네스코 세계유산 구시가지의 조용한 화강암 거리, 클레리구스 탑과 도루 강에서 단 몇 분 거리.",
     portoAddressLabel: "주소",
     walkingDistances: [["3분", "클레리구스 탑"], ["5분", "렐루 서점"], ["5분", "상 벤투 역"], ["8분", "히베이라 & 도루 강"], ["10분", "동 루이스 1세 다리"], ["12분", "포트 와인 셀러, 가이아"]],
-    amenitiesIntro: "공식 예약 시 아래 모든 항목이 포함됩니다. 숨겨진 비용도, 체크인 시 추가 결제도 없습니다.",
+    amenitiesIntro: "아래의 모든 항목이 포함됩니다. 숨겨진 비용도, 체크인 시 추가 결제도 없습니다.",
     amenities: [
       { label: "컨시어지",         note: "매일 8 → 20시" },
       { label: "웰컴 바스켓",       note: "포르투 와인, 파스텔 드 나타, 과일" },
@@ -691,7 +686,7 @@ const VT_I18N = {
       tags: { Eat: "먹기", Shop: "장보기", Hear: "듣기", Practical: "생활", Do: "체험" }
     },
     reviews: { acrossLabel: "·", reviewsLabel: "건의 후기", reviewsLabelOne: "건의 후기" },
-    footer: { visit: "방문", contact: "문의", wander: "둘러보기", language: "언어", reserve: "예약하기", tagline: "유네스코 세계유산 구시가지에 자리한 19세기 화강암 저택의 네 개 아파트. 공식 예약은 항상 최저가가 보장되며, 수수료가 없고 웰컴 바스켓이 포함됩니다." },
+    footer: { visit: "방문", contact: "문의", wander: "둘러보기", language: "언어", reserve: "예약하기", tagline: "공식 예약은 항상 최저가가 보장되며, 수수료가 없고 웰컴 바스켓이 포함됩니다." },
     book: {
       title: "예약", sub: "공식 예약 · 최저가 보장",
       checkin: "체크인", checkout: "체크아웃", guests: "인원",
@@ -712,7 +707,7 @@ const VT_I18N = {
       title1: "街でいちばん",
       title2: "美しい眺めを、",
       title3: "静かな路地から。",
-      sub: "ユネスコ世界遺産であるポルト旧市街の19世紀花崗岩邸宅にある、4つのアパートメント。静かに修復され、一度に一組だけをお迎えします。",
+      sub: "ドウロ川を見下ろす4つのアパートメント。静かに修復され、一度に一組だけをお迎えします。",
       cta: "空室を確認", ctaAlt: "客室を見る"
     },
     secStay:    { num: "i.",  label: "客室",         title: "4つのアパートメント、\n4つの趣。" },
@@ -722,7 +717,6 @@ const VT_I18N = {
     secReviews: { num: "vi.", label: "お客様の声",     title: "どの予約サイトでも、\n同じ物語。" },
     apt: { perNight: "1泊あたり、オフシーズン", reserve: "ご予約", guests: "名様", bed: "ベッド", beds: "ベッド", bath: "バスルーム", baths: "バスルーム", from: "より" },
     storyCaption: "15–17番地の扉、本来のコバルトブルーに修復されました",
-    storyLead: "ユネスコ世界遺産の旧市街にある19世紀の家——ポルトのブルジョワ機能主義建築の美しい一例で、ドウロ川から徒歩数分の場所にあります。",
     storyBody: [
       "オーナーは、この家に名を冠したヴィトリア通りで生まれ育ちました。この建物を手に入れることは長年の夢で、修復にはおよそ3年を要しました。最初から大切にしたのは、家の魂を残すこと——コバルトブルーの扉、花崗岩の石造り、入口の黄色と白のタイル、階段の上の木製アーチ、そして昇るときに思わず手をかける、あの手すりまで。",
       "すべて、保たれています。すべて、まだここに。",
@@ -732,7 +726,7 @@ const VT_I18N = {
     portoLead: "わたしたちはサン・ミゲル通りに——ユネスコ世界遺産の旧市街にある静かな花崗岩の通りで、クレリゴスの塔とドウロ川から数分のところにあります。",
     portoAddressLabel: "住所",
     walkingDistances: [["3分", "クレリゴスの塔"], ["5分", "レロ書店"], ["5分", "サン・ベント駅"], ["8分", "リベイラ & ドウロ川"], ["10分", "ドン・ルイス1世橋"], ["12分", "ポートワイン蔵, ガイア"]],
-    amenitiesIntro: "公式予約には、以下のすべてが含まれます。隠れた費用も、チェックイン時の追加料金もありません。",
+    amenitiesIntro: "以下のすべてが含まれます。隠れた費用も、チェックイン時の追加料金もありません。",
     amenities: [
       { label: "コンシェルジュ",       note: "毎日 8時 → 20時" },
       { label: "ウェルカムバスケット", note: "ポートワイン、パステル・デ・ナタ、果物" },
@@ -756,7 +750,7 @@ const VT_I18N = {
       tags: { Eat: "食べる", Shop: "買う", Hear: "聴く", Practical: "暮らし", Do: "体験する" }
     },
     reviews: { acrossLabel: "·", reviewsLabel: "件のレビュー", reviewsLabelOne: "件のレビュー" },
-    footer: { visit: "訪れる", contact: "お問い合わせ", wander: "散策", language: "言語", reserve: "ご予約", tagline: "ユネスコ世界遺産旧市街にある19世紀の花崗岩の邸宅にある4つのアパートメント。公式予約は常に最低価格保証で、手数料なし、ウェルカムバスケット付きです。" },
+    footer: { visit: "訪れる", contact: "お問い合わせ", wander: "散策", language: "言語", reserve: "ご予約", tagline: "公式予約は常に最低価格保証で、手数料なし、ウェルカムバスケット付きです。" },
     book: {
       title: "ご予約", sub: "公式予約 · 最低価格保証",
       checkin: "チェックイン", checkout: "チェックアウト", guests: "人数",

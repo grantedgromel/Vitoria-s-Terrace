@@ -3,7 +3,9 @@
 
 
 // ── PORTO / Location ────────────────────────────────────
-function VTPorto({ t }) {
+const VT_OPEN_IN_MAPS = { EN: "Open in Maps", PT: "Abrir no Maps", ES: "Abrir en Maps", FR: "Ouvrir dans Maps", KR: "지도에서 열기", JA: "マップで開く" };
+
+function VTPorto({ t, lang }) {
   return (
     <section id="porto" className="section" style={{ background: "var(--ink)", color: "var(--bone)" }}>
       <div className="container">
@@ -25,20 +27,26 @@ function VTPorto({ t }) {
               {t.portoLead}
             </p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, background: "rgba(250,248,244,0.15)" }}>
-              {t.walkingDistances.map(([k, v], i) => (
-                <div key={i} style={{ background: "var(--ink)", padding: "20px 24px" }}>
-                  <div className="serif italic" style={{ fontSize: 26, color: "var(--ochre)" }}>{k}</div>
-                  <div style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", opacity: 0.7, marginTop: 4 }}>{v}</div>
-                </div>
-              ))}
-            </div>
-
             <div style={{ paddingTop: 24, borderTop: "1px solid rgba(250,248,244,0.15)" }}>
               <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 12 }}>{t.portoAddressLabel}</div>
               <div className="serif" style={{ fontSize: 22, fontStyle: "italic" }}>{VT_DATA.meta.address}</div>
               <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8, fontFamily: "var(--mono)" }}>{VT_DATA.meta.coords}</div>
             </div>
+
+            {/* Static styled map. Pin overlay is positioned by % computed at render time. */}
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Rua+de+S%C3%A3o+Miguel+15+Porto"
+              target="_blank" rel="noopener"
+              className="vt-porto-map"
+              aria-label="Open Rua de São Miguel 15 in Google Maps"
+            >
+              <img src="assets/map.jpg" alt="Map of Porto's old town centred on Rua de São Miguel" />
+              <span className="vt-porto-map__pin" style={{ left: "29.79%", top: "44.53%" }} aria-hidden></span>
+              <span className="vt-porto-map__cta">
+                {VT_OPEN_IN_MAPS[lang] || VT_OPEN_IN_MAPS.EN} <span className="arr"></span>
+              </span>
+              <span className="vt-porto-map__attr">Map © OpenStreetMap</span>
+            </a>
           </div>
         </div>
       </div>
@@ -140,7 +148,6 @@ function VTReviews({ t }) {
             <span className="serif italic" style={{ fontSize: 32, color: "var(--ink)" }}>{totalCount.toLocaleString()}+</span>
             <span className="eyebrow">{t.reviews.reviewsLabel} {t.reviews.acrossLabel} {scores.length} {scores.length === 1 ? "platform" : "platforms"}</span>
           </div>
-          <div className="eyebrow" style={{ color: "var(--ochre-deep)" }}>★ Guests' Choice · Travellers' Choice · Loved by Guests</div>
         </div>
 
         {/* Quote — single, auto-rotating, large prev/next chevrons flanking the quote */}
@@ -235,8 +242,7 @@ function VTFooter({ t, lang, onLang, onBook }) {
         <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr)", gap: 56, marginBottom: 72 }}>
           <div>
             <img src="assets/logo.png" alt="Vitória's Terrace"
-              style={{ height: 96, width: "auto", filter: "invert(1) brightness(1.05)", marginBottom: 20 }} />
-            <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 24 }}>{t.hero.eyebrow}</div>
+              style={{ height: 96, width: "auto", filter: "invert(1) brightness(1.05)", marginBottom: 28 }} />
             <p className="body" style={{ color: "rgba(250,248,244,0.7)", maxWidth: 380, fontSize: 14 }}>
               {t.footer.tagline}
             </p>

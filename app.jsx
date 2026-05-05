@@ -44,7 +44,7 @@ function App() {
       <VTHero t={t} onBook={() => openBooking()} />
       <VTApartments t={t} lang={lang} onBook={openBooking} />
       <VTStory t={t} />
-      <VTPorto t={t} />
+      <VTPorto t={t} lang={lang} />
       <VTRecommendations t={t} lang={lang} />
       <VTAmenities t={t} />
       <VTReviews t={t} />
