@@ -243,7 +243,11 @@ function VTReviews({ t }) {
 }
 
 // ── FOOTER ──────────────────────────────────────────────
-function VTFooter({ t, lang, onLang, onBook }) {
+// `currentPage` mirrors the prop in VTNav. Wander-column anchors prefix with
+// `index.html` when not on home; Recommendations entry always points to its own page.
+function VTFooter({ t, lang, onLang, onBook, currentPage }) {
+  const isHome = currentPage !== "recs";
+  const homePrefix = isHome ? "" : "index.html";
   return (
     <footer id="contact" style={{ background: "var(--ink)", color: "var(--bone)", paddingTop: 96, paddingBottom: 40 }}>
       <div className="container">
@@ -293,11 +297,13 @@ function VTFooter({ t, lang, onLang, onBook }) {
           <div>
             <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 20 }}>{t.footer.wander}</div>
             <div style={{ display: "grid", gap: 10, fontSize: 14 }}>
-              <a href="#stays">{t.nav.stays}</a>
-              <a href="#story">{t.nav.story}</a>
-              <a href="#porto">{t.nav.porto}</a>
-              <a href="#recs">{t.nav.recs}</a>
-              <a href="#contact">{t.nav.contact}</a>
+              <a href={`${homePrefix}#stays`}>{t.nav.stays}</a>
+              <a href={`${homePrefix}#story`}>{t.nav.story}</a>
+              <a href={`${homePrefix}#porto`}>{t.nav.porto}</a>
+              <a href={isHome ? "recommendations.html" : "#"}
+                 aria-current={!isHome ? "page" : undefined}
+                 style={!isHome ? { color: "var(--ochre)" } : undefined}>{t.nav.recs}</a>
+              <a href={`${homePrefix}#contact`}>{t.nav.contact}</a>
             </div>
 
             <div className="eyebrow" style={{ color: "var(--ochre)", marginTop: 32, marginBottom: 16 }}>{t.footer.language}</div>

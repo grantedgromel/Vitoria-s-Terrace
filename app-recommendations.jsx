@@ -1,13 +1,8 @@
-// Vitoria's Terrace — App root (home page) + Tweaks integration
+// Vitoria's Terrace — App root (recommendations page)
+// Mirrors app.jsx but renders only the chrome (nav + footer + booking modal +
+// tweaks panel) around the Recommendations section. Shares the same
+// localStorage-backed language state as the home page.
 
-// Soft-redirect old `#recs` deep links to the new dedicated page. Runs before
-// React mounts so users never see a flash of the old anchor target.
-if (typeof window !== "undefined" && window.location.hash === "#recs") {
-  window.location.replace("recommendations.html");
-}
-
-// Read persisted language from localStorage (set on either page) so the choice
-// survives the navigation between home and recs.
 function readLang() {
   try { return localStorage.getItem("vt-lang") || "EN"; } catch (_) { return "EN"; }
 }
@@ -15,7 +10,7 @@ function writeLang(v) {
   try { localStorage.setItem("vt-lang", v); } catch (_) { /* no-op */ }
 }
 
-function App() {
+function AppRecommendations() {
   const [lang, setLangState] = React.useState(readLang);
   const setLang = (v) => { writeLang(v); setLangState(v); };
   const [bookOpen, setBookOpen] = React.useState(false);
@@ -47,6 +42,11 @@ function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Nav assumes a hero behind it; on this page there isn't one. Force the
+  // `scrolled` state immediately so the nav renders in solid-paper mode from
+  // first paint (no transparent state with white logo on a white page).
+  React.useEffect(() => { setScrolled(true); }, []);
+
   const t = window.VT_I18N[lang] || window.VT_I18N.EN;
 
   const openBooking = (aptId) => {
@@ -56,14 +56,11 @@ function App() {
 
   return (
     <>
-      <VTNav t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} scrolled={scrolled} currentPage="home" />
-      <VTHero t={t} onBook={() => openBooking()} />
-      <VTApartments t={t} lang={lang} onBook={openBooking} />
-      <VTStory t={t} />
-      <VTPorto t={t} lang={lang} />
-      <VTAmenities t={t} />
-      <VTReviews t={t} />
-      <VTFooter t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} currentPage="home" />
+      <VTNav t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} scrolled={scrolled} currentPage="recs" />
+      <main style={{ paddingTop: 80 }}>
+        <VTRecommendations t={t} lang={lang} />
+      </main>
+      <VTFooter t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} currentPage="recs" />
 
       <VTBookingModal open={bookOpen} onClose={() => setBookOpen(false)} t={t} lang={lang} initialAptId={initialApt} />
 
@@ -95,4 +92,4 @@ function App() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById("app"));
-root.render(<App />);
+root.render(<AppRecommendations />);

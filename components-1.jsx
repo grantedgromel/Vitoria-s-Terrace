@@ -36,9 +36,17 @@ function SecHead({ num, label, title }) {
 }
 
 // ── NAV ─────────────────────────────────────────────────
-function VTNav({ t, lang, onLang, onBook, scrolled }) {
+// `currentPage` is "home" or "recs". Anchors that target home sections (stays/story/
+// porto/contact) need an `index.html` prefix when we're on a non-home page; the
+// Recommendations link always points at `recommendations.html`. The Recommendations
+// item also gets an active-state visual when we're already on its page.
+function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const isHome = currentPage !== "recs";
+  const homePrefix = isHome ? "" : "index.html";
+  const recsHref = isHome ? "recommendations.html" : "#";   // already on recs → no-op anchor
+  const recsActive = currentPage === "recs";
 
   const navStyle = {
     position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
@@ -56,6 +64,9 @@ function VTNav({ t, lang, onLang, onBook, scrolled }) {
     letterSpacing: "0.01em",
     textTransform: "none"
   };
+  const recsLink = recsActive
+    ? { ...link, color: "var(--porto)", borderBottom: "1px solid currentColor", paddingBottom: 2 }
+    : link;
   const navBtn = {
     fontFamily: "var(--sans)",
     fontSize: 11,
@@ -64,13 +75,16 @@ function VTNav({ t, lang, onLang, onBook, scrolled }) {
     textTransform: "uppercase"
   };
 
+  // Wordmark anchor: home page → top of page, recs page → home root
+  const logoHref = isHome ? "#top" : "index.html";
+
   return (
     <nav style={navStyle}>
       <div className="container" style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         paddingBlock: scrolled ? 18 : 26, transition: "padding 0.3s ease"
       }}>
-        <a href="#top" style={{ display: "flex", alignItems: "center", lineHeight: 0 }} aria-label="Vitória's Terrace">
+        <a href={logoHref} style={{ display: "flex", alignItems: "center", lineHeight: 0 }} aria-label="Vitória's Terrace">
           <img src="assets/logo.png" alt="Vitória's Terrace"
             style={{
               height: 56, width: "auto", display: "block",
@@ -80,11 +94,11 @@ function VTNav({ t, lang, onLang, onBook, scrolled }) {
         </a>
 
         <div className="hide-mobile" style={{ display: "flex", alignItems: "center", gap: 36 }}>
-          <a href="#stays" style={link}>{t.nav.stays}</a>
-          <a href="#story" style={link}>{t.nav.story}</a>
-          <a href="#porto" style={link}>{t.nav.porto}</a>
-          <a href="#recs" style={link}>{t.nav.recs}</a>
-          <a href="#contact" style={link}>{t.nav.contact}</a>
+          <a href={`${homePrefix}#stays`} style={link}>{t.nav.stays}</a>
+          <a href={`${homePrefix}#story`} style={link}>{t.nav.story}</a>
+          <a href={`${homePrefix}#porto`} style={link}>{t.nav.porto}</a>
+          <a href={recsHref} style={recsLink} aria-current={recsActive ? "page" : undefined}>{t.nav.recs}</a>
+          <a href={`${homePrefix}#contact`} style={link}>{t.nav.contact}</a>
 
           <div style={{ position: "relative" }}>
             <button onClick={() => setLangOpen(!langOpen)} style={{ ...navBtn, display: "flex", alignItems: "center", gap: 6 }}>
@@ -130,9 +144,21 @@ function VTNav({ t, lang, onLang, onBook, scrolled }) {
           background: "var(--paper)", color: "var(--ink)",
           borderTop: "1px solid var(--rule)", padding: "32px 24px"
         }}>
-          {[["#stays", t.nav.stays], ["#story", t.nav.story], ["#porto", t.nav.porto], ["#recs", t.nav.recs], ["#contact", t.nav.contact]].map(([h, l]) => (
+          {[
+            [`${homePrefix}#stays`, t.nav.stays, false],
+            [`${homePrefix}#story`, t.nav.story, false],
+            [`${homePrefix}#porto`, t.nav.porto, false],
+            [recsHref, t.nav.recs, recsActive],
+            [`${homePrefix}#contact`, t.nav.contact, false]
+          ].map(([h, l, active]) => (
             <a key={h} href={h} onClick={() => setOpen(false)}
-              style={{ display: "block", padding: "16px 0", borderBottom: "1px solid var(--rule-soft)", ...link }}>
+              aria-current={active ? "page" : undefined}
+              style={{
+                display: "block", padding: "16px 0",
+                borderBottom: "1px solid var(--rule-soft)",
+                ...link,
+                color: active ? "var(--porto)" : "var(--ink)"
+              }}>
               {l}
             </a>
           ))}
