@@ -152,7 +152,7 @@ a { color: inherit; text-decoration: none; }
 }
 .btn--ghost:hover { background: var(--bone); color: var(--ink); }
 
-.btn--sm { padding: 12px 18px; font-size: 11px; }
+.btn--sm { padding: 14px 20px; font-size: 11px; }
 
 /* arrow */
 .arr { display: inline-block; width: 20px; height: 1px; background: currentColor; position: relative; }
@@ -404,7 +404,7 @@ a { color: inherit; text-decoration: none; }
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 14px;
+  padding: 12px 18px;
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -548,7 +548,7 @@ a { color: inherit; text-decoration: none; }
   display: flex; flex-direction: column; gap: 6px;
 }
 .vt-rec-card__name {
-  font-size: 21px;
+  font-size: clamp(18px, 2.5vw, 21px);
   font-style: italic;
   font-weight: 400;
   line-height: 1.2;
@@ -575,7 +575,7 @@ a { color: inherit; text-decoration: none; }
 }
 .vt-practical__item {
   background: var(--paper);
-  padding: 22px 28px;
+  padding: clamp(16px, 4vw, 22px) clamp(20px, 4vw, 28px);
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 16px;
@@ -646,13 +646,14 @@ a { color: inherit; text-decoration: none; }
   animation: slide 0.45s cubic-bezier(.2, .8, .2, 1);
 }
 .vt-drawer__close {
-  position: absolute; top: 20px; right: 24px;
+  position: absolute; top: 16px; right: 16px;
   z-index: 2;
   font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--bone);
   background: rgba(20, 18, 15, 0.55);
-  padding: 8px 14px;
+  padding: 15px 20px;
   border-radius: 100px;
+  min-height: 44px;
   transition: background 0.25s ease;
 }
 .vt-drawer__close:hover { background: var(--ink); }
@@ -663,7 +664,7 @@ a { color: inherit; text-decoration: none; }
 }
 .vt-drawer__photo img { width: 100%; height: 100%; object-fit: cover; }
 .vt-drawer__body {
-  padding: 32px 40px 56px;
+  padding: clamp(20px, 5vw, 32px) clamp(20px, 5vw, 40px) clamp(32px, 7vw, 56px);
   display: flex; flex-direction: column; gap: 14px;
 }
 .vt-drawer__subtag { color: var(--ochre-deep); }
@@ -691,6 +692,104 @@ a { color: inherit; text-decoration: none; }
   font-size: 15px; font-style: italic; color: var(--ink-soft); line-height: 1.5;
 }
 .vt-drawer__cta { margin-top: 12px; align-self: flex-start; }
+
+/* ─────────────────────────────────────────────────────────
+   MOBILE COMPONENT GRIDS
+   These classes own grid templates that previously lived inline
+   in JSX, so a single @media block can collapse them on phones.
+   Convention: any element with one of these classes must NOT
+   set grid-template-columns inline (inline wins specificity).
+   ───────────────────────────────────────────────────────── */
+.vt-story-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 6vw, 96px);
+  align-items: start;
+}
+.vt-heritage-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.vt-heritage-grid > * { padding: 24px 16px; text-align: center; }
+.vt-heritage-grid > *:not(:last-child) { border-right: 1px solid var(--rule); }
+
+.vt-apt-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+}
+
+.vt-porto-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: stretch;
+}
+.vt-porto-grid__media { width: 100%; height: 100%; min-height: 480px; }
+
+.vt-amenities-outer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: clamp(32px, 5vw, 96px);
+}
+
+.vt-review-carousel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "prev quote next";
+  align-items: center;
+  gap: clamp(16px, 3vw, 40px);
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-block: clamp(24px, 4vw, 48px);
+}
+.vt-review-carousel > :nth-child(1) { grid-area: prev; }
+.vt-review-carousel > :nth-child(2) { grid-area: quote; }
+.vt-review-carousel > :nth-child(3) { grid-area: next; }
+
+.vt-footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 56px;
+  margin-bottom: 72px;
+}
+
+.vt-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 720px) {
+  .vt-story-grid,
+  .vt-apt-content,
+  .vt-porto-grid,
+  .vt-amenities-outer { grid-template-columns: 1fr; gap: 32px; }
+
+  .vt-heritage-grid { grid-template-columns: 1fr; }
+  .vt-heritage-grid > *:not(:last-child) {
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .vt-porto-grid__media { min-height: 0; aspect-ratio: 4/3; }
+
+  .vt-review-carousel {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "quote quote"
+      "prev  next";
+    gap: 24px;
+  }
+  .vt-review-carousel > :nth-child(1) { justify-self: center; }
+  .vt-review-carousel > :nth-child(3) { justify-self: center; }
+
+  .vt-footer-grid { grid-template-columns: 1fr; gap: 48px; margin-bottom: 56px; }
+
+  .vt-form-row { grid-template-columns: 1fr; gap: 20px; }
+}
 
 /* ─────────────────────────────────────────────────────────
    PRINT STYLESHEET — branded one-pager (no photos in print)

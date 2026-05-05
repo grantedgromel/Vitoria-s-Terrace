@@ -87,7 +87,7 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
         <a href={logoHref} style={{ display: "flex", alignItems: "center", lineHeight: 0 }} aria-label="Vitória's Terrace">
           <img src="assets/logo.png" alt="Vitória's Terrace"
             style={{
-              height: 56, width: "auto", display: "block",
+              height: "clamp(44px, 8vw, 56px)", width: "auto", display: "block",
               filter: scrolled ? "none" : "invert(1) brightness(1.05)",
               transition: "filter 0.4s ease"
             }} />
@@ -101,7 +101,8 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
           <a href={`${homePrefix}#contact`} style={link}>{t.nav.contact}</a>
 
           <div style={{ position: "relative" }}>
-            <button onClick={() => setLangOpen(!langOpen)} style={{ ...navBtn, display: "flex", alignItems: "center", gap: 6 }}>
+            <button onClick={() => setLangOpen(!langOpen)} aria-label="Language" aria-expanded={langOpen}
+              style={{ ...navBtn, display: "flex", alignItems: "center", gap: 6, padding: "12px 8px", minHeight: 44 }}>
               {lang} <span style={{ fontSize: 8, opacity: 0.6 }}>▾</span>
             </button>
             {langOpen && (
@@ -134,7 +135,9 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
           </button>
         </div>
 
-        <button className="show-mobile" onClick={() => setOpen(!open)} style={{ ...navBtn }}>
+        <button className="show-mobile" onClick={() => setOpen(!open)}
+          aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open}
+          style={{ ...navBtn, padding: "12px 14px", minHeight: 44 }}>
           {open ? "Close" : "Menu"}
         </button>
       </div>
@@ -162,6 +165,27 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
               {l}
             </a>
           ))}
+
+          <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--rule)" }}>
+            <div className="eyebrow" style={{ marginBottom: 12, color: "var(--granite)" }}>{t.footer.language}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+              {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
+                <button key={l}
+                  onClick={() => { onLang(l); setOpen(false); }}
+                  style={{
+                    ...navBtn,
+                    padding: "10px 14px",
+                    minHeight: 44,
+                    border: "1px solid " + (l === lang ? "var(--ink)" : "var(--rule)"),
+                    background: l === lang ? "var(--ink)" : "transparent",
+                    color: l === lang ? "var(--bone)" : "var(--ink)"
+                  }}>
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <button className="btn btn--primary" onClick={() => { onBook(); setOpen(false); }} style={{ marginTop: 24, width: "100%", justifyContent: "center" }}>
             {t.nav.book}
           </button>
@@ -232,7 +256,7 @@ function VTStory({ t }) {
       <div className="container">
         <SecHead num={t.secStory.num} label={t.secStory.label} title={t.secStory.title} />
 
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.1fr)", gap: "clamp(32px, 6vw, 96px)", alignItems: "start" }}>
+        <div className="vt-story-grid">
           <div ref={r1} className="reveal">
             <div className="img-frame" style={{ aspectRatio: "4/5" }}>
               <img src="assets/doors.jpg" alt={t.storyCaption} className="img-cover" />
@@ -245,16 +269,9 @@ function VTStory({ t }) {
               {t.storyBody.map((p, i) => <p key={i}>{p}</p>)}
             </div>
 
-            <div ref={r3} className="reveal" style={{
-              marginTop: 56, display: "grid", gridTemplateColumns: "repeat(3, 1fr)",
-              borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)"
-            }}>
+            <div ref={r3} className="reveal vt-heritage-grid" style={{ marginTop: 56 }}>
               {t.storyHeritage.map(([k, v], i) => (
-                <div key={i} style={{
-                  padding: "24px 16px",
-                  borderRight: i < 2 ? "1px solid var(--rule)" : "none",
-                  textAlign: "center"
-                }}>
+                <div key={i}>
                   <div className="serif" style={{ fontSize: 32, fontStyle: "italic", letterSpacing: "-0.01em" }}>{k}</div>
                   <div className="eyebrow" style={{ marginTop: 6, fontSize: 10 }}>{v}</div>
                 </div>
@@ -284,18 +301,19 @@ function VTApartments({ t, lang, onBook }) {
         {/* tabs */}
         <div ref={ref} className="reveal" style={{
           display: "flex", borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)",
-          marginBottom: 56, overflowX: "auto"
+          marginBottom: 56, overflowX: "auto", scrollSnapType: "x mandatory"
         }}>
           {apts.map((a) => (
             <button key={a.id}
               onClick={() => setActive(a.id)}
               style={{
-                flex: "1 1 0", minWidth: 200, textAlign: "left",
-                padding: "26px 24px",
+                flex: "1 1 0", minWidth: 160, textAlign: "left",
+                padding: "clamp(18px, 4vw, 26px) clamp(16px, 3vw, 24px)",
                 background: active === a.id ? "var(--ink)" : "transparent",
                 color: active === a.id ? "var(--bone)" : "var(--ink)",
                 borderRight: "1px solid var(--rule)",
                 transition: "background 0.4s ease, color 0.4s ease",
+                scrollSnapAlign: "start",
               }}>
               <div className="numeral" style={{ color: active === a.id ? "var(--ochre)" : "var(--ochre-deep)", marginBottom: 6 }}>
                 № {a.number}
@@ -309,10 +327,7 @@ function VTApartments({ t, lang, onBook }) {
         </div>
 
         {/* content */}
-        <div key={apt.id} style={{
-          display: "grid", gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr)", gap: "clamp(32px, 5vw, 80px)",
-          animation: "fadeUp 0.7s ease"
-        }}>
+        <div key={apt.id} className="vt-apt-content" style={{ animation: "fadeUp 0.7s ease" }}>
           <div>
             <div className="img-frame" style={{ aspectRatio: "4/3", marginBottom: 12 }}>
               <img key={apt.images[0]} src={apt.images[0]} alt={aptT.name} className="img-cover"
@@ -333,7 +348,7 @@ function VTApartments({ t, lang, onBook }) {
             </div>
             <h3 className="display-md" style={{ marginBottom: 28 }}>{aptT.name}</h3>
 
-            <div style={{ display: "flex", gap: 28, paddingBlock: 20, borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)", marginBottom: 28, fontSize: 13, color: "var(--ink-soft)" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 28, rowGap: 12, paddingBlock: 20, borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)", marginBottom: 28, fontSize: 13, color: "var(--ink-soft)" }}>
               <span><strong style={{ color: "var(--ink)" }}>{apt.sleeps}</strong> {t.apt.guests}</span>
               <span><strong style={{ color: "var(--ink)" }}>{apt.beds}</strong> {apt.beds > 1 ? t.apt.beds : t.apt.bed}</span>
               <span><strong style={{ color: "var(--ink)" }}>{apt.baths}</strong> {apt.baths > 1 ? t.apt.baths : t.apt.bath}</span>
@@ -342,7 +357,7 @@ function VTApartments({ t, lang, onBook }) {
 
             <p className="body-lg" style={{ marginBottom: 32 }}>{aptT.description}</p>
 
-            <ul style={{ listStyle: "none", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 24px", marginBottom: 36 }}>
+            <ul style={{ listStyle: "none", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "10px 24px", marginBottom: 36 }}>
               {aptT.features.map((f) => (
                 <li key={f} style={{ fontSize: 14, color: "var(--ink-soft)", display: "flex", alignItems: "baseline", gap: 10 }}>
                   <span style={{ width: 4, height: 4, background: "var(--ochre)", transform: "rotate(45deg)", flexShrink: 0, marginTop: 8 }}></span>

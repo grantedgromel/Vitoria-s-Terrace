@@ -61,7 +61,7 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
     <div className={`book-modal ${open ? "open" : ""}`} onClick={onClose}>
       <div className="book-modal__panel" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div style={{ padding: "32px 40px 28px", borderBottom: "1px solid var(--rule)" }}>
+        <div style={{ padding: "clamp(20px, 5vw, 32px) clamp(20px, 5vw, 40px) clamp(20px, 4vw, 28px)", borderBottom: "1px solid var(--rule)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
             <div>
               <div className="numeral" style={{ marginBottom: 6 }}>№ 0{step + 1} of 03</div>
@@ -69,7 +69,8 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
               <div className="body" style={{ fontSize: 12, marginTop: 8 }}>{t.book.sub}</div>
             </div>
             <button onClick={onClose} aria-label="Close" style={{
-              fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--granite)"
+              fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--granite)",
+              padding: "12px 14px", minHeight: 44
             }}>{t.book.close} ×</button>
           </div>
 
@@ -88,8 +89,8 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
 
         {/* Step 0 — dates & guests */}
         {step === 0 && (
-          <div style={{ padding: 40 }} key="s0">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, marginBottom: 32 }}>
+          <div style={{ padding: "clamp(20px, 5vw, 40px)" }} key="s0">
+            <div className="vt-form-row" style={{ marginBottom: 32 }}>
               <div>
                 <label style={labelStyle}>{t.book.checkin}</label>
                 <input type="date" value={checkin}
@@ -118,10 +119,10 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
                   {guests} {guests === 1 ? t.book.adult : t.book.adults}
                 </span>
                 <div style={{ display: "flex", gap: 4 }}>
-                  <button onClick={() => setGuests(Math.max(1, guests - 1))}
-                    style={{ width: 36, height: 36, border: "1px solid var(--rule)", fontSize: 18 }}>−</button>
-                  <button onClick={() => setGuests(Math.min(8, guests + 1))}
-                    style={{ width: 36, height: 36, border: "1px solid var(--rule)", fontSize: 18 }}>+</button>
+                  <button onClick={() => setGuests(Math.max(1, guests - 1))} aria-label="Decrease guests"
+                    style={{ width: 44, height: 44, border: "1px solid var(--rule)", fontSize: 18 }}>−</button>
+                  <button onClick={() => setGuests(Math.min(8, guests + 1))} aria-label="Increase guests"
+                    style={{ width: 44, height: 44, border: "1px solid var(--rule)", fontSize: 18 }}>+</button>
                 </div>
               </div>
             </div>
@@ -191,8 +192,8 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
 
         {/* Step 1 — details */}
         {step === 1 && (
-          <div style={{ padding: 40 }} key="s1">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 24 }}>
+          <div style={{ padding: "clamp(20px, 5vw, 40px)" }} key="s1">
+            <div className="vt-form-row" style={{ gap: 24, marginBottom: 24 }}>
               <div>
                 <label style={labelStyle}>{t.book.first}</label>
                 <input style={inputStyle} value={first} onChange={(e) => setFirst(e.target.value)} />
@@ -240,7 +241,7 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
 
         {/* Step 2 — done */}
         {step === 2 && (
-          <div style={{ padding: 56, textAlign: "center" }} key="s2">
+          <div style={{ padding: "clamp(28px, 6vw, 56px)", textAlign: "center" }} key="s2">
             <div className="numeral" style={{ marginBottom: 24 }}>— Confirmed —</div>
             <div style={{ width: 64, height: 64, border: "1px solid var(--ochre-deep)", borderRadius: "50%", margin: "0 auto 32px", display: "grid", placeItems: "center" }}>
               <div className="serif italic" style={{ fontSize: 28, color: "var(--ochre-deep)" }}>✓</div>

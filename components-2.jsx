@@ -17,8 +17,8 @@ function VTPorto({ t, lang }) {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr)", gap: "clamp(32px, 5vw, 72px)", alignItems: "stretch" }}>
-          <div className="img-frame" style={{ width: "100%", height: "100%", minHeight: 480 }}>
+        <div className="vt-porto-grid">
+          <div className="img-frame vt-porto-grid__media">
             <img src="assets/porto-section.jpg" alt="Azulejo façade in Porto's old town" className="img-cover" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           </div>
 
@@ -59,7 +59,7 @@ function VTAmenities({ t }) {
   return (
     <section className="section" style={{ background: "var(--paper)" }}>
       <div className="container">
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.4fr)", gap: "clamp(32px, 5vw, 96px)" }}>
+        <div className="vt-amenities-outer">
           <div>
             <SecHead num={t.secAmen.num} label={t.secAmen.label} title={t.secAmen.title} />
             <p className="body-lg" style={{ maxWidth: 380 }}>
@@ -68,7 +68,7 @@ function VTAmenities({ t }) {
           </div>
 
           <div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 1, background: "var(--rule)", border: "1px solid var(--rule)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 1, background: "var(--rule)", border: "1px solid var(--rule)" }}>
               {t.amenities.map((a, i) => (
                 <div key={i} style={{ background: "var(--paper)", padding: "26px 28px" }}>
                   <div className="numeral" style={{ marginBottom: 8 }}>{String(i + 1).padStart(2, "0")}</div>
@@ -160,20 +160,14 @@ function VTReviews({ t }) {
           {/* Note: total dedupes shared upstream feeds — Hotels.com/Expedia counted once via sharedFeed. */}
         </div>
 
-        {/* Quote — single, auto-rotating, large prev/next chevrons flanking the quote */}
+        {/* Quote — single, auto-rotating, large prev/next chevrons flanking the quote on desktop, stacked below on mobile */}
         <div
+          className="vt-review-carousel"
           onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          style={{
-            display: "grid",
-            gridTemplateColumns: "auto minmax(0, 1fr) auto",
-            alignItems: "center",
-            gap: "clamp(16px, 3vw, 40px)",
-            maxWidth: 1080, margin: "0 auto",
-            paddingBlock: "clamp(24px, 4vw, 48px)"
-          }}>
+          onMouseLeave={() => setPaused(false)}>
           {/* Prev chevron */}
           <button onClick={goPrev} aria-label="Previous review"
+            className="vt-review-carousel__chevron"
             style={{
               width: 56, height: 56, borderRadius: "50%",
               border: "1px solid var(--rule)", background: "transparent",
@@ -251,7 +245,7 @@ function VTFooter({ t, lang, onLang, onBook, currentPage }) {
   return (
     <footer id="contact" style={{ background: "var(--ink)", color: "var(--bone)", paddingTop: 96, paddingBottom: 40 }}>
       <div className="container">
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr)", gap: 56, marginBottom: 72 }}>
+        <div className="vt-footer-grid">
           <div>
             <img src="assets/logo.png" alt="Vitória's Terrace"
               style={{ height: 96, width: "auto", filter: "invert(1) brightness(1.05)", marginBottom: 28 }} />
@@ -312,7 +306,8 @@ function VTFooter({ t, lang, onLang, onBook, currentPage }) {
                 <button key={l} onClick={() => onLang(l)}
                   style={{
                     fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase",
-                    padding: "6px 10px", border: "1px solid rgba(250,248,244,0.25)",
+                    padding: "12px 14px", minHeight: 44, minWidth: 44,
+                    border: "1px solid rgba(250,248,244,0.25)",
                     color: l === lang ? "var(--ink)" : "var(--bone)",
                     background: l === lang ? "var(--bone)" : "transparent"
                   }}>{l}</button>
