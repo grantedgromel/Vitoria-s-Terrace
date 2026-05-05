@@ -316,6 +316,35 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ─────────────────────────────────────────────────────────
+   FOOTER — social links (icon + handle, monochrome)
+   ───────────────────────────────────────────────────────── */
+.vt-social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: rgba(250, 248, 244, 0.85);
+  opacity: 0.9;
+  transition: color 0.25s ease, opacity 0.25s ease;
+  text-decoration: none;
+  width: fit-content;
+}
+.vt-social-link:hover {
+  color: var(--ochre);
+  opacity: 1;
+}
+.vt-social-icon {
+  flex-shrink: 0;
+  display: block;
+  color: currentColor;
+  transition: transform 0.3s ease;
+}
+.vt-social-link:hover .vt-social-icon {
+  transform: scale(1.06);
+}
+
+/* ─────────────────────────────────────────────────────────
    PORTO — static styled map (OSM tile composite, desaturated)
    ───────────────────────────────────────────────────────── */
 .vt-porto-map {

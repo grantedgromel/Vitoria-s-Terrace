@@ -268,8 +268,25 @@ function VTFooter({ t, lang, onLang, onBook }) {
             <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 12 }}>{t.footer.contact}</div>
             <div style={{ fontSize: 14, lineHeight: 1.9 }}>
               <a href={`mailto:${VT_DATA.meta.email}`} style={{ borderBottom: "1px solid rgba(250,248,244,0.3)" }}>{VT_DATA.meta.email}</a><br/>
-              <a href={`tel:${VT_DATA.meta.phone.replace(/\s/g, '')}`} style={{ opacity: 0.85 }}>{VT_DATA.meta.phone}</a><br/>
-              <a href="https://instagram.com/vitoriasterrace" target="_blank" rel="noopener" style={{ opacity: 0.85, borderBottom: "1px solid rgba(250,248,244,0.3)" }}>Instagram · {VT_DATA.meta.instagram}</a>
+              <a href={`tel:${VT_DATA.meta.phone.replace(/\s/g, '')}`} style={{ opacity: 0.85 }}>{VT_DATA.meta.phone}</a>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 14 }}>
+                <a href="https://instagram.com/vitoriasterrace" target="_blank" rel="noopener"
+                   className="vt-social-link" aria-label="Vitória's Terrace on Instagram">
+                  <svg className="vt-social-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none" />
+                  </svg>
+                  <span>{VT_DATA.meta.instagram}</span>
+                </a>
+                <a href={`https://wa.me/${VT_DATA.meta.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener"
+                   className="vt-social-link" aria-label="Message us on WhatsApp">
+                  <svg className="vt-social-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                  </svg>
+                  <span>{VT_DATA.meta.phone}</span>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -298,10 +315,10 @@ function VTFooter({ t, lang, onLang, onBook }) {
           </div>
         </div>
 
-        <div className="azulejo-strip" style={{ marginBottom: 40 }}></div>
-
         <div style={{
           display: "flex", justifyContent: "space-between", alignItems: "center",
+          padding: "32px 0 0",
+          borderTop: "1px solid rgba(250,248,244,0.12)",
           fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase",
           color: "rgba(250,248,244,0.5)", flexWrap: "wrap", gap: 16
         }}>
