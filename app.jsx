@@ -45,7 +45,7 @@ function App() {
       <VTApartments t={t} lang={lang} onBook={openBooking} />
       <VTStory t={t} />
       <VTPorto t={t} />
-      <VTRecommendations t={t} />
+      <VTRecommendations t={t} lang={lang} />
       <VTAmenities t={t} />
       <VTReviews t={t} />
       <VTFooter t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} />
