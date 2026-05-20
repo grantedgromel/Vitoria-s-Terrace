@@ -249,7 +249,7 @@ const VT_DATA = {
 
   // 4 super-sections from Rita's guide. Each item: name + addr (canon), coords (approx), walk time,
   // optional reserveAhead flag, optional Rita note (translated), image (assets/recs/<slug>.jpg), subTag (slug → subTags above).
-  // Apartment origin for walking-directions deep links: Rua de São Miguel 15 (41.1428, -8.6155).
+  // Apartment origin for walking-directions deep links: Rua de São Miguel 15 (41.143372, -8.616253).
   recommendations: [
     {
       id: "eat",

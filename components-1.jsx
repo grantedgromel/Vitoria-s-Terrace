@@ -85,10 +85,9 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
         <a href={logoHref} style={{ display: "flex", alignItems: "center", lineHeight: 0 }} aria-label="Vitória's Terrace">
           <img src="assets/logo.png" alt="Vitória's Terrace"
             style={{
-              height: scrolled ? "clamp(44px, 8vw, 56px)" : "clamp(36px, 6vw, 44px)",
-              width: "auto", display: "block",
+              height: "clamp(44px, 8vw, 56px)", width: "auto", display: "block",
               filter: scrolled ? "none" : "invert(1) brightness(1.05)",
-              transition: "filter 0.4s ease, height 0.5s var(--ease-out-soft)"
+              transition: "filter 0.4s ease"
             }} />
         </a>
 
@@ -259,7 +258,7 @@ function VTHero({ t, onBook }) {
           display: "flex", justifyContent: "space-between", alignItems: "flex-end",
           fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.85
         }}>
-          <div>41.143° N · 8.614° W</div>
+          <div>41.143° N · 8.616° W</div>
           <div>MMXXVI</div>
         </div>
       </div>
