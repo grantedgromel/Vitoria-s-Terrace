@@ -42,7 +42,7 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
   const [langOpen, setLangOpen] = useState(false);
   const isHome = currentPage !== "recs";
   const homePrefix = isHome ? "" : "index.html";
-  const recsHref = isHome ? "recommendations.html" : "#";   // already on recs → no-op anchor
+  const recsHref = isHome ? "recommendations.html#recs" : "#";   // anchor scroll on cross-page nav for consistent heading position
   const recsActive = currentPage === "recs";
 
   const navStyle = {

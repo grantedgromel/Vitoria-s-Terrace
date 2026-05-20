@@ -54,7 +54,7 @@ function AppRecommendations() {
   return (
     <>
       <VTNav t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} scrolled={true} currentPage="recs" />
-      <main style={{ paddingTop: 80 }}>
+      <main>
         <VTRecommendations t={t} lang={lang} />
       </main>
       <VTFooter t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} currentPage="recs" />
