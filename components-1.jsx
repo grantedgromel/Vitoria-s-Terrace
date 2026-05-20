@@ -40,29 +40,52 @@ function SecHead({ num, label, title }) {
 function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
   const isHome = currentPage !== "recs";
   const homePrefix = isHome ? "" : "index.html";
   const recsHref = isHome ? "recommendations.html" : "#";   // already on recs → no-op anchor
   const recsActive = currentPage === "recs";
 
+  // Hide-on-scroll-down / reveal-on-scroll-up. Stays visible within the top 200px
+  // and whenever the mobile menu is open. Small 4px threshold prevents jitter
+  // from inertial-scroll micro-deltas.
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      const dy = y - lastY.current;
+      if (y > 200) {
+        if (dy > 4) setHidden(true);
+        else if (dy < -4) setHidden(false);
+      } else {
+        setHidden(false);
+      }
+      lastY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const navStyle = {
     position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-    transition: "background 0.4s ease, color 0.4s ease, border-color 0.4s ease",
+    transition: "background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.5s var(--ease-out-soft)",
     background: scrolled ? "rgba(250, 248, 244, 0.92)" : "transparent",
     backdropFilter: scrolled ? "blur(12px)" : "none",
     borderBottom: scrolled ? "1px solid var(--rule-soft)" : "1px solid transparent",
     color: scrolled ? "var(--ink)" : "var(--bone)",
+    transform: (hidden && !open) ? "translateY(-100%)" : "translateY(0)",
   };
 
+  // Desktop nav links: tracked sans, eyebrow register. Aman/Cheval Blanc convention.
   const link = {
-    fontFamily: "var(--serif)",
-    fontSize: 17,
-    fontWeight: 400,
-    letterSpacing: "0.01em",
-    textTransform: "none"
+    fontFamily: "var(--sans)",
+    fontSize: 12,
+    fontWeight: 500,
+    letterSpacing: "0.2em",
+    textTransform: "uppercase"
   };
   const recsLink = recsActive
-    ? { ...link, color: "var(--porto)", borderBottom: "1px solid currentColor", paddingBottom: 2 }
+    ? { ...link, color: "var(--porto)", borderBottom: "1px solid currentColor", paddingBottom: 4 }
     : link;
   const navBtn = {
     fontFamily: "var(--sans)",
@@ -84,9 +107,10 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
         <a href={logoHref} style={{ display: "flex", alignItems: "center", lineHeight: 0 }} aria-label="Vitória's Terrace">
           <img src="assets/logo.png" alt="Vitória's Terrace"
             style={{
-              height: "clamp(44px, 8vw, 56px)", width: "auto", display: "block",
+              height: scrolled ? "clamp(44px, 8vw, 56px)" : "clamp(36px, 6vw, 44px)",
+              width: "auto", display: "block",
               filter: scrolled ? "none" : "invert(1) brightness(1.05)",
-              transition: "filter 0.4s ease"
+              transition: "filter 0.4s ease, height 0.5s var(--ease-out-soft)"
             }} />
         </a>
 
@@ -123,13 +147,17 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
             )}
           </div>
 
-          <button className="btn btn--sm" onClick={onBook}
-            style={{
-              borderColor: scrolled ? "var(--ink)" : "var(--bone)",
-              color: scrolled ? "var(--ink)" : "var(--bone)"
-            }}>
-            {t.nav.book} <span className="arr"></span>
-          </button>
+          {scrolled ? (
+            <button className="btn btn--sm" onClick={onBook}
+              style={{ borderColor: "var(--ink)", color: "var(--ink)" }}>
+              {t.nav.book} <span className="arr"></span>
+            </button>
+          ) : (
+            <button className="btn--text" onClick={onBook}
+              style={{ color: "var(--bone)", fontSize: 16 }}>
+              {t.nav.book} <span className="arr"></span>
+            </button>
+          )}
         </div>
 
         <button className="show-mobile" onClick={() => setOpen(!open)}
@@ -141,49 +169,69 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
 
       {open && (
         <div className="show-mobile" style={{
-          background: "var(--paper)", color: "var(--ink)",
-          borderTop: "1px solid var(--rule)", padding: "32px 24px"
+          position: "fixed",
+          inset: 0,
+          background: "var(--paper)",
+          color: "var(--ink)",
+          zIndex: 99,
+          display: "flex",
+          flexDirection: "column",
+          padding: "clamp(96px, 14vh, 140px) clamp(24px, 6vw, 48px) clamp(32px, 6vh, 56px)",
+          overflowY: "auto"
         }}>
-          {[
-            [`${homePrefix}#stays`, t.nav.stays, false],
-            [`${homePrefix}#story`, t.nav.story, false],
-            [`${homePrefix}#porto`, t.nav.porto, false],
-            [recsHref, t.nav.recs, recsActive],
-            [`${homePrefix}#contact`, t.nav.contact, false]
-          ].map(([h, l, active]) => (
-            <a key={h} href={h} onClick={() => setOpen(false)}
-              aria-current={active ? "page" : undefined}
-              style={{
-                display: "block", padding: "16px 0",
-                borderBottom: "1px solid var(--rule-soft)",
-                ...link,
-                color: active ? "var(--porto)" : "var(--ink)"
-              }}>
-              {l}
-            </a>
-          ))}
-
-          <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--rule)" }}>
-            <div className="eyebrow" style={{ marginBottom: 12, color: "var(--granite)" }}>{t.footer.language}</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {["EN", "PT", "ES", "FR", "KO", "JA"].map((l) => (
-                <button key={l}
-                  onClick={() => { onLang(l); setOpen(false); }}
-                  style={{
-                    ...navBtn,
-                    padding: "10px 14px",
-                    minHeight: 44,
-                    border: "1px solid " + (l === lang ? "var(--ink)" : "var(--rule)"),
-                    background: l === lang ? "var(--ink)" : "transparent",
-                    color: l === lang ? "var(--bone)" : "var(--ink)"
-                  }}>
-                  {l}
-                </button>
-              ))}
-            </div>
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
+            {[
+              [`${homePrefix}#stays`, t.nav.stays, false],
+              [`${homePrefix}#story`, t.nav.story, false],
+              [`${homePrefix}#porto`, t.nav.porto, false],
+              [recsHref, t.nav.recs, recsActive],
+              [`${homePrefix}#contact`, t.nav.contact, false]
+            ].map(([h, l, active]) => (
+              <a key={h} href={h} onClick={() => setOpen(false)}
+                aria-current={active ? "page" : undefined}
+                style={{
+                  fontFamily: "var(--serif)",
+                  fontStyle: "italic",
+                  fontSize: "clamp(36px, 9vw, 56px)",
+                  fontWeight: 300,
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.01em",
+                  color: active ? "var(--porto)" : "var(--ink)"
+                }}>
+                {l}
+              </a>
+            ))}
           </div>
 
-          <button className="btn btn--primary" onClick={() => { onBook(); setOpen(false); }} style={{ marginTop: 24, width: "100%", justifyContent: "center" }}>
+          <div style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingTop: 20,
+            paddingBottom: 28,
+            borderTop: "1px solid var(--rule-soft)"
+          }}>
+            {["EN", "PT", "ES", "FR", "KO", "JA"].map((l) => (
+              <button key={l}
+                onClick={() => { onLang(l); setOpen(false); }}
+                aria-label={({ EN: "English", PT: "Português", ES: "Español", FR: "Français", KO: "한국어", JA: "日本語" })[l]}
+                style={{
+                  fontFamily: "var(--serif)",
+                  fontStyle: "italic",
+                  fontSize: "clamp(20px, 5vw, 26px)",
+                  fontWeight: l === lang ? 500 : 300,
+                  color: l === lang ? "var(--ink)" : "var(--granite-2)",
+                  padding: 4,
+                  minHeight: 44
+                }}>
+                {l}
+              </button>
+            ))}
+          </div>
+
+          <button className="btn btn--primary"
+            onClick={() => { onBook(); setOpen(false); }}
+            style={{ width: "100%", justifyContent: "center" }}>
             {t.nav.book}
           </button>
         </div>
@@ -196,7 +244,7 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
 function VTHero({ t, onBook }) {
   const [parallax, setParallax] = useState(0);
   useEffect(() => {
-    const onScroll = () => setParallax(window.scrollY * 0.3);
+    const onScroll = () => setParallax(window.scrollY * 0.2);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -204,8 +252,8 @@ function VTHero({ t, onBook }) {
   return (
     <header id="top" style={{ position: "relative", minHeight: "100vh", overflow: "hidden", color: "var(--bone)" }}>
       <div style={{ position: "absolute", inset: 0, transform: `translateY(${parallax}px) scale(1.05)`, transition: "transform 0.05s linear" }}>
-        <img src="assets/porto-view.jpg" alt="" className="img-cover" style={{ height: "100%" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(20,18,15,0.55) 0%, rgba(20,18,15,0.15) 35%, rgba(20,18,15,0.65) 100%)" }} />
+        <img src="assets/porto-view.jpg" alt="" className="img-cover hero-img" style={{ height: "100%" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(20,18,15,0.35) 0%, rgba(20,18,15,0.15) 40%, rgba(20,18,15,0.55) 100%)" }} />
       </div>
 
       <div className="container" style={{
@@ -223,13 +271,13 @@ function VTHero({ t, onBook }) {
             {t.hero.sub}
           </p>
 
-          <div style={{ display: "flex", gap: 16, marginTop: 44, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: 28, marginTop: 44, flexWrap: "wrap", alignItems: "center" }}>
             <button className="btn btn--ghost" onClick={onBook} style={{ background: "var(--bone)", color: "var(--ink)", borderColor: "var(--bone)" }}>
               {t.hero.cta} <span className="arr"></span>
             </button>
-            <button className="btn btn--ghost" onClick={onBook}>
-              {t.hero.ctaAlt}
-            </button>
+            <a href="#stays" className="btn--text" style={{ color: "var(--bone)" }}>
+              {t.hero.ctaAlt} <span className="arr"></span>
+            </a>
           </div>
         </div>
 
@@ -238,7 +286,7 @@ function VTHero({ t, onBook }) {
           fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.85
         }}>
           <div>41.143° N · 8.614° W</div>
-          <div>Scroll ↓</div>
+          <div>MMXXVI</div>
         </div>
       </div>
     </header>
