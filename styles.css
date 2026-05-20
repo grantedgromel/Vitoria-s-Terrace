@@ -161,12 +161,12 @@ a { color: inherit; text-decoration: none; }
 
 .section { padding-block: clamp(96px, 14vw, 200px); }
 
-/* Anchor-navigation offset — lands the section heading ~70px below the fixed
+/* Anchor-navigation offset — lands the section heading ~35px below the fixed
    nav, skipping into the section's own padding-top so we don't open with a
-   wall of whitespace. Heading lands at viewport y=150 across all sections;
-   gap from nav-bottom is consistent ~70px. */
+   wall of whitespace. Heading lands at viewport y=115 across all sections;
+   gap from nav-bottom is consistent ~35px. */
 .section[id] {
-  scroll-margin-top: calc(150px - clamp(96px, 14vw, 200px));
+  scroll-margin-top: calc(115px - clamp(96px, 14vw, 200px));
 }
 
 .rule { height: 1px; background: var(--rule); border: 0; }
