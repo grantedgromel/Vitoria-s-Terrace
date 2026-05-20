@@ -38,10 +38,7 @@ function VTPorto({ t, lang }) {
               aria-label="Open Rua de São Miguel 15 in Google Maps"
             >
               <img src="assets/map.jpg" alt="Map of Porto's old town centred on Rua de São Miguel" />
-              {/* Pin position calibrated to the apartment at 41.143372, -8.616253
-                  on assets/map.jpg (a 1024×768 OSM composite centred on the
-                  historic core). Tweak these % if the rendered position looks off. */}
-              <span className="vt-porto-map__pin" style={{ left: "23.5%", top: "27.5%" }} aria-hidden></span>
+              <span className="vt-porto-map__pin" style={{ left: "29.79%", top: "44.53%" }} aria-hidden></span>
               <span className="vt-porto-map__cta">
                 {VT_OPEN_IN_MAPS[lang] || VT_OPEN_IN_MAPS.EN} <span className="arr"></span>
               </span>
