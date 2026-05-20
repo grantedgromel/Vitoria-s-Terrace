@@ -26,11 +26,8 @@ function SecHead({ num, label, title }) {
   const ref = useReveal();
   return (
     <div className="sec-head reveal" ref={ref}>
-      <div className="num">{num}</div>
-      <div>
-        <div className="eyebrow" style={{ marginBottom: 18 }}>{label}</div>
-        <h2 className="display-md" style={{ whiteSpace: "pre-line" }}>{title}</h2>
-      </div>
+      <div className="eyebrow" style={{ marginBottom: 18 }}>{label}</div>
+      <h2 className="display-md" style={{ whiteSpace: "pre-line" }}>{title}</h2>
     </div>
   );
 }

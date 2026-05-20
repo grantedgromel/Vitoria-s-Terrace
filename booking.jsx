@@ -278,9 +278,6 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
             </button>
           </div>
         )}
-
-        {/* tile motif footer */}
-        <div className="azulejo-strip" style={{ position: "sticky", bottom: 0 }}></div>
       </div>
     </div>
   );

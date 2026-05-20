@@ -10,11 +10,8 @@ function VTPorto({ t, lang }) {
     <section id="porto" className="section" style={{ background: "var(--ink)", color: "var(--bone)" }}>
       <div className="container">
         <div className="sec-head reveal" ref={useReveal()}>
-          <div className="num" style={{ color: "var(--ochre)" }}>{t.secPorto.num}</div>
-          <div>
-            <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 18 }}>{t.secPorto.label}</div>
-            <h2 className="display-md" style={{ whiteSpace: "pre-line", color: "var(--bone)" }}>{t.secPorto.title}</h2>
-          </div>
+          <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 18 }}>{t.secPorto.label}</div>
+          <h2 className="display-md" style={{ whiteSpace: "pre-line", color: "var(--bone)" }}>{t.secPorto.title}</h2>
         </div>
 
         <div className="vt-porto-grid">

@@ -239,23 +239,11 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Section headers ─────────────────────────────── */
 .sec-head {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 24px;
-  align-items: baseline;
   margin-bottom: 88px;
 }
 
-.sec-head .num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 18px;
-  color: var(--ochre-deep);
-  letter-spacing: 0.05em;
-}
-
 @media (max-width: 720px) {
-  .sec-head { grid-template-columns: 1fr; gap: 8px; margin-bottom: 36px; }
+  .sec-head { margin-bottom: 36px; }
 }
 
 /* ── Image utilities ─────────────────────────────── */
@@ -542,20 +530,9 @@ a { color: inherit; text-decoration: none; }
 .vt-rec-section:last-child { margin-bottom: 56px; }
 
 .vt-rec-section__head {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 24px;
-  align-items: baseline;
   margin-bottom: 36px;
   padding-bottom: 24px;
   border-bottom: 1px solid var(--rule);
-}
-.vt-rec-section__num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 18px;
-  color: var(--ochre-deep);
-  letter-spacing: 0.05em;
 }
 .vt-rec-section__title {
   font-size: clamp(28px, 3vw, 44px);
@@ -570,7 +547,7 @@ a { color: inherit; text-decoration: none; }
   font-size: 15px; font-style: italic; color: var(--granite);
 }
 @media (max-width: 720px) {
-  .vt-rec-section__head { grid-template-columns: 1fr; gap: 8px; margin-bottom: 24px; padding-bottom: 16px; }
+  .vt-rec-section__head { margin-bottom: 24px; padding-bottom: 16px; }
 }
 
 /* ── IMAGE-CARD GRID ──────────────────────────────────── */

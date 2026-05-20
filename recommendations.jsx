@@ -113,7 +113,7 @@ function VTPracticalList({ items, subTags, lang }) {
 }
 
 // ── SECTION BLOCK ───────────────────────────────────────────
-function VTRecSection({ section, subTags, lang, onOpen, sectionIndex }) {
+function VTRecSection({ section, subTags, lang, onOpen }) {
   const isPractical = section.id === "practical";
   // Mark a few cards "featured" (span 2 cols) to give the grid editorial rhythm.
   const featuredIds = new Set([
@@ -123,16 +123,11 @@ function VTRecSection({ section, subTags, lang, onOpen, sectionIndex }) {
     "fado-real"        // the lead Fado venue
   ]);
 
-  const sectionLabels = ["i.", "ii.", "iii.", "iv."];
-
   return (
     <div className="vt-rec-section" id={`recs-${section.id}`}>
       <div className="vt-rec-section__head">
-        <div className="vt-rec-section__num">{sectionLabels[sectionIndex] || ""}</div>
-        <div className="vt-rec-section__head-text">
-          <h3 className="serif vt-rec-section__title">{tr(section.title, lang)}</h3>
-          <div className="body vt-rec-section__kind">{tr(section.kind, lang)}</div>
-        </div>
+        <h3 className="serif vt-rec-section__title">{tr(section.title, lang)}</h3>
+        <div className="body vt-rec-section__kind">{tr(section.kind, lang)}</div>
       </div>
       {isPractical ? (
         <VTPracticalList items={section.items} subTags={subTags} lang={lang} />
@@ -173,7 +168,6 @@ function VTRecommendations({ t, lang }) {
 
         {/* Editorial header */}
         <div className="sec-head vt-recs__head">
-          <div className="num">v.</div>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 32 }}>
             <div>
               <div className="eyebrow" style={{ marginBottom: 18 }}>{t.recs.eyebrow}</div>
@@ -203,7 +197,6 @@ function VTRecommendations({ t, lang }) {
             subTags={subTags}
             lang={lang}
             onOpen={setDrawerItem}
-            sectionIndex={idx}
           />
         ))}
 
