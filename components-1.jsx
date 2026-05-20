@@ -275,7 +275,7 @@ function VTStory({ t }) {
         <SecHead num={t.secStory.num} label={t.secStory.label} title={t.secStory.title} />
 
         <div className="vt-story-grid">
-          <div ref={r1} className="reveal vt-story-image">
+          <div ref={r1} className="reveal">
             <div className="img-frame" style={{ aspectRatio: "4/5" }}>
               <img src="assets/doors.jpg" alt={t.storyCaption} className="img-cover" />
             </div>
@@ -283,18 +283,16 @@ function VTStory({ t }) {
           </div>
 
           <div ref={r2} className="reveal" style={{ paddingTop: 32 }}>
-            <div style={{ display: "grid", gap: 20, color: "var(--ink-soft)", fontSize: 16, lineHeight: 1.75 }}>
-              {t.storyBody.map((p, i) => (
-                <p key={i} className={i === 0 ? "drop-cap" : ""}>{p}</p>
-              ))}
+            <div style={{ display: "grid", gap: 20, color: "var(--ink-soft)", fontSize: 16, lineHeight: 1.7 }}>
+              {t.storyBody.map((p, i) => <p key={i}>{p}</p>)}
             </div>
 
-            <div ref={r3} className="reveal vt-heritage-line" style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
+            <div ref={r3} className="reveal vt-heritage-grid" style={{ marginTop: 56 }}>
               {t.storyHeritage.map(([k, v], i) => (
-                <React.Fragment key={i}>
-                  {i > 0 && <span className="vt-heritage-dot" aria-hidden>·</span>}
-                  <span><span className="vt-heritage-num">{k}</span>{" "}<span className="vt-heritage-label">{v}</span></span>
-                </React.Fragment>
+                <div key={i}>
+                  <div className="serif" style={{ fontSize: 32, fontStyle: "italic", letterSpacing: "-0.01em" }}>{k}</div>
+                  <div className="eyebrow" style={{ marginTop: 6, fontSize: 10 }}>{v}</div>
+                </div>
               ))}
             </div>
           </div>
