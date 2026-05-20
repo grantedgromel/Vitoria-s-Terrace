@@ -4,7 +4,12 @@
 // localStorage-backed language state as the home page.
 
 function readLang() {
-  try { return localStorage.getItem("vt-lang") || "EN"; } catch (_) { return "EN"; }
+  try {
+    let v = localStorage.getItem("vt-lang") || "EN";
+    // Migrate ISO 3166-1 country code "KR" to ISO 639-1 language code "KO".
+    if (v === "KR") { v = "KO"; try { localStorage.setItem("vt-lang", v); } catch (_) {} }
+    return v;
+  } catch (_) { return "EN"; }
 }
 function writeLang(v) {
   try { localStorage.setItem("vt-lang", v); } catch (_) { /* no-op */ }
@@ -75,7 +80,7 @@ function AppRecommendations() {
 
         <window.TweakSection label="Language preview">
           <window.TweakSelect label="Locale" value={lang}
-            options={["EN", "PT", "ES", "FR", "KR", "JA"]}
+            options={["EN", "PT", "ES", "FR", "KO", "JA"]}
             onChange={(v) => setLang(v)} />
         </window.TweakSection>
       </window.TweaksPanel>

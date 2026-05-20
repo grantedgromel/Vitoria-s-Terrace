@@ -108,7 +108,7 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
                 background: "var(--paper)", border: "1px solid var(--rule)",
                 padding: "8px 0", minWidth: 120, color: "var(--ink)"
               }}>
-                {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
+                {["EN", "PT", "ES", "FR", "KO", "JA"].map((l) => (
                   <button key={l}
                     onClick={() => { onLang(l); setLangOpen(false); }}
                     style={{
@@ -116,7 +116,7 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
                       ...navBtn, fontWeight: l === lang ? 600 : 400,
                       color: l === lang ? "var(--porto)" : "var(--ink)"
                     }}>
-                    {({ EN: "English", PT: "Português", ES: "Español", FR: "Français", KR: "한국어", JA: "日本語" })[l]}
+                    {({ EN: "English", PT: "Português", ES: "Español", FR: "Français", KO: "한국어", JA: "日本語" })[l]}
                   </button>
                 ))}
               </div>
@@ -166,7 +166,7 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
           <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--rule)" }}>
             <div className="eyebrow" style={{ marginBottom: 12, color: "var(--granite)" }}>{t.footer.language}</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
+              {["EN", "PT", "ES", "FR", "KO", "JA"].map((l) => (
                 <button key={l}
                   onClick={() => { onLang(l); setOpen(false); }}
                   style={{

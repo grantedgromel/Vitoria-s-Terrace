@@ -34,7 +34,7 @@ const VT_DATA = {
           description: "Le penthouse au dernier étage, avec une terrasse privée donnant sur le Douro et les toits de la Ribeira. Deux chambres, deux salles de bains, salon et cuisine ouverts. Le plus grand et le plus paisible des quatre — pour ceux qui recherchent espace, intimité et un séjour singulier.",
           features: ["Vue fleuve", "Terrasse privée", "King + queen", "2 salles de bains"]
         },
-        KR: {
+        KO: {
           name: "펜트하우스 · 강 전망",
           tagline: "최상층, 강을 마주한 테라스",
           description: "최상층 펜트하우스. 도루 강과 히베이라의 붉은 지붕이 바라다보이는 전용 테라스가 있습니다. 침실 두 개, 욕실 두 개, 거실과 주방이 트인 구조. 네 객실 중 가장 넓고 가장 조용한 곳 — 공간과 사생활, 그리고 특별한 머묾을 원하는 분께.",
@@ -79,7 +79,7 @@ const VT_DATA = {
           description: "Appartement d'une chambre avec un grand séjour, une kitchenette et une cloison en pin à claire-voie, écho à la menuiserie d'origine du bâtiment. La fenêtre encadre le Douro au bout de la rue. Jusqu'à trois personnes avec le canapé-lit.",
           features: ["Vue fleuve", "Queen + canapé-lit", "Kitchenette complète", "Séjour"]
         },
-        KR: {
+        KO: {
           name: "디럭스 아파트 · 강 전망",
           tagline: "창 너머로 도루 강이 보이는 1베드룸",
           description: "넓은 거실, 간이 주방, 그리고 건물의 원래 목공을 떠올리게 하는 소나무 살창 파티션이 있는 1베드룸 아파트. 창은 길 끝에 흐르는 도루 강을 액자처럼 담아냅니다. 소파베드 포함 3인 가능.",
@@ -124,7 +124,7 @@ const VT_DATA = {
           description: "Studio compact avec un sol de carreaux ciment vert et gris dans la cuisine — un écho direct aux azulejos jaunes de l'entrée. Hautes fenêtres à la française sur la vieille ville et un coin lecture dans l'embrasure.",
           features: ["Vue ville", "Lit queen", "Cuisine carrelée", "Coin lecture"]
         },
-        KR: {
+        KO: {
           name: "스튜디오 · 도시 전망",
           tagline: "초록 타일 주방의 스튜디오",
           description: "초록과 회색 시멘트 타일이 깔린 주방 바닥이 인상적인 컴팩트 스튜디오 — 입구의 노란 아줄레주와 호응하는 디테일입니다. 구시가지를 향한 높은 프렌치 창과 창가의 독서 자리.",
@@ -169,7 +169,7 @@ const VT_DATA = {
           description: "Loft à l'étage supérieur avec deux fenêtres sur la rue de granit. Cuisine, salle à manger et salon ouverts ; la chambre séparée par une arche intérieure d'origine. Calme, autonome, et à quelques minutes du fleuve.",
           features: ["Vue rue", "Lit queen", "Cuisine ouverte", "Arche d'origine"]
         },
-        KR: {
+        KO: {
           name: "로프트 · 거리 전망",
           tagline: "상 미겔 거리 위의 로프트",
           description: "위층의 로프트. 화강암 거리를 향한 두 개의 창이 있고, 주방·식사·거실이 하나의 공간으로 이어지며, 침실은 원래의 실내 아치로 구분됩니다. 조용하고 독립적이며, 강까지 도보로 몇 분.",
@@ -223,28 +223,28 @@ const VT_DATA = {
   // Shared sub-tag dictionary — items reference a slug; we look up translations here.
   // Renders on each card as small uppercase meta (e.g. "TRADITIONAL · 6 MIN").
   subTags: {
-    traditional:  { EN: "Traditional",      PT: "Tradicional",         ES: "Tradicional",         FR: "Traditionnel",      KR: "전통",      JA: "伝統的" },
-    modern:       { EN: "Modern",           PT: "Moderno",             ES: "Moderno",             FR: "Moderne",           KR: "모던",      JA: "モダン" },
-    francesinha:  { EN: "Francesinha",      PT: "Francesinha",         ES: "Francesinha",         FR: "Francesinha",       KR: "프란세지냐", JA: "フランセジーニャ" },
-    breakfast:    { EN: "Breakfast",        PT: "Pequeno-almoço",      ES: "Desayuno",            FR: "Petit-déjeuner",    KR: "조식",      JA: "朝食" },
-    market:       { EN: "Market",           PT: "Mercado",             ES: "Mercado",             FR: "Marché",            KR: "시장",      JA: "マーケット" },
-    gaia:         { EN: "Across the river", PT: "Outro lado do rio",   ES: "Otro lado del río",   FR: "Autre côté",        KR: "강 건너편",   JA: "川の対岸" },
-    tower:        { EN: "Tower",            PT: "Torre",               ES: "Torre",               FR: "Tour",              KR: "탑",        JA: "塔" },
-    bookshop:     { EN: "Bookshop",         PT: "Livraria",            ES: "Librería",            FR: "Librairie",         KR: "서점",      JA: "書店" },
-    cathedral:    { EN: "Cathedral",        PT: "Catedral",            ES: "Catedral",            FR: "Cathédrale",        KR: "대성당",     JA: "大聖堂" },
-    riverside:    { EN: "Riverside",        PT: "Beira-rio",           ES: "Junto al río",        FR: "Bord du fleuve",    KR: "강변",      JA: "川辺" },
-    bridge:       { EN: "Bridge",           PT: "Ponte",               ES: "Puente",              FR: "Pont",              KR: "다리",      JA: "橋" },
-    wine:         { EN: "Port wine",        PT: "Vinho do Porto",      ES: "Vino de Oporto",      FR: "Vin de Porto",      KR: "포트 와인",   JA: "ポートワイン" },
-    tiles:        { EN: "Tiles",            PT: "Azulejos",            ES: "Azulejos",            FR: "Azulejos",          KR: "타일",      JA: "タイル" },
-    street:       { EN: "Street",           PT: "Rua",                 ES: "Calle",               FR: "Rue",               KR: "거리",      JA: "通り" },
-    avenue:       { EN: "Avenue",           PT: "Avenida",             ES: "Avenida",             FR: "Avenue",            KR: "대로",      JA: "大通り" },
-    cafe:         { EN: "Café",             PT: "Café",                ES: "Café",                FR: "Café",              KR: "카페",      JA: "カフェ" },
-    fado:         { EN: "Fado",             PT: "Fado",                ES: "Fado",                FR: "Fado",              KR: "파두",      JA: "ファド" },
-    walkingTour:  { EN: "Walking tour",     PT: "Visita guiada",       ES: "Visita guiada",       FR: "Visite guidée",     KR: "도보 투어",   JA: "街歩きツアー" },
-    dayTrip:      { EN: "Day trip",         PT: "Excursão",            ES: "Excursión",           FR: "Excursion",         KR: "당일 여행",   JA: "日帰りツアー" },
-    minimarket:   { EN: "Mini-market",      PT: "Mercearia",           ES: "Tienda local",        FR: "Épicerie",          KR: "미니마트",    JA: "食料品店" },
-    supermarket:  { EN: "Supermarket",      PT: "Supermercado",        ES: "Supermercado",        FR: "Supermarché",       KR: "슈퍼마켓",    JA: "スーパー" },
-    laundry:      { EN: "Laundry",          PT: "Lavandaria",          ES: "Lavandería",          FR: "Laverie",           KR: "빨래방",    JA: "ランドリー" }
+    traditional:  { EN: "Traditional",      PT: "Tradicional",         ES: "Tradicional",         FR: "Traditionnel",      KO: "전통",      JA: "伝統的" },
+    modern:       { EN: "Modern",           PT: "Moderno",             ES: "Moderno",             FR: "Moderne",           KO: "모던",      JA: "モダン" },
+    francesinha:  { EN: "Francesinha",      PT: "Francesinha",         ES: "Francesinha",         FR: "Francesinha",       KO: "프란세지냐", JA: "フランセジーニャ" },
+    breakfast:    { EN: "Breakfast",        PT: "Pequeno-almoço",      ES: "Desayuno",            FR: "Petit-déjeuner",    KO: "조식",      JA: "朝食" },
+    market:       { EN: "Market",           PT: "Mercado",             ES: "Mercado",             FR: "Marché",            KO: "시장",      JA: "マーケット" },
+    gaia:         { EN: "Across the river", PT: "Outro lado do rio",   ES: "Otro lado del río",   FR: "Autre côté",        KO: "강 건너편",   JA: "川の対岸" },
+    tower:        { EN: "Tower",            PT: "Torre",               ES: "Torre",               FR: "Tour",              KO: "탑",        JA: "塔" },
+    bookshop:     { EN: "Bookshop",         PT: "Livraria",            ES: "Librería",            FR: "Librairie",         KO: "서점",      JA: "書店" },
+    cathedral:    { EN: "Cathedral",        PT: "Catedral",            ES: "Catedral",            FR: "Cathédrale",        KO: "대성당",     JA: "大聖堂" },
+    riverside:    { EN: "Riverside",        PT: "Beira-rio",           ES: "Junto al río",        FR: "Bord du fleuve",    KO: "강변",      JA: "川辺" },
+    bridge:       { EN: "Bridge",           PT: "Ponte",               ES: "Puente",              FR: "Pont",              KO: "다리",      JA: "橋" },
+    wine:         { EN: "Port wine",        PT: "Vinho do Porto",      ES: "Vino de Oporto",      FR: "Vin de Porto",      KO: "포트 와인",   JA: "ポートワイン" },
+    tiles:        { EN: "Tiles",            PT: "Azulejos",            ES: "Azulejos",            FR: "Azulejos",          KO: "타일",      JA: "タイル" },
+    street:       { EN: "Street",           PT: "Rua",                 ES: "Calle",               FR: "Rue",               KO: "거리",      JA: "通り" },
+    avenue:       { EN: "Avenue",           PT: "Avenida",             ES: "Avenida",             FR: "Avenue",            KO: "대로",      JA: "大通り" },
+    cafe:         { EN: "Café",             PT: "Café",                ES: "Café",                FR: "Café",              KO: "카페",      JA: "カフェ" },
+    fado:         { EN: "Fado",             PT: "Fado",                ES: "Fado",                FR: "Fado",              KO: "파두",      JA: "ファド" },
+    walkingTour:  { EN: "Walking tour",     PT: "Visita guiada",       ES: "Visita guiada",       FR: "Visite guidée",     KO: "도보 투어",   JA: "街歩きツアー" },
+    dayTrip:      { EN: "Day trip",         PT: "Excursão",            ES: "Excursión",           FR: "Excursion",         KO: "당일 여행",   JA: "日帰りツアー" },
+    minimarket:   { EN: "Mini-market",      PT: "Mercearia",           ES: "Tienda local",        FR: "Épicerie",          KO: "미니마트",    JA: "食料品店" },
+    supermarket:  { EN: "Supermarket",      PT: "Supermercado",        ES: "Supermercado",        FR: "Supermarché",       KO: "슈퍼마켓",    JA: "スーパー" },
+    laundry:      { EN: "Laundry",          PT: "Lavandaria",          ES: "Lavandería",          FR: "Laverie",           KO: "빨래방",    JA: "ランドリー" }
   },
 
   // 4 super-sections from Rita's guide. Each item: name + addr (canon), coords (approx), walk time,
@@ -253,12 +253,12 @@ const VT_DATA = {
   recommendations: [
     {
       id: "eat",
-      title: { EN: "Eat & Drink",       PT: "Comer & Beber",        ES: "Comer & Beber",         FR: "Manger & Boire",         KR: "먹고 마시기",  JA: "食べる & 飲む" },
+      title: { EN: "Eat & Drink",       PT: "Comer & Beber",        ES: "Comer & Beber",         FR: "Manger & Boire",         KO: "먹고 마시기",  JA: "食べる & 飲む" },
       kind:  { EN: "Where the locals still go, and where we go ourselves.",
                PT: "Onde os locais ainda vão, e onde nós vamos.",
                ES: "Donde aún van los locales, y donde vamos nosotros.",
                FR: "Où vont encore les locaux, et où nous allons aussi.",
-               KR: "현지인들이 여전히 찾는 곳, 그리고 우리도 가는 곳.",
+               KO: "현지인들이 여전히 찾는 곳, 그리고 우리도 가는 곳.",
                JA: "地元の人がいまも通う場所、わたしたち自身が通う場所。" },
       items: [
         { id: "taberna-santo-antonio",  name: "Taberna Santo António",        addr: "R. das Virtudes 32, 4050-630 Porto",                                  coords: [41.1444, -8.6178], walk: "6 min",  subTag: "traditional", image: "assets/recs/taberna-santo-antonio.jpg" },
@@ -279,12 +279,12 @@ const VT_DATA = {
     },
     {
       id: "see",
-      title: { EN: "See",        PT: "Ver",          ES: "Ver",          FR: "Voir",          KR: "둘러보기",     JA: "訪ねる" },
+      title: { EN: "See",        PT: "Ver",          ES: "Ver",          FR: "Voir",          KO: "둘러보기",     JA: "訪ねる" },
       kind:  { EN: "Iconic Porto, on foot.",
                PT: "O Porto icónico, a pé.",
                ES: "El Oporto icónico, a pie.",
                FR: "Le Porto iconique, à pied.",
-               KR: "걸어서 만나는, 포르투의 상징.",
+               KO: "걸어서 만나는, 포르투의 상징.",
                JA: "歩いて出会う、ポルトの象徴。" },
       items: [
         { id: "clerigos",         name: "Torre dos Clérigos",            addr: "R. de São Filipe de Nery, 4050-546 Porto",   coords: [41.1453, -8.6131], walk: "3 min",  subTag: "tower",     image: "assets/recs/clerigos-tower.jpg" },
@@ -295,7 +295,7 @@ const VT_DATA = {
                   PT: "Lindo para passear — não recomendamos comer aí porque é muito turístico.",
                   ES: "Precioso para pasear — no recomendamos comer allí porque es muy turístico.",
                   FR: "Magnifique pour s'y promener — on déconseille d'y manger, c'est trop touristique.",
-                  KR: "걷기에는 아름답지만, 너무 관광지화되어 식사는 권하지 않습니다.",
+                  KO: "걷기에는 아름답지만, 너무 관광지화되어 식사는 권하지 않습니다.",
                   JA: "散歩には素晴らしいですが、観光地化が進んでいるためお食事はおすすめしません。" } },
         { id: "ponte-luis",       name: "Dom Luís I Bridge",             addr: "Ponte Dom Luís I, Porto",                    coords: [41.1399, -8.6109], walk: "10 min", subTag: "bridge",    image: "assets/recs/ponte-dom-luis.jpg" },
         { id: "port-cellars",     name: "Port wine cellars",             addr: "Vila Nova de Gaia",                          coords: [41.1379, -8.6116], walk: "12 min", subTag: "wine",      image: "assets/recs/port-cellars.jpg" },
@@ -310,20 +310,20 @@ const VT_DATA = {
     },
     {
       id: "do",
-      title: { EN: "Do",      PT: "Fazer",   ES: "Hacer",    FR: "Faire",      KR: "체험하기",  JA: "体験する" },
+      title: { EN: "Do",      PT: "Fazer",   ES: "Hacer",    FR: "Faire",      KO: "체험하기",  JA: "体験する" },
       kind:  { EN: "A few hand-arranged things.",
                PT: "Algumas coisas feitas à medida.",
                ES: "Algunas cosas hechas a mano.",
                FR: "Quelques expériences soigneusement choisies.",
-               KR: "정성껏 골라낸 몇 가지 경험.",
+               KO: "정성껏 골라낸 몇 가지 경험.",
                JA: "心を込めて選んだ、いくつかの体験。" },
       items: [
         { id: "fado-real",        name: "Taberna Real do Fado",          addr: "R. do Dr. Barbosa de Castro 58, 4050-090 Porto", coords: [41.1455, -8.6172], walk: "4 min",  subTag: "fado",        reserveAhead: true,  image: "assets/recs/fado.jpg",
-          note: { EN: "With dinner.",                       PT: "Com jantar.",                  ES: "Con cena.",                   FR: "Avec dîner.",               KR: "저녁 식사 포함.",  JA: "お食事と一緒に。" } },
+          note: { EN: "With dinner.",                       PT: "Com jantar.",                  ES: "Con cena.",                   FR: "Avec dîner.",               KO: "저녁 식사 포함.",  JA: "お食事と一緒に。" } },
         { id: "fado-mariquinhas", name: "Casa da Mariquinhas",           addr: "R. de São Sebastião 25, Porto",                coords: [41.1480, -8.6168], walk: "7 min",  subTag: "fado",        reserveAhead: true,  image: "assets/recs/fado.jpg",
-          note: { EN: "With dinner.",                       PT: "Com jantar.",                  ES: "Con cena.",                   FR: "Avec dîner.",               KR: "저녁 식사 포함.",  JA: "お食事と一緒に。" } },
+          note: { EN: "With dinner.",                       PT: "Com jantar.",                  ES: "Con cena.",                   FR: "Avec dîner.",               KO: "저녁 식사 포함.",  JA: "お食事と一緒に。" } },
         { id: "fado-maior",       name: "Fado Maior do Porto",           addr: "Rua de Miragaia 54, 4050-386 Porto",           coords: [41.1421, -8.6203], walk: "9 min",  subTag: "fado",        reserveAhead: true,  image: "assets/recs/fado.jpg",
-          note: { EN: "Afternoon performance, no dinner.",  PT: "Sessão à tarde, sem jantar.", ES: "Función por la tarde, sin cena.", FR: "Spectacle l'après-midi, sans dîner.", KR: "오후 공연, 식사 없음.", JA: "午後の公演、お食事なし。" } },
+          note: { EN: "Afternoon performance, no dinner.",  PT: "Sessão à tarde, sem jantar.", ES: "Función por la tarde, sin cena.", FR: "Spectacle l'après-midi, sans dîner.", KO: "오후 공연, 식사 없음.", JA: "午後の公演、お食事なし。" } },
         { id: "civitatis",        name: "Civitatis · Free walking tour", addr: "civitatis.com",                                external: "https://www.civitatis.com/en/porto/", subTag: "walkingTour", reserveAhead: true,  image: "assets/recs/walking-tours.jpg" },
         { id: "guruwalk",         name: "GuruWalk · Free walking tour",  addr: "guruwalk.com",                                 external: "https://www.guruwalk.com/porto",     subTag: "walkingTour", reserveAhead: true,  image: "assets/recs/walking-tours.jpg" },
         { id: "douro-cruise",     name: "Day cruise · Douro Valley",     addr: "Book via GetYourGuide",                        external: "https://www.getyourguide.com/s/?q=douro+valley+from+porto", subTag: "dayTrip", reserveAhead: true,  image: "assets/recs/douro-valley.jpg" }
@@ -331,16 +331,16 @@ const VT_DATA = {
     },
     {
       id: "practical",
-      title: { EN: "Practical",     PT: "Prático",        ES: "Práctico",        FR: "Pratique",        KR: "생활 정보",  JA: "暮らし" },
+      title: { EN: "Practical",     PT: "Prático",        ES: "Práctico",        FR: "Pratique",        KO: "생활 정보",  JA: "暮らし" },
       kind:  { EN: "For longer stays.",
                PT: "Para estadias longas.",
                ES: "Para estancias largas.",
                FR: "Pour les longs séjours.",
-               KR: "장기 투숙객을 위해.",
+               KO: "장기 투숙객을 위해.",
                JA: "長期滞在のために。" },
       items: [
         { id: "mercearia-garrett", name: "Mercearia Garrett",             addr: "R. do Dr. Barbosa de Castro 35, 4050-091 Porto", coords: [41.1453, -8.6171], walk: "4 min", subTag: "minimarket",
-          note: { EN: "Ask for Lola.", PT: "Pergunte pela Lola.", ES: "Pregunta por Lola.", FR: "Demandez Lola.", KR: "롤라에게 물어보세요.", JA: "ロラさんに尋ねてみてください。" } },
+          note: { EN: "Ask for Lola.", PT: "Pergunte pela Lola.", ES: "Pregunta por Lola.", FR: "Demandez Lola.", KO: "롤라에게 물어보세요.", JA: "ロラさんに尋ねてみてください。" } },
         { id: "minipreco",         name: "Minipreço",                     addr: "Largo dos Lóios 46, 4050-338 Porto",            coords: [41.1465, -8.6116], walk: "7 min", subTag: "supermarket" },
         { id: "lavandaria",        name: "LavandaRIA Self-Service Laundry", addr: "Rua dos Caldeireiros 91, 4050-140 Porto",     coords: [41.1452, -8.6135], walk: "6 min", subTag: "laundry" }
       ]
@@ -629,7 +629,7 @@ const VT_I18N = {
       close: "Fermer"
     }
   },
-  KR: {
+  KO: {
     nav: { stays: "객실", story: "이 집", porto: "포르투", recs: "추천", contact: "문의", book: "예약하기" },
     hero: {
       title: "포르투 중심의\n조용한 안식처.",

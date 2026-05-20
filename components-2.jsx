@@ -3,7 +3,7 @@
 
 
 // ── PORTO / Location ────────────────────────────────────
-const VT_OPEN_IN_MAPS = { EN: "Open in Maps", PT: "Abrir no Maps", ES: "Abrir en Maps", FR: "Ouvrir dans Maps", KR: "지도에서 열기", JA: "マップで開く" };
+const VT_OPEN_IN_MAPS = { EN: "Open in Maps", PT: "Abrir no Maps", ES: "Abrir en Maps", FR: "Ouvrir dans Maps", KO: "지도에서 열기", JA: "マップで開く" };
 
 function VTPorto({ t, lang }) {
   return (
@@ -299,7 +299,7 @@ function VTFooter({ t, lang, onLang, onBook, currentPage }) {
 
             <div className="eyebrow" style={{ color: "var(--ochre)", marginTop: 32, marginBottom: 16 }}>{t.footer.language}</div>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
+              {["EN", "PT", "ES", "FR", "KO", "JA"].map((l) => (
                 <button key={l} onClick={() => onLang(l)}
                   style={{
                     fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase",
