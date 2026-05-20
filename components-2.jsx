@@ -1,5 +1,26 @@
 // Vitoria's Terrace — page sections part 2
-// Globally exposes: VTPorto, VTAmenities, VTReviews, VTFooter, VTBookingModal
+// Globally exposes: VTPorto, VTDetail, VTAmenities, VTReviews, VTFooter, VTBookingModal
+
+
+// ── DETAIL — full-bleed atmospheric mosaic between Story and Apartments ──
+// Pure mood. No header, no CTA. Six detail crops of the apartments' materials
+// arranged in an asymmetric grid, with one italic-serif caption floating over.
+function VTDetail({ t }) {
+  const ref = useReveal();
+  return (
+    <section className="vt-detail-section reveal" ref={ref} aria-label="The detail">
+      <div className="vt-detail-mosaic">
+        <div className="vt-detail-cell vt-detail-cell--a"><img src="assets/bath-tiles.jpg" alt="" loading="lazy" /></div>
+        <div className="vt-detail-cell vt-detail-cell--b"><img src="assets/kitchen-tiles.jpg" alt="" loading="lazy" /></div>
+        <div className="vt-detail-cell vt-detail-cell--c"><img src="assets/living-slats.jpg" alt="" loading="lazy" /></div>
+        <div className="vt-detail-cell vt-detail-cell--d"><img src="assets/bath-detail.jpg" alt="" loading="lazy" /></div>
+        <div className="vt-detail-cell vt-detail-cell--e"><img src="assets/armchairs.jpg" alt="" loading="lazy" /></div>
+        <div className="vt-detail-cell vt-detail-cell--f"><img src="assets/sofa-detail.jpg" alt="" loading="lazy" /></div>
+        <div className="vt-detail-caption">{t.detailCaption || "Granite, pine, hand-glazed tile."}</div>
+      </div>
+    </section>
+  );
+}
 
 
 // ── PORTO / Location ────────────────────────────────────
@@ -326,5 +347,5 @@ function VTFooter({ t, lang, onLang, onBook, currentPage }) {
 }
 
 Object.assign(window, {
-  VTPorto, VTAmenities, VTReviews, VTFooter
+  VTPorto, VTDetail, VTAmenities, VTReviews, VTFooter
 });

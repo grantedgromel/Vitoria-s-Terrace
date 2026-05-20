@@ -63,8 +63,9 @@ function App() {
     <>
       <VTNav t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} scrolled={scrolled} currentPage="home" />
       <VTHero t={t} onBook={() => openBooking()} />
-      <VTApartments t={t} lang={lang} onBook={openBooking} />
       <VTStory t={t} />
+      <VTDetail t={t} />
+      <VTApartments t={t} lang={lang} onBook={openBooking} />
       <VTPorto t={t} lang={lang} />
       <VTAmenities t={t} />
       <VTReviews t={t} />
