@@ -15,7 +15,6 @@ function AppRecommendations() {
   const setLang = (v) => { writeLang(v); setLangState(v); };
   const [bookOpen, setBookOpen] = React.useState(false);
   const [initialApt, setInitialApt] = React.useState("");
-  const [scrolled, setScrolled] = React.useState(false);
 
   const TWEAKS = /*EDITMODE-BEGIN*/{
     "accentBlue": "#2A3F8F",
@@ -36,16 +35,9 @@ function AppRecommendations() {
     root.style.setProperty("--sans", `"${tweaks.bodyFont}", system-ui, sans-serif`);
   }, [tweaks]);
 
-  React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Nav assumes a hero behind it; on this page there isn't one. Force the
-  // `scrolled` state immediately so the nav renders in solid-paper mode from
-  // first paint (no transparent state with white logo on a white page).
-  React.useEffect(() => { setScrolled(true); }, []);
+  // No hero behind the nav on this page — keep it permanently in solid-paper
+  // mode. A scroll listener would race with this and flicker to transparent
+  // when scrolled near the top.
 
   const t = window.VT_I18N[lang] || window.VT_I18N.EN;
 
@@ -56,7 +48,7 @@ function AppRecommendations() {
 
   return (
     <>
-      <VTNav t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} scrolled={scrolled} currentPage="recs" />
+      <VTNav t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} scrolled={true} currentPage="recs" />
       <main style={{ paddingTop: 80 }}>
         <VTRecommendations t={t} lang={lang} />
       </main>

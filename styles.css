@@ -42,6 +42,11 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
+/* Smooth anchor scrolling — gated on reduced-motion preference. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
 body { overflow-x: hidden; }
 
 img { display: block; max-width: 100%; }
@@ -155,6 +160,14 @@ a { color: inherit; text-decoration: none; }
 }
 
 .section { padding-block: clamp(96px, 14vw, 200px); }
+
+/* Anchor-navigation offset — lands the section heading just below the fixed
+   nav, skipping into the section's own padding-top so we don't open with a
+   wall of whitespace. Negative on wide viewports (padding > target offset),
+   ~zero on small screens. */
+.section[id] {
+  scroll-margin-top: calc(100px - clamp(96px, 14vw, 200px));
+}
 
 .rule { height: 1px; background: var(--rule); border: 0; }
 
