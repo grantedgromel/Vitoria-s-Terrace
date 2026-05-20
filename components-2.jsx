@@ -56,25 +56,18 @@ function VTAmenities({ t }) {
   return (
     <section className="section" style={{ background: "var(--paper)" }}>
       <div className="container">
-        <div className="vt-amenities-outer">
-          <div>
-            <SecHead num={t.secAmen.num} label={t.secAmen.label} title={t.secAmen.title} />
-            <p className="body-lg" style={{ maxWidth: 380 }}>
-              {t.amenitiesIntro}
-            </p>
-          </div>
+        <SecHead num={t.secAmen.num} label={t.secAmen.label} title={t.secAmen.title} />
+        <p className="body-lg" style={{ maxWidth: 540, marginBottom: "clamp(48px, 8vw, 88px)" }}>
+          {t.amenitiesIntro}
+        </p>
 
-          <div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 1, background: "var(--rule)", border: "1px solid var(--rule)" }}>
-              {t.amenities.map((a, i) => (
-                <div key={i} style={{ background: "var(--paper)", padding: "26px 28px" }}>
-                  <div className="numeral" style={{ marginBottom: 8 }}>{String(i + 1).padStart(2, "0")}</div>
-                  <div className="serif" style={{ fontSize: 22, marginBottom: 4 }}>{a.label}</div>
-                  <div className="body" style={{ fontSize: 13 }}>{a.note}</div>
-                </div>
-              ))}
+        <div className="vt-amenities-grid">
+          {t.amenities.map((a, i) => (
+            <div key={i} className="vt-amenity-cell">
+              <div className="serif" style={{ fontSize: 22, marginBottom: 6, fontStyle: "italic", fontWeight: 400 }}>{a.label}</div>
+              <div className="body" style={{ fontSize: 13 }}>{a.note}</div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

@@ -40,40 +40,18 @@ function SecHead({ num, label, title }) {
 function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
   const isHome = currentPage !== "recs";
   const homePrefix = isHome ? "" : "index.html";
   const recsHref = isHome ? "recommendations.html" : "#";   // already on recs → no-op anchor
   const recsActive = currentPage === "recs";
 
-  // Hide-on-scroll-down / reveal-on-scroll-up. Stays visible within the top 200px
-  // and whenever the mobile menu is open. Small 4px threshold prevents jitter
-  // from inertial-scroll micro-deltas.
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      const dy = y - lastY.current;
-      if (y > 200) {
-        if (dy > 4) setHidden(true);
-        else if (dy < -4) setHidden(false);
-      } else {
-        setHidden(false);
-      }
-      lastY.current = y;
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   const navStyle = {
     position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-    transition: "background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.5s var(--ease-out-soft)",
+    transition: "background 0.4s ease, color 0.4s ease, border-color 0.4s ease",
     background: scrolled ? "rgba(250, 248, 244, 0.92)" : "transparent",
     backdropFilter: scrolled ? "blur(12px)" : "none",
     borderBottom: scrolled ? "1px solid var(--rule-soft)" : "1px solid transparent",
     color: scrolled ? "var(--ink)" : "var(--bone)",
-    transform: (hidden && !open) ? "translateY(-100%)" : "translateY(0)",
   };
 
   // Desktop nav links: tracked sans, eyebrow register. Aman/Cheval Blanc convention.
@@ -147,17 +125,13 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
             )}
           </div>
 
-          {scrolled ? (
-            <button className="btn btn--sm" onClick={onBook}
-              style={{ borderColor: "var(--ink)", color: "var(--ink)" }}>
-              {t.nav.book} <span className="arr"></span>
-            </button>
-          ) : (
-            <button className="btn--text" onClick={onBook}
-              style={{ color: "var(--bone)", fontSize: 16 }}>
-              {t.nav.book} <span className="arr"></span>
-            </button>
-          )}
+          <button className="btn btn--sm" onClick={onBook}
+            style={{
+              borderColor: scrolled ? "var(--ink)" : "var(--bone)",
+              color: scrolled ? "var(--ink)" : "var(--bone)"
+            }}>
+            {t.nav.book} <span className="arr"></span>
+          </button>
         </div>
 
         <button className="show-mobile" onClick={() => setOpen(!open)}
@@ -252,8 +226,8 @@ function VTHero({ t, onBook }) {
   return (
     <header id="top" style={{ position: "relative", minHeight: "100vh", overflow: "hidden", color: "var(--bone)" }}>
       <div style={{ position: "absolute", inset: 0, transform: `translateY(${parallax}px) scale(1.05)`, transition: "transform 0.05s linear" }}>
-        <img src="assets/porto-view.jpg" alt="" className="img-cover hero-img" style={{ height: "100%" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(20,18,15,0.35) 0%, rgba(20,18,15,0.15) 40%, rgba(20,18,15,0.55) 100%)" }} />
+        <img src="assets/porto-view.jpg" alt="" className="img-cover" style={{ height: "100%" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(20,18,15,0.5) 0%, rgba(20,18,15,0.2) 40%, rgba(20,18,15,0.55) 100%)" }} />
       </div>
 
       <div className="container" style={{
@@ -264,19 +238,19 @@ function VTHero({ t, onBook }) {
         gap: "clamp(48px, 8vh, 96px)"
       }}>
         <div style={{ alignSelf: "center", width: "100%" }}>
-          <h1 className="display-xl" style={{ fontStyle: "italic", letterSpacing: "-0.025em", whiteSpace: "pre-line" }}>
+          <h1 className="display-xl" style={{ fontStyle: "italic", letterSpacing: "-0.025em", whiteSpace: "pre-line", textShadow: "0 2px 24px rgba(20,18,15,0.4), 0 0 8px rgba(20,18,15,0.2)" }}>
             {t.hero.title}
           </h1>
-          <p className="body-lg" style={{ color: "rgba(250,248,244,0.85)", maxWidth: 540, marginTop: 36 }}>
+          <p className="body-lg" style={{ color: "rgba(250,248,244,0.9)", maxWidth: 540, marginTop: 36, textShadow: "0 1px 12px rgba(20,18,15,0.35)" }}>
             {t.hero.sub}
           </p>
 
-          <div style={{ display: "flex", gap: 28, marginTop: 44, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 16, marginTop: 44, flexWrap: "wrap" }}>
             <button className="btn btn--ghost" onClick={onBook} style={{ background: "var(--bone)", color: "var(--ink)", borderColor: "var(--bone)" }}>
               {t.hero.cta} <span className="arr"></span>
             </button>
-            <a href="#stays" className="btn--text" style={{ color: "var(--bone)" }}>
-              {t.hero.ctaAlt} <span className="arr"></span>
+            <a href="#stays" className="btn btn--ghost">
+              {t.hero.ctaAlt}
             </a>
           </div>
         </div>
