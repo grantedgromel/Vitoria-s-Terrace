@@ -1,16 +1,28 @@
-// Vitoria's Terrace — booking modal (multi-step)
+// Vitoria's Terrace: booking request panel
 // Globally exposes: VTBookingModal
+//
+// There is no booking backend. The panel collects dates and contact details,
+// then hands a pre-filled message to the guest's own email app or WhatsApp.
+// Nothing is sent until the guest presses send there, and the copy says so.
+
+// Porto municipal tourist tax: €3 per guest aged 13+ per night, capped at 7 nights
+// (in force since 1 Dec 2024, Câmara Municipal do Porto).
+const VT_CITY_TAX = { perNight: 3, maxNights: 7 };
+const DAY = 86400000;
+
+// Dates are "YYYY-MM-DD" strings in the guest's local calendar.
+const vtIso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const vtAddDays = (s, n) => { const [y, m, d] = s.split("-").map(Number); return vtIso(new Date(y, m - 1, d + n)); };
+const vtNights = (a, b) => Math.round((new Date(b + "T00:00:00Z") - new Date(a + "T00:00:00Z")) / DAY);
 
 function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
   const tx = (a) => (a.i18n[lang] || a.i18n.EN);
-  const [step, setStep] = useState(0);
-  const today = new Date();
-  const fmt = (d) => d.toISOString().slice(0, 10);
-  const tomorrow = new Date(today.getTime() + 86400000);
-  const fourth = new Date(today.getTime() + 4 * 86400000);
+  const today = vtIso(new Date());
+  const panelRef = React.useRef(null);
 
-  const [checkin, setCheckin] = useState(fmt(tomorrow));
-  const [checkout, setCheckout] = useState(fmt(fourth));
+  const [step, setStep] = useState(0);
+  const [checkin, setCheckin] = useState(vtAddDays(today, 1));
+  const [checkout, setCheckout] = useState(vtAddDays(today, 4));
   const [guests, setGuests] = useState(2);
   const [aptId, setAptId] = useState(initialAptId || "");
   const [first, setFirst] = useState("");
@@ -18,271 +30,251 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
+  const [showErrors, setShowErrors] = useState(false);
+
+  useDialog(open, onClose, panelRef);
 
   useEffect(() => {
-    if (open) {
-      setStep(0);
-      if (initialAptId) setAptId(initialAptId);
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
+    if (!open) return;
+    setStep(0); setShowErrors(false); setAptId(initialAptId || "");
+    // Opening from an apartment's button: fit the party to that apartment.
+    const a = VT_DATA.apartments.find((x) => x.id === initialAptId);
+    if (a && guests > a.sleeps) setGuests(a.sleeps);
   }, [open, initialAptId]);
 
+  // Move focus to the top of each new step so keyboard and screen-reader users start there.
+  const prevStep = React.useRef(0);
   useEffect(() => {
-    const onKey = (e) => { if (e.key === "Escape" && open) onClose(); };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+    const moved = prevStep.current !== step;
+    prevStep.current = step;
+    if (!open || !panelRef.current || !moved) return;
+    const h = panelRef.current.querySelector("[data-step-focus]");
+    if (h) h.focus();
+  }, [step, open]);
 
   const apts = VT_DATA.apartments;
+  const maxSleeps = Math.max(...apts.map((a) => a.sleeps));
   const apt = apts.find((a) => a.id === aptId);
-  const nights = Math.max(1, Math.round((new Date(checkout) - new Date(checkin)) / 86400000));
-  const subtotal = (apt ? apt.price : 240) * nights;
-  const cityTax = nights * guests * 2;
-  const cleaning = 45;
-  const total = subtotal + cityTax + cleaning;
 
-  const stepTitles = ["Dates & guests", t.book.details, t.book.done];
+  // A chosen apartment that no longer fits the party is cleared, not kept silently.
+  useEffect(() => { if (apt && apt.sleeps < guests) setAptId(""); }, [guests]);
 
-  const inputStyle = {
-    width: "100%", padding: "14px 0", border: 0, borderBottom: "1px solid var(--rule)",
-    background: "transparent", fontSize: 16, fontFamily: "var(--sans)",
-    outline: "none", color: "var(--ink)"
-  };
+  const nights = vtNights(checkin, checkout);
+  const datesOk = checkin >= today && nights >= 1;
+  const rate = apt && apt.price && datesOk ? apt.price * nights : null;
+  const cityTax = guests * Math.min(Math.max(nights, 0), VT_CITY_TAX.maxNights) * VT_CITY_TAX.perNight;
 
-  const labelStyle = {
-    fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase",
-    color: "var(--granite)", fontWeight: 500, display: "block", marginBottom: 4
-  };
+  const dateFmt = new Intl.DateTimeFormat(VT_NUM_LOCALES[lang] || "en-GB", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric" });
+  const showDate = (s) => dateFmt.format(new Date(s + "T00:00:00Z"));
+  const nameOk = Boolean(first.trim() && last.trim());
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  // The host works in Portuguese and English, so a translated name also carries the English one.
+  const aptName = apt ? (lang === "EN" ? apt.i18n.EN.name : `${tx(apt).name} (${apt.i18n.EN.name})`) : t.book.any;
 
-  return (
-    <div className={`book-modal ${open ? "open" : ""}`} onClick={onClose}>
-      <div className="book-modal__panel" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div style={{ padding: "clamp(20px, 5vw, 32px) clamp(20px, 5vw, 40px) clamp(20px, 4vw, 28px)", borderBottom: "1px solid var(--rule)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+  const lines = [
+    [t.book.checkin, showDate(checkin)],
+    [t.book.checkout, showDate(checkout)],
+    [t.book.nightsLabel, String(nights)],
+    [t.book.guests, String(guests)],
+    [t.book.apartment, aptName],
+    [t.book.nameL, `${first.trim()} ${last.trim()}`.trim()],
+    [t.book.emailL, email.trim()],
+    [t.book.phoneL, phone.trim()],
+    [t.book.notesL, notes.trim()]
+  ].filter(([, v]) => v);
+  const subject = `${t.book.requestSubject}: ${showDate(checkin)} / ${showDate(checkout)}`;
+  const body = lines.map(([k, v]) => `${k}: ${v}`).join("\n");
+  const mailHref = `mailto:${VT_DATA.meta.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const waHref = `https://wa.me/${VT_DATA.meta.whatsapp}?text=${encodeURIComponent(subject + "\n\n" + body)}`;
+
+  const steps = [t.book.stepDates, t.book.details, t.book.stepSend];
+
+  const next0 = () => { if (datesOk) { setShowErrors(false); setStep(1); } else setShowErrors(true); };
+  const next1 = () => { if (nameOk && emailOk) { setShowErrors(false); setStep(2); } else setShowErrors(true); };
+
+  if (!open) return null;
+
+  return ReactDOM.createPortal(
+    <div className="book-modal open" onClick={onClose}>
+      <div className="book-modal__panel" role="dialog" aria-modal="true" aria-labelledby="vt-book-title"
+        ref={panelRef} tabIndex={-1} onClick={(e) => e.stopPropagation()}>
+        <div className="vt-panel-head">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16 }}>
             <div>
-              <div className="numeral" style={{ marginBottom: 6 }}>№ 0{step + 1} of 03</div>
-              <h3 className="serif" style={{ fontSize: 28, fontStyle: "italic", lineHeight: 1 }}>{t.book.title}</h3>
-              <div className="body" style={{ fontSize: 12, marginTop: 8 }}>{t.book.sub}</div>
+              <h2 id="vt-book-title" className="serif" tabIndex={-1} data-autofocus=""
+                style={{ fontSize: 32, lineHeight: 1.1, fontWeight: 400 }}>{t.book.title}</h2>
+              <p className="body" style={{ fontSize: 15, marginTop: 8 }}>{t.book.sub}</p>
             </div>
-            <button onClick={onClose} aria-label="Close" style={{
-              fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--granite)",
-              padding: "12px 14px", minHeight: 44
-            }}>{t.book.close} ×</button>
+            <button onClick={onClose} className="vt-panel-close">{t.book.close}</button>
           </div>
-
-          {/* Step rail */}
-          <div style={{ display: "flex", gap: 8 }}>
-            {[0, 1, 2].map((s) => (
-              <div key={s} style={{
-                flex: 1, height: 2,
-                background: s <= step ? "var(--ink)" : "var(--rule)",
-                transition: "background 0.4s ease"
-              }}></div>
+          <ol className="vt-steps" style={{ listStyle: "none" }}>
+            {steps.map((s, i) => (
+              <li key={s} aria-current={i === step ? "step" : undefined}>{i + 1}. {s}</li>
             ))}
-          </div>
-          <div className="eyebrow" style={{ marginTop: 14, fontSize: 10, color: "var(--ink)" }}>{stepTitles[step]}</div>
+          </ol>
         </div>
 
-        {/* Step 0 — dates & guests */}
         {step === 0 && (
-          <div style={{ padding: "clamp(20px, 5vw, 40px)" }} key="s0">
-            <div className="vt-form-row" style={{ marginBottom: 32 }}>
-              <div>
-                <label style={labelStyle}>{t.book.checkin}</label>
-                <input type="date" value={checkin}
-                  min={fmt(today)}
+          <div className="vt-panel-body">
+            <h3 className="visually-hidden" tabIndex={-1} data-step-focus="">{t.book.stepDates}</h3>
+            <div className="vt-form-row">
+              <label className="vt-field">
+                <span className="vt-field__label">{t.book.checkin}</span>
+                <input type="date" className="vt-input" value={checkin} min={today} required
+                  aria-invalid={showErrors && !datesOk ? "true" : undefined} aria-describedby={showErrors && !datesOk ? "vt-err-dates" : undefined}
                   onChange={(e) => {
-                    setCheckin(e.target.value);
-                    if (new Date(e.target.value) >= new Date(checkout)) {
-                      setCheckout(fmt(new Date(new Date(e.target.value).getTime() + 86400000 * 3)));
-                    }
-                  }}
-                  style={inputStyle} />
-              </div>
-              <div>
-                <label style={labelStyle}>{t.book.checkout}</label>
-                <input type="date" value={checkout}
-                  min={fmt(new Date(new Date(checkin).getTime() + 86400000))}
-                  onChange={(e) => setCheckout(e.target.value)}
-                  style={inputStyle} />
-              </div>
+                    // Chrome fires a change per typed segment, so accept partial values and
+                    // let the Continue check reject past or reversed dates.
+                    const v = e.target.value;
+                    if (!v) return;
+                    setCheckin(v);
+                    if (v >= today && vtNights(v, checkout) < 1) setCheckout(vtAddDays(v, 3));
+                  }} />
+              </label>
+              <label className="vt-field">
+                <span className="vt-field__label">{t.book.checkout}</span>
+                <input type="date" className="vt-input" value={checkout} min={vtAddDays(checkin, 1)} required
+                  aria-invalid={showErrors && !datesOk ? "true" : undefined} aria-describedby={showErrors && !datesOk ? "vt-err-dates" : undefined}
+                  onChange={(e) => e.target.value && setCheckout(e.target.value)} />
+              </label>
             </div>
+            {showErrors && !datesOk && <p id="vt-err-dates" className="vt-error" role="alert">{t.book.errDates}</p>}
+            <p className="vt-summary__note" style={{ margin: "-8px 0 24px" }}>{t.arrival}</p>
 
-            <div style={{ marginBottom: 32 }}>
-              <label style={labelStyle}>{t.book.guests}</label>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingBlock: 12, borderBottom: "1px solid var(--rule)" }}>
-                <span className="serif italic" style={{ fontSize: 22 }}>
-                  {guests} {guests === 1 ? t.book.adult : t.book.adults}
-                </span>
-                <div style={{ display: "flex", gap: 4 }}>
-                  <button onClick={() => setGuests(Math.max(1, guests - 1))} aria-label="Decrease guests"
-                    style={{ width: 44, height: 44, border: "1px solid var(--rule)", fontSize: 18 }}>−</button>
-                  <button onClick={() => setGuests(Math.min(8, guests + 1))} aria-label="Increase guests"
-                    style={{ width: 44, height: 44, border: "1px solid var(--rule)", fontSize: 18 }}>+</button>
+            <div className="vt-field">
+              <span className="vt-field__label" id="vt-guests-label">{t.book.guests}</span>
+              <div className="vt-stepper" role="group" aria-labelledby="vt-guests-label">
+                <span className="serif" style={{ fontSize: 24 }} aria-live="polite">{guests}</span>
+                <div style={{ display: "flex", gap: 6 }}>
+                  <button onClick={() => setGuests(Math.max(1, guests - 1))} aria-label={t.book.fewer}>−</button>
+                  <button onClick={() => setGuests(Math.min(8, guests + 1))} aria-label={t.book.more}>+</button>
                 </div>
               </div>
             </div>
 
-            <div style={{ marginBottom: 40 }}>
-              <label style={labelStyle}>{t.book.apartment}</label>
-              <div style={{ display: "grid", gap: 10, marginTop: 12 }}>
-                <button onClick={() => setAptId("")}
-                  style={{
-                    textAlign: "left", padding: "16px 20px",
-                    border: "1px solid " + (aptId === "" ? "var(--ink)" : "var(--rule)"),
-                    background: aptId === "" ? "var(--bone-2)" : "transparent",
-                    transition: "all 0.3s ease"
-                  }}>
-                  <div className="serif italic" style={{ fontSize: 18 }}>{t.book.any}</div>
-                  <div style={{ fontSize: 12, color: "var(--granite)", marginTop: 2 }}>We'll match you to the best fit</div>
+            <div className="vt-field">
+              <span className="vt-field__label" style={{ marginBottom: 10 }}>{t.book.apartment}</span>
+              <div style={{ display: "grid", gap: 8 }}>
+                <button className="vt-choice" aria-pressed={aptId === ""} onClick={() => setAptId("")}>
+                  <span>
+                    <span className="serif" style={{ fontSize: 20, display: "block" }}>{t.book.any}</span>
+                    <span style={{ fontSize: 14, color: "var(--granite)" }}>{guests > maxSleeps ? t.book.groupNote : t.book.anyNote}</span>
+                  </span>
                 </button>
                 {apts.map((a) => (
-                  <button key={a.id} onClick={() => setAptId(a.id)}
-                    disabled={a.sleeps < guests}
-                    style={{
-                      textAlign: "left", padding: "16px 20px",
-                      border: "1px solid " + (aptId === a.id ? "var(--ink)" : "var(--rule)"),
-                      background: aptId === a.id ? "var(--bone-2)" : "transparent",
-                      opacity: a.sleeps < guests ? 0.4 : 1,
-                      cursor: a.sleeps < guests ? "not-allowed" : "pointer",
-                      transition: "all 0.3s ease",
-                      display: "flex", justifyContent: "space-between", alignItems: "center"
-                    }}>
-                    <div>
-                      <div className="serif italic" style={{ fontSize: 18 }}>№ {a.number} · {tx(a).name}</div>
-                      <div style={{ fontSize: 12, color: "var(--granite)", marginTop: 2 }}>
-                        {a.sleeps} {t.book.guests.toLowerCase()} · {a.sqm}m²
-                      </div>
-                    </div>
-                    <div className="serif" style={{ fontSize: 22 }}>€{a.price}<span style={{ fontSize: 11, color: "var(--granite)" }}>/n</span></div>
+                  <button key={a.id} className="vt-choice" aria-pressed={aptId === a.id}
+                    disabled={a.sleeps < guests} onClick={() => setAptId(a.id)}>
+                    <span>
+                      <span className="serif vt-choice__name">{vtName(tx(a).name)}</span>
+                      <span style={{ fontSize: 14, color: "var(--granite)" }}>{vtCount(t, "guests", a.sleeps)} · {a.sqm} m²</span>
+                    </span>
+                    <span style={{ fontSize: 15, whiteSpace: "nowrap" }}>
+                      {a.price ? vtFrom(t, a.price, lang) : t.apt.onRequest}
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Summary preview */}
-            <div style={{ background: "var(--bone-2)", padding: 24, marginBottom: 32 }}>
-              <div className="eyebrow" style={{ marginBottom: 12 }}>{t.book.summary}</div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 14 }}>
-                <span>{nights} {t.book.nights}{apt ? ` · ${tx(apt).name}` : ""}</span>
-                <span>€{subtotal}</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 13, color: "var(--granite)" }}>
-                <span>City tax</span><span>€{cityTax}</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16, fontSize: 13, color: "var(--granite)" }}>
-                <span>Cleaning</span><span>€{cleaning}</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 14, borderTop: "1px solid var(--rule)" }}>
-                <span className="serif italic" style={{ fontSize: 20 }}>{t.book.total}</span>
-                <span className="serif" style={{ fontSize: 24 }}>€{total}</span>
-              </div>
+            <div className="vt-summary">
+              <div className="eyebrow" style={{ marginBottom: 10 }}>{t.book.summary}</div>
+              {rate !== null ? (
+                <>
+                  <div className="vt-summary__row">
+                    <span>{nights} × {vtEur(apt.price, lang)}</span><span>{vtEur(rate, lang)}</span>
+                  </div>
+                  <div className="vt-summary__row" style={{ color: "var(--granite)" }}>
+                    <span>{t.book.cityTax}</span><span>{vtEur(cityTax, lang)}</span>
+                  </div>
+                  <div className="vt-summary__row" style={{ marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--rule)" }}>
+                    <span className="serif" style={{ fontSize: 20 }}>{t.book.total}</span>
+                    <span className="serif" style={{ fontSize: 22 }}>{vtEur(rate + cityTax, lang)}</span>
+                  </div>
+                  <p className="vt-summary__note">{t.book.estimateNote}</p>
+                </>
+              ) : (
+                <p style={{ fontSize: 15 }}>
+                  {datesOk ? (t.book.nightsFmt ? t.book.nightsFmt.replace("{n}", nights) : `${nights} ${nights === 1 ? t.book.night : t.book.nights}. `) : ""}{t.book.estimateNone}
+                </p>
+              )}
             </div>
 
-            <button className="btn btn--primary" style={{ width: "100%", justifyContent: "center" }}
-              onClick={() => setStep(1)}>
-              {t.book.next} <span className="arr"></span>
-            </button>
+            <button className="btn btn--primary" style={{ width: "100%" }} onClick={next0}>{t.book.next}</button>
           </div>
         )}
 
-        {/* Step 1 — details */}
         {step === 1 && (
-          <div style={{ padding: "clamp(20px, 5vw, 40px)" }} key="s1">
-            <div className="vt-form-row" style={{ gap: 24, marginBottom: 24 }}>
-              <div>
-                <label style={labelStyle}>{t.book.first}</label>
-                <input style={inputStyle} value={first} onChange={(e) => setFirst(e.target.value)} />
-              </div>
-              <div>
-                <label style={labelStyle}>{t.book.last}</label>
-                <input style={inputStyle} value={last} onChange={(e) => setLast(e.target.value)} />
-              </div>
+          <div className="vt-panel-body">
+            <h3 className="visually-hidden" tabIndex={-1} data-step-focus="">{t.book.details}</h3>
+            <div className="vt-form-row">
+              <label className="vt-field">
+                <span className="vt-field__label">{t.book.first}</span>
+                <input className="vt-input" autoComplete="given-name" required value={first}
+                  aria-invalid={showErrors && !first.trim() ? "true" : undefined}
+                  aria-describedby={showErrors && !nameOk ? "vt-err-name" : undefined}
+                  onChange={(e) => setFirst(e.target.value)} />
+              </label>
+              <label className="vt-field">
+                <span className="vt-field__label">{t.book.last}</span>
+                <input className="vt-input" autoComplete="family-name" required value={last}
+                  aria-invalid={showErrors && !last.trim() ? "true" : undefined}
+                  aria-describedby={showErrors && !nameOk ? "vt-err-name" : undefined}
+                  onChange={(e) => setLast(e.target.value)} />
+              </label>
             </div>
+            {showErrors && !nameOk && <p id="vt-err-name" className="vt-error" role="alert">{t.book.errName}</p>}
+            <label className="vt-field">
+              <span className="vt-field__label">{t.book.emailL}</span>
+              <input type="email" className="vt-input" autoComplete="email" required value={email}
+                aria-invalid={showErrors && !emailOk ? "true" : undefined}
+                aria-describedby={showErrors && !emailOk ? "vt-err-email" : undefined}
+                onChange={(e) => setEmail(e.target.value)} />
+            </label>
+            {showErrors && !emailOk && <p id="vt-err-email" className="vt-error" role="alert">{t.book.errEmail}</p>}
+            <label className="vt-field">
+              <span className="vt-field__label">{t.book.phoneL} ({t.book.optional})</span>
+              <input type="tel" className="vt-input" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </label>
+            <label className="vt-field">
+              <span className="vt-field__label">{t.book.notes}</span>
+              <textarea rows={3} className="vt-input" style={{ resize: "vertical" }} value={notes} onChange={(e) => setNotes(e.target.value)} />
+            </label>
 
-            <div style={{ marginBottom: 24 }}>
-              <label style={labelStyle}>{t.book.emailL}</label>
-              <input type="email" style={inputStyle} value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div style={{ marginBottom: 24 }}>
-              <label style={labelStyle}>{t.book.phoneL}</label>
-              <input style={inputStyle} value={phone} onChange={(e) => setPhone(e.target.value)} />
-            </div>
-            <div style={{ marginBottom: 36 }}>
-              <label style={labelStyle}>{t.book.notes}</label>
-              <textarea rows={3} style={{ ...inputStyle, padding: "14px 0", resize: "vertical" }}
-                value={notes} onChange={(e) => setNotes(e.target.value)} />
-            </div>
-
-            <div style={{ background: "var(--bone-2)", padding: "20px 24px", marginBottom: 32, fontSize: 13 }}>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span>{checkin} → {checkout} · {nights} {t.book.nights}</span>
-                <span className="serif italic">€{total}</span>
-              </div>
-              <div style={{ fontSize: 11, color: "var(--granite)", marginTop: 4 }}>{t.book.includes}</div>
-            </div>
-
+            <p className="vt-summary__note" style={{ margin: "-8px 0 20px" }}>
+              {t.book.legalLabel} <a className="link-u" href={`privacy.html${lang === "PT" ? "#pt" : ""}`} target="_blank" rel="noopener">{t.footer.privacy}</a>
+              {" · "}<a className="link-u" href={`terms.html${lang === "PT" ? "#pt" : ""}`} target="_blank" rel="noopener">{t.footer.terms}</a>
+            </p>
             <div style={{ display: "flex", gap: 12 }}>
-              <button className="btn" style={{ flex: "0 0 auto" }} onClick={() => setStep(0)}>
-                ← {t.book.back}
-              </button>
-              <button className="btn btn--primary" style={{ flex: 1, justifyContent: "center" }}
-                disabled={!first || !last || !email}
-                onClick={() => setStep(2)}>
-                {t.book.confirm} <span className="arr"></span>
-              </button>
+              <button className="btn" onClick={() => setStep(0)}>{t.book.back}</button>
+              <button className="btn btn--primary" style={{ flex: 1 }} onClick={next1}>{t.book.confirm}</button>
             </div>
           </div>
         )}
 
-        {/* Step 2 — done */}
         {step === 2 && (
-          <div style={{ padding: "clamp(28px, 6vw, 56px)", textAlign: "center" }} key="s2">
-            <div className="numeral" style={{ marginBottom: 24 }}>— Confirmed —</div>
-            <div style={{ width: 64, height: 64, border: "1px solid var(--ochre-deep)", borderRadius: "50%", margin: "0 auto 32px", display: "grid", placeItems: "center" }}>
-              <div className="serif italic" style={{ fontSize: 28, color: "var(--ochre-deep)" }}>✓</div>
-            </div>
-            <h3 className="display-md" style={{ marginBottom: 20 }}>{t.book.done}</h3>
-            <p className="body-lg" style={{ marginBottom: 8 }}>{t.book.doneSub}</p>
-            <p className="serif italic" style={{ fontSize: 20, color: "var(--ink)", marginBottom: 32 }}>{email}</p>
-            <p className="body" style={{ maxWidth: 360, margin: "0 auto 40px" }}>{t.book.doneNote}</p>
+          <div className="vt-panel-body">
+            <h3 className="serif" tabIndex={-1} data-step-focus=""
+              style={{ fontSize: 26, fontWeight: 400, marginBottom: 8 }}>{t.book.readyTitle}</h3>
+            <p className="body" style={{ marginBottom: 24 }}>{t.book.readySub}</p>
 
-            <div style={{ background: "var(--bone-2)", padding: 24, marginBottom: 32, textAlign: "left" }}>
-              <div className="eyebrow" style={{ marginBottom: 12 }}>Reservation</div>
-              <div style={{ display: "grid", gap: 8, fontSize: 13 }}>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Reference</span><span className="mono">VT-{Date.now().toString(36).toUpperCase().slice(-6)}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Stay</span><span>{checkin} → {checkout}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>{t.book.apartment}</span><span>{apt ? tx(apt).name : t.book.any}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>Guests</span><span>{guests}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 8, borderTop: "1px solid var(--rule)", marginTop: 4 }}>
-                  <span className="serif italic" style={{ fontSize: 16 }}>{t.book.total}</span>
-                  <span className="serif" style={{ fontSize: 18 }}>€{total}</span>
-                </div>
-              </div>
+            <dl className="vt-review-list">
+              {lines.map(([k, v]) => (<React.Fragment key={k}><dt>{k}</dt><dd>{v}</dd></React.Fragment>))}
+            </dl>
+
+            <div style={{ display: "grid", gap: 10 }}>
+              <a className="btn btn--primary" href={mailHref}>{t.book.sendEmail}</a>
+              <a className="btn" href={waHref} target="_blank" rel="noopener">{t.book.sendWhatsapp}</a>
+              <button className="btn" onClick={() => setStep(1)}>{t.book.back}</button>
             </div>
 
-            <button className="btn" style={{ width: "100%", justifyContent: "center" }} onClick={onClose}>
-              {t.book.close}
-            </button>
+            <p className="body" style={{ fontSize: 14, marginTop: 20 }}>
+              {t.book.readyNote} <a className="link-u" href={`mailto:${VT_DATA.meta.email}`}>{VT_DATA.meta.email}</a>
+            </p>
           </div>
         )}
-
-        {/* tile motif footer */}
-        <div className="azulejo-strip" style={{ position: "sticky", bottom: 0 }}></div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

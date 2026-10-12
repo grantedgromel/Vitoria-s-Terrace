@@ -1,53 +1,24 @@
-// Vitoria's Terrace — App root (recommendations page)
-// Mirrors app.jsx but renders only the chrome (nav + footer + booking modal +
-// tweaks panel) around the Recommendations section. Shares the same
-// localStorage-backed language state as the home page.
-
-function readLang() {
-  try { return localStorage.getItem("vt-lang") || "EN"; } catch (_) { return "EN"; }
-}
-function writeLang(v) {
-  try { localStorage.setItem("vt-lang", v); } catch (_) { /* no-op */ }
-}
+// Vitoria's Terrace: app root (recommendations page)
+// Same chrome as the home page (nav, footer, booking panel) around the
+// recommendations list. Shares the localStorage-backed language choice.
 
 function AppRecommendations() {
-  const [lang, setLangState] = React.useState(readLang);
-  const setLang = (v) => { writeLang(v); setLangState(v); };
+  const [lang, setLangState] = React.useState(vtReadLang);
+  const setLang = (v) => { vtWriteLang(v); setLangState(v); };
   const [bookOpen, setBookOpen] = React.useState(false);
   const [initialApt, setInitialApt] = React.useState("");
-  const [scrolled, setScrolled] = React.useState(false);
-
-  const TWEAKS = /*EDITMODE-BEGIN*/{
-    "accentBlue": "#2A3F8F",
-    "accentOchre": "#B89150",
-    "displayFont": "Cormorant Garamond",
-    "bodyFont": "Inter"
-  }/*EDITMODE-END*/;
-
-  const [tweaks, setTweak] = window.useTweaks(TWEAKS);
-
-  React.useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty("--porto", tweaks.accentBlue);
-    root.style.setProperty("--porto-deep", tweaks.accentBlue);
-    root.style.setProperty("--ochre", tweaks.accentOchre);
-    root.style.setProperty("--ochre-deep", tweaks.accentOchre);
-    root.style.setProperty("--serif", `"${tweaks.displayFont}", Georgia, serif`);
-    root.style.setProperty("--sans", `"${tweaks.bodyFont}", system-ui, sans-serif`);
-  }, [tweaks]);
-
-  React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Nav assumes a hero behind it; on this page there isn't one. Force the
-  // `scrolled` state immediately so the nav renders in solid-paper mode from
-  // first paint (no transparent state with white logo on a white page).
-  React.useEffect(() => { setScrolled(true); }, []);
 
   const t = window.VT_I18N[lang] || window.VT_I18N.EN;
+
+  React.useEffect(() => { vtApplyPageMeta(lang, `${t.recs.heading} · Vitória's Terrace`, t.recs.byline); }, [lang]);
+
+  // Section links (index.html#porto, ?lang=pt#stays) arrive before React has
+  // rendered the target, so scroll once after the first render.
+  React.useEffect(() => {
+    const id = window.location.hash && decodeURIComponent(window.location.hash.slice(1));
+    const el = id && document.getElementById(id);
+    if (el) el.scrollIntoView();
+  }, []);
 
   const openBooking = (aptId) => {
     setInitialApt(typeof aptId === "string" ? aptId : "");
@@ -56,37 +27,13 @@ function AppRecommendations() {
 
   return (
     <>
-      <VTNav t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} scrolled={scrolled} currentPage="recs" />
+      <VTNav t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} currentPage="recs" />
       <main style={{ paddingTop: 80 }}>
         <VTRecommendations t={t} lang={lang} />
       </main>
       <VTFooter t={t} lang={lang} onLang={setLang} onBook={() => openBooking()} currentPage="recs" />
 
       <VTBookingModal open={bookOpen} onClose={() => setBookOpen(false)} t={t} lang={lang} initialAptId={initialApt} />
-
-      <window.TweaksPanel title="Tweaks">
-        <window.TweakSection label="Accent palette">
-          <window.TweakColor label="Porto blue" value={tweaks.accentBlue}
-            onChange={(v) => setTweak('accentBlue', v)} />
-          <window.TweakColor label="Tile ochre" value={tweaks.accentOchre}
-            onChange={(v) => setTweak('accentOchre', v)} />
-        </window.TweakSection>
-
-        <window.TweakSection label="Typography">
-          <window.TweakSelect label="Display serif" value={tweaks.displayFont}
-            options={["Cormorant Garamond", "Playfair Display", "DM Serif Display", "Fraunces", "Lora"]}
-            onChange={(v) => setTweak('displayFont', v)} />
-          <window.TweakSelect label="Body sans" value={tweaks.bodyFont}
-            options={["Inter", "Manrope", "DM Sans", "Work Sans"]}
-            onChange={(v) => setTweak('bodyFont', v)} />
-        </window.TweakSection>
-
-        <window.TweakSection label="Language preview">
-          <window.TweakSelect label="Locale" value={lang}
-            options={["EN", "PT", "ES", "FR", "KR", "JA"]}
-            onChange={(v) => setLang(v)} />
-        </window.TweakSection>
-      </window.TweaksPanel>
     </>
   );
 }
