@@ -113,20 +113,22 @@ function SecTitle({ children }) {
 // `currentPage` is "home" or "recs". Anchors that target home sections need an
 // `index.html` prefix when we're on the recommendations page.
 function VTNav({ t, lang, onLang, onBook, currentPage }) {
+  // Cross-page links carry ?lang= so the language survives when storage is blocked.
+  const q = lang === "EN" ? "" : `?lang=${VT_URL_LANG[lang]}`;
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const langRef = React.useRef(null);
   const menuBtnRef = React.useRef(null);
   const focusLangBtn = () => langRef.current && langRef.current.querySelector("button").focus();
   const isHome = currentPage !== "recs";
-  const homePrefix = isHome ? "" : "index.html";
+  const homePrefix = isHome ? "" : `index.html${q}`;
   const recsActive = currentPage === "recs";
 
   const links = [
     [`${homePrefix}#stays`, t.nav.stays, false],
     [`${homePrefix}#story`, t.nav.story, false],
     [`${homePrefix}#porto`, t.nav.porto, false],
-    ["recommendations.html", t.nav.recs, recsActive],
+    [`recommendations.html${q}`, t.nav.recs, recsActive],
     ["#contact", t.nav.contact, false]
   ];
 
@@ -141,11 +143,21 @@ function VTNav({ t, lang, onLang, onBook, currentPage }) {
     return () => { window.removeEventListener("keydown", onKey); document.removeEventListener("mousedown", onDown); };
   }, [langOpen]);
 
+  // The mobile sheet covers the page: Escape closes it, and so does focus leaving the nav.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => { if (e.key === "Escape") { setOpen(false); menuBtnRef.current && menuBtnRef.current.focus(); } };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   return (
-    <nav className="vt-nav" aria-label={t.nav.mainLabel}>
+    <nav className="vt-nav" aria-label={t.nav.mainLabel}
+      onBlur={(e) => { if (open && !e.currentTarget.contains(e.relatedTarget)) setOpen(false); }}>
       <div className="container vt-nav__row">
-        <a href={isHome ? "#top" : "index.html"} className="vt-nav__logo" aria-label={t.nav.homeLabel}>
-          <img src="assets/logo.png" alt="Vitória's Terrace" width="52" height="52" />
+        <a href={isHome ? "#top" : `index.html${q}`} className="vt-nav__logo" aria-label={t.nav.homeLabel}>
+          <img src="assets/mark.png" alt="" width="44" height="44" />
+          <span className="vt-nav__name">Vitória&apos;s Terrace</span>
         </a>
 
         <div className="vt-nav__links">

@@ -117,7 +117,8 @@ function VTReviews({ t }) {
 // ── FOOTER ──────────────────────────────────────────────
 function VTFooter({ t, lang, onLang, onBook, currentPage }) {
   const isHome = currentPage !== "recs";
-  const homePrefix = isHome ? "" : "index.html";
+  const q = lang === "EN" ? "" : `?lang=${VT_URL_LANG[lang]}`;
+  const homePrefix = isHome ? "" : `index.html${q}`;
   const meta = VT_DATA.meta;
   // Legal pages exist in English and Portuguese; other languages get the English text.
   const legalHash = lang === "PT" ? "#pt" : "";
@@ -152,7 +153,7 @@ function VTFooter({ t, lang, onLang, onBook, currentPage }) {
               <a href={`${homePrefix}#stays`}>{t.nav.stays}</a>
               <a href={`${homePrefix}#story`}>{t.nav.story}</a>
               <a href={`${homePrefix}#porto`}>{t.nav.porto}</a>
-              <a href="recommendations.html" aria-current={!isHome ? "page" : undefined}>{t.nav.recs}</a>
+              <a href={`recommendations.html${q}`} aria-current={!isHome ? "page" : undefined}>{t.nav.recs}</a>
             </div>
 
             <div className="vt-footer__label" style={{ marginTop: 28 }}>{t.footer.language}</div>

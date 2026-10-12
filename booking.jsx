@@ -35,7 +35,11 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
   useDialog(open, onClose, panelRef);
 
   useEffect(() => {
-    if (open) { setStep(0); setShowErrors(false); setAptId(initialAptId || ""); }
+    if (!open) return;
+    setStep(0); setShowErrors(false); setAptId(initialAptId || "");
+    // Opening from an apartment's button: fit the party to that apartment.
+    const a = VT_DATA.apartments.find((x) => x.id === initialAptId);
+    if (a && guests > a.sleeps) setGuests(a.sleeps);
   }, [open, initialAptId]);
 
   // Move focus to the top of each new step so keyboard and screen-reader users start there.
@@ -117,22 +121,24 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
               <label className="vt-field">
                 <span className="vt-field__label">{t.book.checkin}</span>
                 <input type="date" className="vt-input" value={checkin} min={today} required
-                  aria-invalid={!datesOk ? "true" : undefined} aria-describedby={!datesOk ? "vt-err-dates" : undefined}
+                  aria-invalid={showErrors && !datesOk ? "true" : undefined} aria-describedby={showErrors && !datesOk ? "vt-err-dates" : undefined}
                   onChange={(e) => {
-                    if (!e.target.value) return;
-                    const v = e.target.value < today ? today : e.target.value;
+                    // Chrome fires a change per typed segment, so accept partial values and
+                    // let the Continue check reject past or reversed dates.
+                    const v = e.target.value;
+                    if (!v) return;
                     setCheckin(v);
-                    if (vtNights(v, checkout) < 1) setCheckout(vtAddDays(v, 3));
+                    if (v >= today && vtNights(v, checkout) < 1) setCheckout(vtAddDays(v, 3));
                   }} />
               </label>
               <label className="vt-field">
                 <span className="vt-field__label">{t.book.checkout}</span>
                 <input type="date" className="vt-input" value={checkout} min={vtAddDays(checkin, 1)} required
-                  aria-invalid={!datesOk ? "true" : undefined} aria-describedby={!datesOk ? "vt-err-dates" : undefined}
+                  aria-invalid={showErrors && !datesOk ? "true" : undefined} aria-describedby={showErrors && !datesOk ? "vt-err-dates" : undefined}
                   onChange={(e) => e.target.value && setCheckout(e.target.value)} />
               </label>
             </div>
-            {!datesOk && <p id="vt-err-dates" className="vt-error" role="alert">{t.book.errDates}</p>}
+            {showErrors && !datesOk && <p id="vt-err-dates" className="vt-error" role="alert">{t.book.errDates}</p>}
             <p className="vt-summary__note" style={{ margin: "-8px 0 24px" }}>{t.arrival}</p>
 
             <div className="vt-field">

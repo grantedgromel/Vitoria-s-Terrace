@@ -393,7 +393,7 @@ const VT_DATA = {
           name: "Time Out Market Porto",
           addr: "Ala Sul da Estação Ferroviária de São Bento, Praça de Almeida Garrett",
           coords: [41.1456, -8.6105],
-          walk: "10 min",
+          walk: "5 min",
           subTag: "market"
         },
         {

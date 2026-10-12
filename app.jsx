@@ -2,7 +2,7 @@
 
 // Soft-redirect old `#recs` deep links to the dedicated page.
 if (typeof window !== "undefined" && window.location.hash === "#recs") {
-  window.location.replace("recommendations.html");
+  window.location.replace("recommendations.html" + window.location.search);
 }
 
 function App() {

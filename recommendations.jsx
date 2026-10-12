@@ -21,7 +21,7 @@ function tr(field, lang) {
 const VT_REC_LABELS = {
   directions: { EN: "Walking directions", PT: "Direções a pé", ES: "Cómo llegar a pie", FR: "Itinéraire à pied", KR: "도보 길찾기", JA: "徒歩ルートを見る" },
   website:    { EN: "Open website", PT: "Abrir o site", ES: "Abrir la web", FR: "Ouvrir le site", KR: "웹사이트 열기", JA: "サイトを開く" },
-  reserve:    { EN: "Book ahead", PT: "Convém reservar", ES: "Conviene reservar", FR: "Réservation conseillée", KR: "사전 예약", JA: "要予約" },
+  reserve:    { EN: "Book ahead", PT: "Convém reservar", ES: "Conviene reservar", FR: "Réservation conseillée", KR: "예약 권장", JA: "予約がおすすめ" },
   reserveLong:{ EN: "Book a table or ticket in advance.", PT: "Reserve mesa ou bilhete com antecedência.", ES: "Reserva mesa o entrada con antelación.", FR: "Réservez une table ou un billet à l'avance.", KR: "자리나 티켓을 미리 예약하세요.", JA: "席やチケットは事前に予約してください。" },
   walk:       { EN: "on foot", PT: "a pé", ES: "a pie", FR: "à pied", KR: "도보", JA: "徒歩" }
 };
@@ -56,7 +56,7 @@ function VTRecDrawer({ item, subTags, lang, t, onClose }) {
         </div>
         {item.image && (
           <div className="vt-drawer__photo">
-            <img src={item.image} alt={name} />
+            <img src={item.image} alt="" />
           </div>
         )}
         <div className="vt-drawer__body">
