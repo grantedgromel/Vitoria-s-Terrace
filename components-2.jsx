@@ -1,51 +1,45 @@
-// Vitoria's Terrace — page sections part 2
-// Globally exposes: VTPorto, VTAmenities, VTReviews, VTFooter, VTBookingModal
+// Vitoria's Terrace: page sections, part 2
+// Globally exposes: VTPorto, VTAmenities, VTReviews, VTFooter
 
-
-// ── PORTO / Location ────────────────────────────────────
-const VT_OPEN_IN_MAPS = { EN: "Open in Maps", PT: "Abrir no Maps", ES: "Abrir en Maps", FR: "Ouvrir dans Maps", KR: "지도에서 열기", JA: "マップで開く" };
-
-function VTPorto({ t, lang }) {
+// ── LOCATION ────────────────────────────────────────────
+function VTPorto({ t }) {
   return (
-    <section id="porto" className="section" style={{ background: "var(--ink)", color: "var(--bone)" }}>
+    <section id="porto" className="section section--bone">
       <div className="container">
-        <div className="sec-head reveal" ref={useReveal()}>
-          <div className="num" style={{ color: "var(--ochre)" }}>{t.secPorto.num}</div>
-          <div>
-            <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 18 }}>{t.secPorto.label}</div>
-            <h2 className="display-md" style={{ whiteSpace: "pre-line", color: "var(--bone)" }}>{t.secPorto.title}</h2>
-          </div>
-        </div>
+        <SecTitle>{t.sec.porto}</SecTitle>
 
         <div className="vt-porto-grid">
           <div className="img-frame vt-porto-grid__media">
-            <img src="assets/porto-section.jpg" alt="Azulejo façade in Porto's old town" className="img-cover" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img src="assets/porto-section.jpg" alt={t.portoPhotoAlt} className="img-cover" loading="lazy" />
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
-            <p className="display-sm" style={{ color: "var(--bone)", fontWeight: 300, textWrap: "balance" }}>
-              {t.portoLead}
-            </p>
+          <div className="vt-porto-side">
+            <p className="display-sm" style={{ textWrap: "pretty" }}>{t.portoLead}</p>
 
-            <div style={{ paddingTop: 24, borderTop: "1px solid rgba(250,248,244,0.15)" }}>
-              <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 12 }}>{t.portoAddressLabel}</div>
-              <div className="serif" style={{ fontSize: 22, fontStyle: "italic" }}>{VT_DATA.meta.address}</div>
-              <div style={{ fontSize: 12, opacity: 0.6, marginTop: 8, fontFamily: "var(--mono)" }}>{VT_DATA.meta.coords}</div>
+            <div>
+              <div className="eyebrow">{t.portoAddressLabel}</div>
+              <div className="vt-porto-address">{VT_DATA.meta.address}</div>
             </div>
 
-            {/* Static styled map. Pin overlay is positioned by % computed at render time. */}
+            <div>
+              <div className="eyebrow" style={{ marginBottom: 10 }}>{t.portoWalkLabel}</div>
+              <ul className="vt-walk">
+                {t.walkingDistances.map(([time, place]) => (
+                  <li key={place}><span className="vt-walk__time">{time}</span><span>{place}</span></li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Static map; the pin sits at the building's position on this crop. */}
             <a
               href="https://www.google.com/maps/search/?api=1&query=Rua+de+S%C3%A3o+Miguel+15+Porto"
               target="_blank" rel="noopener"
               className="vt-porto-map"
-              aria-label="Open Rua de São Miguel 15 in Google Maps"
             >
-              <img src="assets/map.jpg" alt="Map of Porto's old town centred on Rua de São Miguel" />
-              <span className="vt-porto-map__pin" style={{ left: "29.79%", top: "44.53%" }} aria-hidden></span>
-              <span className="vt-porto-map__cta">
-                {VT_OPEN_IN_MAPS[lang] || VT_OPEN_IN_MAPS.EN} <span className="arr"></span>
-              </span>
-              <span className="vt-porto-map__attr">Map © OpenStreetMap</span>
+              <img src="assets/map.jpg" alt={t.mapAlt} loading="lazy" />
+              <span className="vt-porto-map__pin" style={{ left: "29.79%", top: "44.53%" }} aria-hidden="true"></span>
+              <span className="vt-porto-map__cta">{t.openInMaps}</span>
+              <span className="vt-porto-map__attr">© OpenStreetMap</span>
             </a>
           </div>
         </div>
@@ -54,284 +48,134 @@ function VTPorto({ t, lang }) {
   );
 }
 
-// ── AMENITIES ───────────────────────────────────────────
+// ── INCLUDED ────────────────────────────────────────────
 function VTAmenities({ t }) {
   return (
-    <section className="section" style={{ background: "var(--paper)" }}>
+    <section className="section section--paper">
       <div className="container">
         <div className="vt-amenities-outer">
           <div>
-            <SecHead num={t.secAmen.num} label={t.secAmen.label} title={t.secAmen.title} />
-            <p className="body-lg" style={{ maxWidth: 380 }}>
-              {t.amenitiesIntro}
-            </p>
-          </div>
-
-          <div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 1, background: "var(--rule)", border: "1px solid var(--rule)" }}>
-              {t.amenities.map((a, i) => (
-                <div key={i} style={{ background: "var(--paper)", padding: "26px 28px" }}>
-                  <div className="numeral" style={{ marginBottom: 8 }}>{String(i + 1).padStart(2, "0")}</div>
-                  <div className="serif" style={{ fontSize: 22, marginBottom: 4 }}>{a.label}</div>
-                  <div className="body" style={{ fontSize: 13 }}>{a.note}</div>
-                </div>
-              ))}
+            <SecTitle>{t.sec.amen}</SecTitle>
+            <p className="body-lg" style={{ maxWidth: 380 }}>{t.amenitiesIntro}</p>
+            <div className="vt-arrival">
+              <h3 className="eyebrow">{t.arrivalLabel}</h3>
+              <p>{t.arrival}</p>
             </div>
           </div>
+
+          <ul className="vt-amenities">
+            {t.amenities.map((a) => (
+              <li key={a.label}>
+                <div className="vt-amenities__label">{a.label}</div>
+                <div className="vt-amenities__note">{a.note}</div>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
   );
 }
 
-// ── REVIEWS — real scores grid + real quotes carousel ──
+// ── REVIEWS ─────────────────────────────────────────────
+// Scores only, each linked to the platform where the reviews were written.
+// Counts are left out on purpose: they change weekly and go stale on a static site.
 function VTReviews({ t }) {
   const scores = VT_DATA.reviewScores;
-  const quotes = VT_DATA.reviewQuotes;
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-  // Sum review counts across platforms, but only count each shared upstream feed once
-  // (e.g. Hotels.com + Expedia both serve the Expedia Group review pool — counting both
-  // would double the aggregate). Platforms without `sharedFeed` are unique by definition.
-  const _seenFeeds = new Set();
-  const totalCount = scores.reduce((sum, x) => {
-    const key = x.sharedFeed || x.platform;
-    if (_seenFeeds.has(key)) return sum;
-    _seenFeeds.add(key);
-    return sum + x.count;
-  }, 0);
-
-  useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => setI((x) => (x + 1) % quotes.length), 7000);
-    return () => clearInterval(id);
-  }, [quotes.length, paused]);
-
-  const goPrev = () => setI((x) => (x - 1 + quotes.length) % quotes.length);
-  const goNext = () => setI((x) => (x + 1) % quotes.length);
-
   return (
-    <section className="section" style={{ background: "var(--paper)" }}>
+    <section id="reviews" className="section section--bone">
       <div className="container">
-        <SecHead num={t.secReviews.num} label={t.secReviews.label} title={t.secReviews.title} />
+        <SecTitle>{t.sec.reviews}</SecTitle>
 
-        {/* Scores grid — one tile per platform, consistent layout */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 1,
-          background: "var(--rule)",
-          border: "1px solid var(--rule)",
-          marginBottom: 64
-        }}>
-          {scores.map((s, k) => (
-            <a key={s.platform} href={s.url} target="_blank" rel="noopener"
-              style={{ background: "var(--paper)", padding: "28px 28px 24px", display: "flex", flexDirection: "column", gap: 14, position: "relative", transition: "background 0.3s ease" }}
-              onMouseEnter={(e) => e.currentTarget.style.background = "var(--bone-2)"}
-              onMouseLeave={(e) => e.currentTarget.style.background = "var(--paper)"}>
-              <div className="eyebrow" style={{ color: "var(--ochre-deep)" }}>{s.platform}</div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                <span className="serif italic" style={{ fontSize: 56, lineHeight: 0.95, letterSpacing: "-0.01em" }}>{s.score}</span>
-                <span className="serif" style={{ fontSize: 18, color: "var(--granite)", fontStyle: "italic" }}>/ {s.outOf}</span>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--ochre-deep)" }}>
-                {"★★★★★".split("").map((c, j) => <span key={j} style={{ fontSize: 11 }}>{c}</span>)}
-                <span style={{ fontSize: 11, color: "var(--granite)", marginLeft: 4 }}>· {s.count.toLocaleString()} {s.count === 1 ? t.reviews.reviewsLabelOne : t.reviews.reviewsLabel}</span>
-              </div>
-              <div style={{ marginTop: "auto", paddingTop: 12, borderTop: "1px solid var(--rule-soft)" }}>
-                <div style={{ fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase", fontWeight: 500, color: "var(--porto)", marginBottom: 4 }}>{s.badge}</div>
-                <div className="body" style={{ fontSize: 11, color: "var(--granite)" }}>{s.subtitle}</div>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        {/* Aggregate strip */}
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "baseline",
-          padding: "28px 0", marginBottom: 56,
-          borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)",
-          flexWrap: "wrap", gap: 16
-        }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
-            <span className="serif italic" style={{ fontSize: 32, color: "var(--ink)" }}>{totalCount.toLocaleString()}+</span>
-            <span className="eyebrow">{t.reviews.reviewsLabel} {t.reviews.acrossLabel} {scores.length} {scores.length === 1 ? "platform" : "platforms"}</span>
-          </div>
-          {/* Note: total dedupes shared upstream feeds — Hotels.com/Expedia counted once via sharedFeed. */}
-        </div>
-
-        {/* Quote — single, auto-rotating, large prev/next chevrons flanking the quote on desktop, stacked below on mobile */}
-        <div
-          className="vt-review-carousel"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}>
-          {/* Prev chevron */}
-          <button onClick={goPrev} aria-label="Previous review"
-            className="vt-review-carousel__chevron"
-            style={{
-              width: 56, height: 56, borderRadius: "50%",
-              border: "1px solid var(--rule)", background: "transparent",
-              display: "grid", placeItems: "center",
-              fontSize: 22, color: "var(--ink-soft)",
-              transition: "all 0.3s ease", flexShrink: 0
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--ink)"; e.currentTarget.style.color = "var(--bone)"; e.currentTarget.style.borderColor = "var(--ink)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--ink-soft)"; e.currentTarget.style.borderColor = "var(--rule)"; }}>
-            ←
-          </button>
-
-          {/* Quote */}
-          <div style={{ textAlign: "center" }}>
-            <div style={{ display: "flex", justifyContent: "center", gap: 4, color: "var(--ochre-deep)", marginBottom: 28 }}>
-              {"★★★★★".split("").map((c, k) => <span key={k} style={{ fontSize: 16 }}>{c}</span>)}
-            </div>
-
-            <div key={i} style={{ animation: "fadeUp 0.6s ease", minHeight: 200 }}>
-              <blockquote className="serif italic" style={{
-                fontSize: "clamp(22px, 2.4vw, 32px)",
-                lineHeight: 1.35, color: "var(--ink)", textWrap: "balance",
-                margin: 0, marginBottom: 32, fontWeight: 300
-              }}>
-                &ldquo;{quotes[i].text}&rdquo;
-              </blockquote>
-
-              <div className="serif" style={{ fontSize: 18, fontStyle: "italic", color: "var(--ink)", marginBottom: 4 }}>
-                {quotes[i].name}
-              </div>
-              <div className="eyebrow" style={{ fontSize: 10, color: "var(--granite)" }}>
-                {quotes[i].location} · {quotes[i].platform}
-              </div>
-            </div>
-
-            {/* Subtle progress bar — no numeric counter; we don't want the carousel
-                 to imply we only have N hand-picked reviews. */}
-            <div style={{ marginTop: 36, display: "flex", justifyContent: "center" }}>
-              <div style={{ width: "min(280px, 80%)", height: 1, background: "var(--rule)", position: "relative", overflow: "hidden" }}>
-                <div style={{
-                  position: "absolute", inset: 0,
-                  width: `${((i + 1) / quotes.length) * 100}%`,
-                  background: "var(--ink)",
-                  transition: "width 0.5s ease"
-                }} />
-              </div>
-            </div>
-          </div>
-
-          {/* Next chevron */}
-          <button onClick={goNext} aria-label="Next review"
-            style={{
-              width: 56, height: 56, borderRadius: "50%",
-              border: "1px solid var(--rule)", background: "transparent",
-              display: "grid", placeItems: "center",
-              fontSize: 22, color: "var(--ink-soft)",
-              transition: "all 0.3s ease", flexShrink: 0
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--ink)"; e.currentTarget.style.color = "var(--bone)"; e.currentTarget.style.borderColor = "var(--ink)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--ink-soft)"; e.currentTarget.style.borderColor = "var(--rule)"; }}>
-            →
-          </button>
-        </div>
+        <table className="vt-scores">
+          <thead>
+            <tr>
+              <th scope="col">{t.reviews.platform}</th>
+              <th scope="col">{t.reviews.score}</th>
+              <th scope="col"><span className="visually-hidden">{t.reviews.read}</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {scores.map((s) => (
+              <tr key={s.platform}>
+                <td className="vt-scores__platform">{s.platform}</td>
+                <td>
+                  <span className="vt-scores__score">{s.score}</span>
+                  <span className="vt-scores__out"> / {s.outOf}</span>
+                </td>
+                <td><a href={s.url} target="_blank" rel="noopener">{t.reviews.read}</a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p className="vt-scores-total">{t.reviews.note}</p>
       </div>
     </section>
   );
 }
 
 // ── FOOTER ──────────────────────────────────────────────
-// `currentPage` mirrors the prop in VTNav. Wander-column anchors prefix with
-// `index.html` when not on home; Recommendations entry always points to its own page.
 function VTFooter({ t, lang, onLang, onBook, currentPage }) {
   const isHome = currentPage !== "recs";
   const homePrefix = isHome ? "" : "index.html";
+  const meta = VT_DATA.meta;
+  // Legal pages exist in English and Portuguese; other languages get the English text.
+  const legalHash = lang === "PT" ? "#pt" : "";
   return (
-    <footer id="contact" style={{ background: "var(--ink)", color: "var(--bone)", paddingTop: 96, paddingBottom: 40 }}>
+    <footer id="contact" className="vt-footer">
       <div className="container">
         <div className="vt-footer-grid">
           <div>
-            <img src="assets/logo.png" alt="Vitória's Terrace"
-              style={{ height: 96, width: "auto", filter: "invert(1) brightness(1.05)", marginBottom: 28 }} />
-            <p className="body" style={{ color: "rgba(250,248,244,0.7)", maxWidth: 380, fontSize: 14 }}>
-              {t.footer.tagline}
-            </p>
-
-            <button className="btn btn--ghost" onClick={onBook} style={{ marginTop: 32 }}>
-              {t.footer.reserve} <span className="arr"></span>
+            <img src="assets/logo.png" alt="Vitória's Terrace" className="vt-footer__logo" loading="lazy" />
+            <p className="vt-footer__muted" style={{ maxWidth: 360 }}>{t.footer.tagline}</p>
+            <button className="btn btn--outline-light" onClick={onBook} style={{ marginTop: 28 }}>
+              {t.footer.reserve}
             </button>
           </div>
 
           <div>
-            <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 20 }}>{t.footer.visit}</div>
-            <div className="serif" style={{ fontSize: 18, fontStyle: "italic", marginBottom: 6 }}>{VT_DATA.meta.address}</div>
-            <div style={{ fontFamily: "var(--mono)", fontSize: 11, opacity: 0.6, marginBottom: 32 }}>{VT_DATA.meta.coords}</div>
+            <div className="vt-footer__label">{t.footer.visit}</div>
+            <p className="serif" style={{ fontSize: 21, fontStyle: "italic", marginBottom: 28 }}>{meta.address}</p>
 
-            <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 12 }}>{t.footer.contact}</div>
-            <div style={{ fontSize: 14, lineHeight: 1.9 }}>
-              <a href={`mailto:${VT_DATA.meta.email}`} style={{ borderBottom: "1px solid rgba(250,248,244,0.3)" }}>{VT_DATA.meta.email}</a><br/>
-              <a href={`tel:${VT_DATA.meta.phone.replace(/\s/g, '')}`} style={{ opacity: 0.85 }}>{VT_DATA.meta.phone}</a>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 14 }}>
-                <a href="https://instagram.com/vitoriasterrace" target="_blank" rel="noopener"
-                   className="vt-social-link" aria-label="Vitória's Terrace on Instagram">
-                  <svg className="vt-social-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <rect x="3" y="3" width="18" height="18" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none" />
-                  </svg>
-                  <span>{VT_DATA.meta.instagram}</span>
-                </a>
-                <a href={`https://wa.me/${VT_DATA.meta.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener"
-                   className="vt-social-link" aria-label="Message us on WhatsApp">
-                  <svg className="vt-social-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                  </svg>
-                  <span>{VT_DATA.meta.phone}</span>
-                </a>
-              </div>
+            <div className="vt-footer__label">{t.footer.contact}</div>
+            <div className="vt-footer__list">
+              <a href={`mailto:${meta.email}`}>{meta.email}</a>
+              <a href={`tel:${meta.phone.replace(/\s/g, "")}`}>{meta.phone}</a>
+              <a href={`https://wa.me/${meta.whatsapp}`} target="_blank" rel="noopener">WhatsApp</a>
+              <a href="https://instagram.com/vitoriasterrace" target="_blank" rel="noopener">Instagram {meta.instagram}</a>
             </div>
           </div>
 
           <div>
-            <div className="eyebrow" style={{ color: "var(--ochre)", marginBottom: 20 }}>{t.footer.wander}</div>
-            <div style={{ display: "grid", gap: 10, fontSize: 14 }}>
+            <div className="vt-footer__label">{t.footer.wander}</div>
+            <div className="vt-footer__list">
               <a href={`${homePrefix}#stays`}>{t.nav.stays}</a>
               <a href={`${homePrefix}#story`}>{t.nav.story}</a>
               <a href={`${homePrefix}#porto`}>{t.nav.porto}</a>
-              <a href={isHome ? "recommendations.html" : "#"}
-                 aria-current={!isHome ? "page" : undefined}
-                 style={!isHome ? { color: "var(--ochre)" } : undefined}>{t.nav.recs}</a>
-              <a href={`${homePrefix}#contact`}>{t.nav.contact}</a>
+              <a href="recommendations.html" aria-current={!isHome ? "page" : undefined}>{t.nav.recs}</a>
             </div>
 
-            <div className="eyebrow" style={{ color: "var(--ochre)", marginTop: 32, marginBottom: 16 }}>{t.footer.language}</div>
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
-                <button key={l} onClick={() => onLang(l)}
-                  style={{
-                    fontSize: 12, letterSpacing: "0.18em", textTransform: "uppercase",
-                    padding: "12px 14px", minHeight: 44, minWidth: 44,
-                    border: "1px solid rgba(250,248,244,0.25)",
-                    color: l === lang ? "var(--ink)" : "var(--bone)",
-                    background: l === lang ? "var(--bone)" : "transparent"
-                  }}>{l}</button>
+            <div className="vt-footer__label" style={{ marginTop: 28 }}>{t.footer.language}</div>
+            <div className="vt-lang-row">
+              {VT_LANGS.map(([code]) => (
+                <button key={code} aria-pressed={code === lang} onClick={() => onLang(code)}>{code}</button>
               ))}
             </div>
           </div>
         </div>
 
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          padding: "32px 0 0",
-          borderTop: "1px solid rgba(250,248,244,0.12)",
-          fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase",
-          color: "rgba(250,248,244,0.5)", flexWrap: "wrap", gap: 16
-        }}>
-          <div>© 2026 Vitória's Terrace · Made in Porto</div>
-          <div>RNAL nº TBD / AL{/* TODO confirm registration number */}</div>
-          <div>Privacy · Terms</div>
+        <div className="vt-footer__base">
+          <span>© 2026 Vitória&apos;s Terrace</span>
+          <a href={`privacy.html${legalHash}`}>{t.footer.privacy}</a>
+          <a href={`terms.html${legalHash}`}>{t.footer.terms}</a>
+          <a href="https://www.livroreclamacoes.pt/" target="_blank" rel="noopener">{t.footer.complaints}</a>
+          {meta.rnal && meta.rnal.length > 0 && (
+            <span>{t.footer.license}: {meta.rnal.join(", ")}</span>
+          )}
         </div>
       </div>
     </footer>
   );
 }
 
-Object.assign(window, {
-  VTPorto, VTAmenities, VTReviews, VTFooter
-});
+Object.assign(window, { VTPorto, VTAmenities, VTReviews, VTFooter });

@@ -1,12 +1,12 @@
-// Vitoria's Terrace — Recommendations section (v2: image-led, 4 super-sections)
+// Vitoria's Terrace: Recommendations page body
 // Globally exposes: VTRecommendations
 
 const VT_APARTMENT_LABEL = "Rua de São Miguel 15, Porto";
 
-// Build a Google Maps walking-directions URL from the apartment to a place.
+// Google Maps walking directions from the apartment to a place.
 function gmapsDirectionsUrl(item) {
   if (item.external) return item.external;
-  const dest = item.coords ? `${item.coords[0]},${item.coords[1]}` : `${item.name}, ${item.addr}`;
+  const dest = item.coords ? `${item.coords[0]},${item.coords[1]}` : `${tr(item.name, "EN")}, ${tr(item.addr, "EN")}`;
   const origin = encodeURIComponent(VT_APARTMENT_LABEL);
   return `https://www.google.com/maps/dir/?api=1&travelmode=walking&origin=${origin}&destination=${encodeURIComponent(dest)}`;
 }
@@ -18,74 +18,85 @@ function tr(field, lang) {
   return field[lang] || field.EN;
 }
 
-// ── DRAWER ──────────────────────────────────────────────────
+const VT_REC_LABELS = {
+  directions: { EN: "Walking directions", PT: "Direções a pé", ES: "Cómo llegar a pie", FR: "Itinéraire à pied", KR: "도보 길찾기", JA: "徒歩ルートを見る" },
+  website:    { EN: "Open website", PT: "Abrir o site", ES: "Abrir la web", FR: "Ouvrir le site", KR: "웹사이트 열기", JA: "サイトを開く" },
+  reserve:    { EN: "Book ahead", PT: "Convém reservar", ES: "Conviene reservar", FR: "Réservation conseillée", KR: "사전 예약", JA: "要予約" },
+  reserveLong:{ EN: "Book a table or ticket in advance.", PT: "Reserve mesa ou bilhete com antecedência.", ES: "Reserva mesa o entrada con antelación.", FR: "Réservez une table ou un billet à l'avance.", KR: "자리나 티켓을 미리 예약하세요.", JA: "席やチケットは事前に予約してください。" },
+  walk:       { EN: "on foot", PT: "a pé", ES: "a pie", FR: "à pied", KR: "도보", JA: "徒歩" }
+};
+
+// item.walk is stored as "6 min"; Korean and Japanese write "도보 6분" / "徒歩6分".
+function walkText(item, lang) {
+  if (!item.walk) return "";
+  const label = tr(VT_REC_LABELS.walk, lang);
+  const mins = parseInt(item.walk, 10);
+  if (lang === "KR") return `${label} ${mins}분`;
+  if (lang === "JA") return `${label}${mins}分`;
+  return `${item.walk} ${label}`;
+}
+
+// ── DETAIL PANEL ────────────────────────────────────────────
 function VTRecDrawer({ item, subTags, lang, t, onClose }) {
-  React.useEffect(() => {
-    if (!item) return;
-    document.body.style.overflow = "hidden";
-    const onKey = (e) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [item, onClose]);
+  const panelRef = React.useRef(null);
+  useDialog(Boolean(item), onClose, panelRef);
 
   if (!item) return null;
   const subTagLabel = item.subTag && subTags[item.subTag] ? tr(subTags[item.subTag], lang) : "";
   const note = item.note ? tr(item.note, lang) : null;
-  const ctaLabel = tr({ EN: "Walking directions", PT: "Direções a pé", ES: "Cómo llegar", FR: "Itinéraire à pied", KR: "길찾기", JA: "道順を見る" }, lang);
-  const reserveLabel = tr({ EN: "Reservation recommended", PT: "Reserva recomendada", ES: "Reserva recomendada", FR: "Réservation recommandée", KR: "예약 권장", JA: "事前予約推奨" }, lang);
+  const meta = [subTagLabel, walkText(item, lang)].filter(Boolean).join(" · ");
+  const name = tr(item.name, lang);
 
-  return (
-    <div className="vt-drawer-shade open" onClick={onClose}>
-      <aside className="vt-drawer" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} className="vt-drawer__close" aria-label="Close">{t.book.close} ×</button>
+  return ReactDOM.createPortal(
+    <div className="vt-drawer-shade" onClick={onClose}>
+      <aside className="vt-drawer" role="dialog" aria-modal="true" aria-labelledby="vt-drawer-title"
+        ref={panelRef} tabIndex={-1} onClick={(e) => e.stopPropagation()}>
+        <div className="vt-drawer__bar">
+          <button onClick={onClose} className="vt-panel-close">{t.book.close}</button>
+        </div>
         {item.image && (
           <div className="vt-drawer__photo">
-            <img src={item.image} alt={item.name} />
+            <img src={item.image} alt={name} />
           </div>
         )}
         <div className="vt-drawer__body">
-          <div className="eyebrow vt-drawer__subtag">
-            {subTagLabel}{item.walk ? ` · ${item.walk}` : ""}
-          </div>
-          <h3 className="serif vt-drawer__name">{item.name}</h3>
-          <div className="vt-drawer__addr">{item.addr}</div>
-          {item.reserveAhead && (
-            <div className="vt-drawer__reserve">{reserveLabel}</div>
-          )}
-          {note && <div className="vt-drawer__note">— {note}</div>}
+          <div className="vt-drawer__subtag">{meta}</div>
+          <h2 id="vt-drawer-title" className="serif vt-drawer__name" tabIndex={-1} data-autofocus="">{name}</h2>
+          <div className="vt-drawer__addr">{tr(item.addr, lang)}</div>
+          {item.reserveAhead && <div className="vt-drawer__reserve">{tr(VT_REC_LABELS.reserveLong, lang)}</div>}
+          {note && <p className="vt-drawer__note">{note}</p>}
           <a href={gmapsDirectionsUrl(item)} target="_blank" rel="noopener" className="btn btn--primary vt-drawer__cta">
-            {ctaLabel} <span className="arr"></span>
+            {tr(item.external ? VT_REC_LABELS.website : VT_REC_LABELS.directions, lang)}
           </a>
         </div>
       </aside>
-    </div>
+    </div>,
+    document.body
   );
 }
 
-// ── IMAGE CARD ──────────────────────────────────────────────
-function VTRecCard({ item, subTags, lang, onOpen, featured }) {
+// ── PHOTO CARD ──────────────────────────────────────────────
+function VTRecCard({ item, subTags, lang, onOpen }) {
   const subTagLabel = item.subTag && subTags[item.subTag] ? tr(subTags[item.subTag], lang) : "";
+  const meta = [subTagLabel, walkText(item, lang)].filter(Boolean).join(" · ");
   return (
-    <article className={"vt-rec-card" + (featured ? " is-featured" : "")} onClick={() => onOpen(item)}>
+    <button type="button" className="vt-rec-card" onClick={() => onOpen(item)}>
       <div className="vt-rec-card__photo">
-        <img src={item.image} alt={item.name} loading="lazy" />
+        <img src={item.image} alt="" loading="lazy" />
       </div>
       <div className="vt-rec-card__body">
-        <h4 className="serif vt-rec-card__name">{item.name}</h4>
+        <h3 className="vt-rec-card__name">{tr(item.name, lang)}</h3>
         <div className="vt-rec-card__meta">
-          {subTagLabel && <span>{subTagLabel}</span>}
-          {item.walk && <span>· {item.walk}</span>}
-          {item.reserveAhead && <span className="vt-rec-card__reserve">· {tr({EN:"Reserve",PT:"Reservar",ES:"Reservar",FR:"Réserver",KR:"예약",JA:"要予約"}, lang)}</span>}
+          {meta}
+          {item.reserveAhead && <span className="vt-rec-card__reserve"> · {tr(VT_REC_LABELS.reserve, lang)}</span>}
         </div>
       </div>
-    </article>
+    </button>
   );
 }
 
-// ── PRACTICAL LIST (no photos — utility section) ────────────
+// ── TEXT LIST (no photos) ───────────────────────────────────
+// Used where a photo per item would mean repeating stock images.
 function VTPracticalList({ items, subTags, lang }) {
   return (
     <ul className="vt-practical">
@@ -94,16 +105,14 @@ function VTPracticalList({ items, subTags, lang }) {
         const note = it.note ? tr(it.note, lang) : null;
         return (
           <li key={it.id} className="vt-practical__item">
-            <div className="vt-practical__main">
-              <a href={gmapsDirectionsUrl(it)} target="_blank" rel="noopener" className="vt-practical__name serif">
-                {it.name}
-                <span className="vt-practical__arrow" aria-hidden>↗</span>
-              </a>
-              <div className="vt-practical__addr">{it.addr}</div>
+            <div>
+              <a href={gmapsDirectionsUrl(it)} target="_blank" rel="noopener" className="vt-practical__name">{tr(it.name, lang)}</a>
+              <div className="vt-practical__addr">{tr(it.addr, lang)}</div>
             </div>
             <div className="vt-practical__meta">
-              <span className="eyebrow">{subTagLabel}{it.walk ? ` · ${it.walk}` : ""}</span>
-              {note && <div className="vt-practical__note">— {note}</div>}
+              {[subTagLabel, walkText(it, lang)].filter(Boolean).join(" · ")}
+              {it.reserveAhead && <span className="vt-rec-card__reserve"> · {tr(VT_REC_LABELS.reserve, lang)}</span>}
+              {note && <div className="vt-practical__note">{note}</div>}
             </div>
           </li>
         );
@@ -112,41 +121,22 @@ function VTPracticalList({ items, subTags, lang }) {
   );
 }
 
-// ── SECTION BLOCK ───────────────────────────────────────────
-function VTRecSection({ section, subTags, lang, onOpen, sectionIndex }) {
-  const isPractical = section.id === "practical";
-  // Mark a few cards "featured" (span 2 cols) to give the grid editorial rhythm.
-  const featuredIds = new Set([
-    "cafe-santiago",   // the iconic francesinha
-    "lello",           // the red staircase
-    "ribeira",         // the colorful houses
-    "fado-real"        // the lead Fado venue
-  ]);
+// ── SECTION ─────────────────────────────────────────────────
+const VT_LIST_SECTIONS = new Set(["do", "practical"]);
 
-  const sectionLabels = ["i.", "ii.", "iii.", "iv."];
-
+function VTRecSection({ section, subTags, lang, onOpen }) {
   return (
     <div className="vt-rec-section" id={`recs-${section.id}`}>
       <div className="vt-rec-section__head">
-        <div className="vt-rec-section__num">{sectionLabels[sectionIndex] || ""}</div>
-        <div className="vt-rec-section__head-text">
-          <h3 className="serif vt-rec-section__title">{tr(section.title, lang)}</h3>
-          <div className="body vt-rec-section__kind">{tr(section.kind, lang)}</div>
-        </div>
+        <h2 className="serif vt-rec-section__title">{tr(section.title, lang)}</h2>
+        <p className="vt-rec-section__kind">{tr(section.kind, lang)}</p>
       </div>
-      {isPractical ? (
+      {VT_LIST_SECTIONS.has(section.id) ? (
         <VTPracticalList items={section.items} subTags={subTags} lang={lang} />
       ) : (
         <div className="vt-rec-section__grid">
           {section.items.map((item) => (
-            <VTRecCard
-              key={item.id}
-              item={item}
-              subTags={subTags}
-              lang={lang}
-              onOpen={onOpen}
-              featured={featuredIds.has(item.id)}
-            />
+            <VTRecCard key={item.id} item={item} subTags={subTags} lang={lang} onOpen={onOpen} />
           ))}
         </div>
       )}
@@ -158,79 +148,53 @@ function VTRecSection({ section, subTags, lang, onOpen, sectionIndex }) {
 function VTRecommendations({ t, lang }) {
   const sections = window.VT_DATA.recommendations;
   const subTags = window.VT_DATA.subTags;
+  const meta = window.VT_DATA.meta;
   const [drawerItem, setDrawerItem] = React.useState(null);
 
   return (
-    <section id="recs" className="section vt-recs" style={{ background: "var(--bone-2)" }}>
+    <section id="recs" className="section vt-recs" style={{ background: "var(--bone)" }}>
       <div className="container">
-        {/* Print-only header — first in DOM order so it prints at the top */}
+        {/* Print-only header, first in DOM order so it prints at the top */}
         <div className="vt-print-only vt-print-header">
           <div className="vt-print-logo">VITÓRIA&apos;S TERRACE</div>
-          <div className="vt-print-tagline">{t.hero.eyebrow}</div>
-          <div className="vt-print-divider" aria-hidden></div>
-          <div className="vt-print-byline">{t.recs.byline}</div>
+          <div className="vt-print-tagline">{meta.address}</div>
+          <div className="vt-print-byline">{t.recs.byline} {t.recs.signature}</div>
         </div>
 
-        {/* Editorial header */}
-        <div className="sec-head vt-recs__head">
-          <div className="num">v.</div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 32 }}>
-            <div>
-              <div className="eyebrow" style={{ marginBottom: 18 }}>{t.recs.eyebrow}</div>
-              <h2 className="display-md" style={{ whiteSpace: "pre-line" }}>{t.recs.heading}</h2>
-            </div>
-            <div className="body vt-recs__byline">{t.recs.byline}</div>
-          </div>
+        <div className="vt-recs__head">
+          <h1 className="display-md">{t.recs.heading}</h1>
+          <blockquote className="vt-recs__byline">
+            <p>{t.recs.byline}</p>
+            <cite>{t.recs.signature}</cite>
+          </blockquote>
         </div>
 
-        {/* Print button — stands alone now that filter chips are gone */}
-        <div className="vt-recs__print-bar">
-          <button onClick={() => window.print()} className="vt-print-btn hide-mobile" type="button">
-            <svg className="vt-print-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M6 9V3h12v6" />
-              <rect x="6" y="14" width="12" height="7" />
-              <path d="M6 18H4a2 2 0 01-2-2v-4a2 2 0 012-2h16a2 2 0 012 2v4a2 2 0 01-2 2h-2" />
-            </svg>
-            {t.recs.print}
-          </button>
+        <div className="vt-recs__bar vt-recs__print-bar">
+          <ul className="vt-recs__index">
+            {sections.map((s) => (
+              <li key={s.id}><a href={`#recs-${s.id}`}>{tr(s.title, lang)}</a></li>
+            ))}
+          </ul>
+          <button onClick={() => window.print()} className="vt-print-btn hide-mobile" type="button">{t.recs.print}</button>
         </div>
 
-        {/* 4 super-sections */}
-        {sections.map((section, idx) => (
-          <VTRecSection
-            key={section.id}
-            section={section}
-            subTags={subTags}
-            lang={lang}
-            onOpen={setDrawerItem}
-            sectionIndex={idx}
-          />
+        {sections.map((section) => (
+          <VTRecSection key={section.id} section={section} subTags={subTags} lang={lang} onOpen={setDrawerItem} />
         ))}
 
-        {/* WhatsApp aside */}
         <div className="vt-whatsapp">
           <div>
-            <div className="eyebrow" style={{ marginBottom: 8, color: "var(--porto)" }}>{t.recs.whatsappEyebrow}</div>
-            <div className="serif vt-whatsapp__title">{t.recs.whatsappTitle}</div>
-            <div className="body" style={{ fontSize: 13, marginTop: 6 }}>{t.recs.whatsappBody}</div>
+            <div className="vt-whatsapp__title">{t.recs.whatsappTitle}</div>
+            <p className="body" style={{ marginTop: 6 }}>{t.recs.whatsappBody}</p>
           </div>
-          <a href="https://wa.me/351960178336" className="btn">
-            {t.recs.whatsappCta} <span className="arr"></span>
-          </a>
+          <a href={`https://wa.me/${meta.whatsapp}`} target="_blank" rel="noopener" className="btn">{t.recs.whatsappCta}</a>
         </div>
       </div>
 
-      {/* Drawer */}
       <VTRecDrawer item={drawerItem} subTags={subTags} lang={lang} t={t} onClose={() => setDrawerItem(null)} />
 
-      {/* Print-only footer */}
       <div className="vt-print-only vt-print-footer">
-        <div className="vt-print-divider" aria-hidden></div>
-        <div className="vt-print-footer__line">{window.VT_DATA.meta.address} · {window.VT_DATA.meta.phone}</div>
-        <div className="vt-print-footer__line">{window.VT_DATA.meta.email} · {window.VT_DATA.meta.instagram}</div>
-        <div className="vt-print-footer__brand">
-          {tr({EN:"Made in Porto", PT:"Feito no Porto", ES:"Hecho en Oporto", FR:"Fait à Porto", KR:"포르투에서 만들어짐", JA:"ポルトで生まれました"}, lang)} · vitoriasterraceapartments.com
-        </div>
+        <div className="vt-print-footer__line">{meta.address} · {meta.phone} · {meta.email}</div>
       </div>
     </section>
   );

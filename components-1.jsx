@@ -1,192 +1,175 @@
-// Vitoria's Terrace — page sections
-// Globally exposes: VTNav, VTHero, VTStory, VTApartments, VTGallery,
-//                   VTPorto, VTAmenities, VTExperiences, VTReviews, VTFooter
+// Vitoria's Terrace: page sections, part 1
+// Globally exposes: VTNav, VTHero, VTStory, VTApartments, SecTitle, VT_LANGS
 
-const { useState, useEffect, useRef, useMemo } = React;
+const { useState, useEffect } = React;
 
-// ── Reveal hook ─────────────────────────────────────────
-function useReveal() {
-  const ref = useRef(null);
-  useEffect(() => {
-    if (!ref.current) return;
-    const el = ref.current;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) { el.classList.add("in"); io.disconnect(); }
-      });
-    }, { threshold: 0.12 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return ref;
+const VT_LANGS = [
+  ["EN", "English"], ["PT", "Português"], ["ES", "Español"],
+  ["FR", "Français"], ["KR", "한국어"], ["JA", "日本語"]
+];
+
+const VT_NUM_LOCALES = { EN: "en-GB", PT: "pt-PT", ES: "es-ES", FR: "fr-FR", KR: "ko-KR", JA: "ja-JP" };
+// Euro amounts in the reader's convention: "€100" in English, "100 €" in PT/ES/FR.
+function vtEur(n, lang) {
+  return new Intl.NumberFormat(VT_NUM_LOCALES[lang] || "en-GB", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
 }
 
-// ── Section header ─────────────────────────────────────
-function SecHead({ num, label, title }) {
-  const ref = useReveal();
-  return (
-    <div className="sec-head reveal" ref={ref}>
-      <div className="num">{num}</div>
-      <div>
-        <div className="eyebrow" style={{ marginBottom: 18 }}>{label}</div>
-        <h2 className="display-md" style={{ whiteSpace: "pre-line" }}>{title}</h2>
-      </div>
-    </div>
-  );
+// Count and price labels. Korean and Japanese put the counter word around the
+// number ("침대 2개", "€100から"), so those locales supply format strings.
+function vtCount(t, key, n) {
+  const f = t.apt.fmt && t.apt.fmt[key];
+  return f ? f.replace("{n}", n) : `${n} ${t.apt[key]}`;
+}
+function vtFrom(t, price, lang) {
+  const f = t.apt.fmt && t.apt.fmt.from;
+  const p = vtEur(price, lang);
+  return f ? f.replace("{p}", p) : `${t.apt.from} ${p}`;
+}
+
+// Apartment names read "Type · View". Bind the dot to the word before it so a
+// wrapped name never starts its second line with "·".
+function vtName(s) { return s.replace(/ · /g, "\u00a0· "); }
+
+// ── Language ───────────────────────────────────────────
+// The language comes from ?lang= first (so each language has a shareable URL),
+// then from the choice saved in localStorage, then English.
+const VT_URL_LANG = { EN: "en", PT: "pt", ES: "es", FR: "fr", KR: "ko", JA: "ja" };
+const VT_HTML_LANG = { EN: "en", PT: "pt-PT", ES: "es", FR: "fr", KR: "ko", JA: "ja" };
+function vtReadLang() {
+  try {
+    const q = (new URLSearchParams(window.location.search).get("lang") || "").toLowerCase();
+    const fromUrl = Object.keys(VT_URL_LANG).find((k) => VT_URL_LANG[k] === q);
+    if (fromUrl) {
+      try { localStorage.setItem("vt-lang", fromUrl); } catch (_) { /* no-op */ }
+      return fromUrl;
+    }
+  } catch (_) { /* no-op */ }
+  try { return localStorage.getItem("vt-lang") || "EN"; } catch (_) { return "EN"; }
+}
+function vtWriteLang(v) {
+  try { localStorage.setItem("vt-lang", v); } catch (_) { /* no-op */ }
+  try {
+    const u = new URL(window.location.href);
+    if (v === "EN") u.searchParams.delete("lang"); else u.searchParams.set("lang", VT_URL_LANG[v]);
+    history.replaceState(null, "", u);
+  } catch (_) { /* no-op */ }
+}
+
+// ── Dialog behaviour ───────────────────────────────────
+// Shared by the booking panel and the recommendation detail panel. Both render
+// into document.body, so the page behind (#app) can be made inert while open:
+// focus moves into the panel, Tab cannot reach the page, Escape closes, and focus
+// returns to whatever opened the panel.
+function useDialog(open, onClose, panelRef) {
+  useEffect(() => {
+    if (!open) return;
+    const opener = document.activeElement;
+    const app = document.getElementById("app");
+    if (app) app.setAttribute("inert", "");
+    document.body.style.overflow = "hidden";
+    const target = panelRef.current && (panelRef.current.querySelector("[data-autofocus]") || panelRef.current);
+    if (target) target.focus();
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      if (app) app.removeAttribute("inert");
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+      if (opener && opener.focus) opener.focus();
+    };
+  }, [open]);
+}
+
+// ── Section title ──────────────────────────────────────
+function SecTitle({ children }) {
+  return <h2 className="display-md sec-title">{children}</h2>;
 }
 
 // ── NAV ─────────────────────────────────────────────────
-// `currentPage` is "home" or "recs". Anchors that target home sections (stays/story/
-// porto/contact) need an `index.html` prefix when we're on a non-home page; the
-// Recommendations link always points at `recommendations.html`. The Recommendations
-// item also gets an active-state visual when we're already on its page.
-function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
+// `currentPage` is "home" or "recs". Anchors that target home sections need an
+// `index.html` prefix when we're on the recommendations page.
+function VTNav({ t, lang, onLang, onBook, currentPage }) {
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const langRef = React.useRef(null);
   const isHome = currentPage !== "recs";
   const homePrefix = isHome ? "" : "index.html";
-  const recsHref = isHome ? "recommendations.html" : "#";   // already on recs → no-op anchor
   const recsActive = currentPage === "recs";
 
-  const navStyle = {
-    position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-    transition: "background 0.4s ease, color 0.4s ease, border-color 0.4s ease",
-    background: scrolled ? "rgba(250, 248, 244, 0.92)" : "transparent",
-    backdropFilter: scrolled ? "blur(12px)" : "none",
-    borderBottom: scrolled ? "1px solid var(--rule-soft)" : "1px solid transparent",
-    color: scrolled ? "var(--ink)" : "var(--bone)",
-  };
+  const links = [
+    [`${homePrefix}#stays`, t.nav.stays, false],
+    [`${homePrefix}#story`, t.nav.story, false],
+    [`${homePrefix}#porto`, t.nav.porto, false],
+    ["recommendations.html", t.nav.recs, recsActive],
+    [`${homePrefix}#contact`, t.nav.contact, false]
+  ];
 
-  const link = {
-    fontFamily: "var(--serif)",
-    fontSize: 17,
-    fontWeight: 400,
-    letterSpacing: "0.01em",
-    textTransform: "none"
-  };
-  const recsLink = recsActive
-    ? { ...link, color: "var(--porto)", borderBottom: "1px solid currentColor", paddingBottom: 2 }
-    : link;
-  const navBtn = {
-    fontFamily: "var(--sans)",
-    fontSize: 11,
-    fontWeight: 500,
-    letterSpacing: "0.18em",
-    textTransform: "uppercase"
-  };
-
-  // Wordmark anchor: home page → top of page, recs page → home root
-  const logoHref = isHome ? "#top" : "index.html";
+  useEffect(() => {
+    if (!langOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") { setLangOpen(false); langRef.current && langRef.current.querySelector("button").focus(); }
+    };
+    const onDown = (e) => { if (langRef.current && !langRef.current.contains(e.target)) setLangOpen(false); };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onDown);
+    return () => { window.removeEventListener("keydown", onKey); document.removeEventListener("mousedown", onDown); };
+  }, [langOpen]);
 
   return (
-    <nav style={navStyle}>
-      <div className="container" style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        paddingBlock: scrolled ? 18 : 26, transition: "padding 0.3s ease"
-      }}>
-        <a href={logoHref} style={{ display: "flex", alignItems: "center", lineHeight: 0 }} aria-label="Vitória's Terrace">
-          <img src="assets/logo.png" alt="Vitória's Terrace"
-            style={{
-              height: "clamp(44px, 8vw, 56px)", width: "auto", display: "block",
-              filter: scrolled ? "none" : "invert(1) brightness(1.05)",
-              transition: "filter 0.4s ease"
-            }} />
+    <nav className="vt-nav" aria-label={t.nav.mainLabel}>
+      <div className="container vt-nav__row">
+        <a href={isHome ? "#top" : "index.html"} className="vt-nav__logo" aria-label={t.nav.homeLabel}>
+          <img src="assets/logo.png" alt="Vitória's Terrace" width="52" height="52" />
         </a>
 
-        <div className="hide-mobile" style={{ display: "flex", alignItems: "center", gap: 36 }}>
-          <a href={`${homePrefix}#stays`} style={link}>{t.nav.stays}</a>
-          <a href={`${homePrefix}#story`} style={link}>{t.nav.story}</a>
-          <a href={`${homePrefix}#porto`} style={link}>{t.nav.porto}</a>
-          <a href={recsHref} style={recsLink} aria-current={recsActive ? "page" : undefined}>{t.nav.recs}</a>
-          <a href={`${homePrefix}#contact`} style={link}>{t.nav.contact}</a>
+        <div className="vt-nav__links">
+          {links.map(([h, l, active]) => (
+            <a key={h} href={h} className="vt-nav__link" aria-current={active ? "page" : undefined}>{l}</a>
+          ))}
 
-          <div style={{ position: "relative" }}>
-            <button onClick={() => setLangOpen(!langOpen)} aria-label="Language" aria-expanded={langOpen}
-              style={{ ...navBtn, display: "flex", alignItems: "center", gap: 6, padding: "12px 8px", minHeight: 44 }}>
-              {lang} <span style={{ fontSize: 8, opacity: 0.6 }}>▾</span>
+          <div className="vt-nav__lang" ref={langRef}>
+            <button className="vt-nav__lang-btn" onClick={() => setLangOpen(!langOpen)}
+              aria-label={`${t.footer.language}: ${lang}`} aria-expanded={langOpen}>
+              {lang}
             </button>
             {langOpen && (
-              <div style={{
-                position: "absolute", right: 0, top: "calc(100% + 12px)",
-                background: "var(--paper)", border: "1px solid var(--rule)",
-                padding: "8px 0", minWidth: 120, color: "var(--ink)"
-              }}>
-                {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
-                  <button key={l}
-                    onClick={() => { onLang(l); setLangOpen(false); }}
-                    style={{
-                      display: "block", width: "100%", textAlign: "left", padding: "8px 16px",
-                      ...navBtn, fontWeight: l === lang ? 600 : 400,
-                      color: l === lang ? "var(--porto)" : "var(--ink)"
-                    }}>
-                    {({ EN: "English", PT: "Português", ES: "Español", FR: "Français", KR: "한국어", JA: "日本語" })[l]}
+              <div className="vt-nav__lang-menu">
+                {VT_LANGS.map(([code, name]) => (
+                  <button key={code} lang={code === "KR" ? "ko" : code.toLowerCase()}
+                    aria-current={code === lang ? "true" : undefined}
+                    onClick={() => { onLang(code); setLangOpen(false); }}>
+                    {name}
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          <button className="btn btn--sm" onClick={onBook}
-            style={{
-              borderColor: scrolled ? "var(--ink)" : "var(--bone)",
-              color: scrolled ? "var(--ink)" : "var(--bone)"
-            }}>
-            {t.nav.book} <span className="arr"></span>
+          <button className="btn btn--sm" onClick={onBook}>
+            {t.nav.book}
           </button>
         </div>
 
-        <button className="show-mobile" onClick={() => setOpen(!open)}
-          aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open}
-          style={{ ...navBtn, padding: "12px 14px", minHeight: 44 }}>
-          {open ? "Close" : "Menu"}
+        <button className="vt-nav__menu-btn" onClick={() => setOpen(!open)} aria-expanded={open}>
+          {open ? t.book.close : t.nav.menu}
         </button>
       </div>
 
       {open && (
-        <div className="show-mobile" style={{
-          background: "var(--paper)", color: "var(--ink)",
-          borderTop: "1px solid var(--rule)", padding: "32px 24px"
-        }}>
-          {[
-            [`${homePrefix}#stays`, t.nav.stays, false],
-            [`${homePrefix}#story`, t.nav.story, false],
-            [`${homePrefix}#porto`, t.nav.porto, false],
-            [recsHref, t.nav.recs, recsActive],
-            [`${homePrefix}#contact`, t.nav.contact, false]
-          ].map(([h, l, active]) => (
-            <a key={h} href={h} onClick={() => setOpen(false)}
-              aria-current={active ? "page" : undefined}
-              style={{
-                display: "block", padding: "16px 0",
-                borderBottom: "1px solid var(--rule-soft)",
-                ...link,
-                color: active ? "var(--porto)" : "var(--ink)"
-              }}>
-              {l}
-            </a>
+        <div className="vt-nav__sheet">
+          {links.map(([h, l, active]) => (
+            <a key={h} href={h} onClick={() => setOpen(false)} aria-current={active ? "page" : undefined}>{l}</a>
           ))}
 
-          <div style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid var(--rule)" }}>
-            <div className="eyebrow" style={{ marginBottom: 12, color: "var(--granite)" }}>{t.footer.language}</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {["EN", "PT", "ES", "FR", "KR", "JA"].map((l) => (
-                <button key={l}
-                  onClick={() => { onLang(l); setOpen(false); }}
-                  style={{
-                    ...navBtn,
-                    padding: "10px 14px",
-                    minHeight: 44,
-                    border: "1px solid " + (l === lang ? "var(--ink)" : "var(--rule)"),
-                    background: l === lang ? "var(--ink)" : "transparent",
-                    color: l === lang ? "var(--bone)" : "var(--ink)"
-                  }}>
-                  {l}
-                </button>
-              ))}
-            </div>
+          <div className="eyebrow" style={{ margin: "24px 0 10px" }}>{t.footer.language}</div>
+          <div className="vt-lang-row">
+            {VT_LANGS.map(([code]) => (
+              <button key={code} aria-pressed={code === lang} onClick={() => { onLang(code); setOpen(false); }}>{code}</button>
+            ))}
           </div>
 
-          <button className="btn btn--primary" onClick={() => { onBook(); setOpen(false); }} style={{ marginTop: 24, width: "100%", justifyContent: "center" }}>
+          <button className="btn btn--primary" onClick={() => { onBook(); setOpen(false); }}
+            style={{ marginTop: 24, width: "100%" }}>
             {t.nav.book}
           </button>
         </div>
@@ -197,51 +180,17 @@ function VTNav({ t, lang, onLang, onBook, scrolled, currentPage }) {
 
 // ── HERO ────────────────────────────────────────────────
 function VTHero({ t, onBook }) {
-  const [parallax, setParallax] = useState(0);
-  useEffect(() => {
-    const onScroll = () => setParallax(window.scrollY * 0.3);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header id="top" style={{ position: "relative", minHeight: "100vh", overflow: "hidden", color: "var(--bone)" }}>
-      <div style={{ position: "absolute", inset: 0, transform: `translateY(${parallax}px) scale(1.05)`, transition: "transform 0.05s linear" }}>
-        <img src="assets/porto-view.jpg" alt="" className="img-cover" style={{ height: "100%" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(20,18,15,0.55) 0%, rgba(20,18,15,0.15) 35%, rgba(20,18,15,0.65) 100%)" }} />
-      </div>
+    <header id="top" className="vt-hero">
+      <img src="assets/porto-view.jpg" alt="" className="vt-hero__photo" fetchpriority="high" />
+      <div className="vt-hero__scrim" />
 
-      <div className="container" style={{
-        position: "relative", minHeight: "100vh",
-        display: "grid", gridTemplateRows: "1fr auto",
-        paddingTop: "clamp(120px, 18vh, 168px)",
-        paddingBottom: "clamp(40px, 7vh, 72px)",
-        gap: "clamp(48px, 8vh, 96px)"
-      }}>
-        <div style={{ alignSelf: "center", width: "100%" }}>
-          <h1 className="display-xl" style={{ fontStyle: "italic", letterSpacing: "-0.025em", whiteSpace: "pre-line" }}>
-            {t.hero.title}
-          </h1>
-          <p className="body-lg" style={{ color: "rgba(250,248,244,0.85)", maxWidth: 540, marginTop: 36 }}>
-            {t.hero.sub}
-          </p>
-
-          <div style={{ display: "flex", gap: 16, marginTop: 44, flexWrap: "wrap" }}>
-            <button className="btn btn--ghost" onClick={onBook} style={{ background: "var(--bone)", color: "var(--ink)", borderColor: "var(--bone)" }}>
-              {t.hero.cta} <span className="arr"></span>
-            </button>
-            <button className="btn btn--ghost" onClick={onBook}>
-              {t.hero.ctaAlt}
-            </button>
-          </div>
-        </div>
-
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "flex-end",
-          fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", opacity: 0.85
-        }}>
-          <div>41.143° N · 8.614° W</div>
-          <div>Scroll ↓</div>
+      <div className="container vt-hero__inner">
+        <h1 className="display-xl" style={{ fontStyle: "italic", whiteSpace: "pre-line" }}>{t.hero.title}</h1>
+        <p className="body-lg vt-hero__sub">{t.hero.sub}</p>
+        <div className="vt-hero__actions">
+          <button className="btn btn--light" onClick={onBook}>{t.hero.cta}</button>
+          <a href="#stays" className="link-u">{t.hero.ctaAlt}</a>
         </div>
       </div>
     </header>
@@ -250,33 +199,21 @@ function VTHero({ t, onBook }) {
 
 // ── STORY ───────────────────────────────────────────────
 function VTStory({ t }) {
-  const r1 = useReveal(), r2 = useReveal(), r3 = useReveal();
   return (
-    <section id="story" className="section" style={{ background: "var(--paper)" }}>
+    <section id="story" className="section section--paper">
       <div className="container">
-        <SecHead num={t.secStory.num} label={t.secStory.label} title={t.secStory.title} />
+        <SecTitle>{t.sec.story}</SecTitle>
 
         <div className="vt-story-grid">
-          <div ref={r1} className="reveal">
-            <div className="img-frame" style={{ aspectRatio: "4/5" }}>
-              <img src="assets/doors.jpg" alt={t.storyCaption} className="img-cover" />
+          <figure>
+            <div className="img-frame" style={{ aspectRatio: "962/768" }}>
+              <img src="assets/doors.jpg" alt={t.storyCaption} className="img-cover" loading="lazy" />
             </div>
-            <p className="cap">{t.storyCaption}</p>
-          </div>
+            <figcaption className="cap">{t.storyCaption}</figcaption>
+          </figure>
 
-          <div ref={r2} className="reveal" style={{ paddingTop: 32 }}>
-            <div style={{ display: "grid", gap: 20, color: "var(--ink-soft)", fontSize: 16, lineHeight: 1.7 }}>
-              {t.storyBody.map((p, i) => <p key={i}>{p}</p>)}
-            </div>
-
-            <div ref={r3} className="reveal vt-heritage-grid" style={{ marginTop: 56 }}>
-              {t.storyHeritage.map(([k, v], i) => (
-                <div key={i}>
-                  <div className="serif" style={{ fontSize: 32, fontStyle: "italic", letterSpacing: "-0.01em" }}>{k}</div>
-                  <div className="eyebrow" style={{ marginTop: 6, fontSize: 10 }}>{v}</div>
-                </div>
-              ))}
-            </div>
+          <div className="vt-story-text">
+            {t.storyBody.map((p, i) => <p key={i}>{p}</p>)}
           </div>
         </div>
       </div>
@@ -285,108 +222,116 @@ function VTStory({ t }) {
 }
 
 // ── APARTMENTS ──────────────────────────────────────────
+// Tabs follow the WAI-ARIA tab pattern: one Tab stop, arrow keys move between tabs.
 function VTApartments({ t, lang, onBook }) {
-  const [active, setActive] = useState("penthouse");
   const apts = VT_DATA.apartments;
+  const [active, setActive] = useState(apts[0].id);
+  const tabRefs = React.useRef({});
   const apt = apts.find(a => a.id === active);
-  const ref = useReveal();
   const tx = (a) => (a.i18n[lang] || a.i18n.EN);
   const aptT = tx(apt);
 
-  return (
-    <section id="stays" className="section" style={{ background: "var(--bone)" }}>
-      <div className="container">
-        <SecHead num={t.secStay.num} label={t.secStay.label} title={t.secStay.title} />
+  const rateLine = (a) => a.price ? vtFrom(t, a.price, lang) : t.apt.onRequest;
 
-        {/* tabs */}
-        <div ref={ref} className="reveal" style={{
-          display: "flex", borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)",
-          marginBottom: 56, overflowX: "auto", scrollSnapType: "x mandatory"
-        }}>
+  const onTabKey = (e) => {
+    const i = apts.findIndex((a) => a.id === active);
+    const next = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: apts.length - 1 }[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    const id = apts[(next + apts.length) % apts.length].id;
+    setActive(id);
+    tabRefs.current[id] && tabRefs.current[id].focus();
+  };
+
+  return (
+    <section id="stays" className="section section--bone">
+      <div className="container">
+        <SecTitle>{t.sec.stays}</SecTitle>
+        <p className="body-lg" style={{ marginTop: -24, marginBottom: 32 }}>{t.sec.staysIntro}</p>
+
+        <div className="vt-tabs" role="tablist" aria-label={t.sec.stays} onKeyDown={onTabKey}>
           {apts.map((a) => (
-            <button key={a.id}
-              onClick={() => setActive(a.id)}
-              style={{
-                flex: "1 1 0", minWidth: 160, textAlign: "left",
-                padding: "clamp(18px, 4vw, 26px) clamp(16px, 3vw, 24px)",
-                background: active === a.id ? "var(--ink)" : "transparent",
-                color: active === a.id ? "var(--bone)" : "var(--ink)",
-                borderRight: "1px solid var(--rule)",
-                transition: "background 0.4s ease, color 0.4s ease",
-                scrollSnapAlign: "start",
-              }}>
-              <div className="numeral" style={{ color: active === a.id ? "var(--ochre)" : "var(--ochre-deep)", marginBottom: 6 }}>
-                № {a.number}
-              </div>
-              <div className="serif" style={{ fontSize: 22, fontStyle: "italic", marginBottom: 4 }}>{tx(a).name}</div>
-              <div style={{ fontSize: 12, opacity: 0.7, letterSpacing: "0.05em" }}>
-                {a.sleeps} {t.apt.guests} · {a.sqm}m² · {t.apt.from} €{a.price}
+            <button key={a.id} role="tab" className="vt-tab"
+              ref={(el) => { tabRefs.current[a.id] = el; }}
+              id={`tab-${a.id}`} aria-controls="apt-panel"
+              aria-selected={active === a.id}
+              tabIndex={active === a.id ? 0 : -1}
+              onClick={() => setActive(a.id)}>
+              <div className="vt-tab__name">{vtName(tx(a).name)}</div>
+              <div className="vt-tab__meta">
+                {vtCount(t, "guests", a.sleeps)} · {a.sqm} m² · {rateLine(a)}
               </div>
             </button>
           ))}
         </div>
 
-        {/* content */}
-        <div key={apt.id} className="vt-apt-content" style={{ animation: "fadeUp 0.7s ease" }}>
+        <div id="apt-panel" role="tabpanel" tabIndex={0} aria-labelledby={`tab-${apt.id}`} className="vt-apt-content">
           <div>
-            <div className="img-frame" style={{ aspectRatio: "4/3", marginBottom: 12 }}>
-              <img key={apt.images[0]} src={apt.images[0]} alt={aptT.name} className="img-cover"
-                style={{ animation: "fadeIn 0.7s ease" }} />
+            <div className="eyebrow vt-apt-tagline">{aptT.tagline}</div>
+            <h3 className="display-md">{vtName(aptT.name)}</h3>
+
+            <div className="vt-apt-specs">
+              <span>{vtCount(t, "guests", apt.sleeps)}</span>
+              <span>{vtCount(t, apt.beds > 1 ? "beds" : "bed", apt.beds)}</span>
+              <span>{vtCount(t, apt.baths > 1 ? "baths" : "bath", apt.baths)}</span>
+              <span>{apt.sqm} m²</span>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-              {apt.images.slice(1, 4).map((src, i) => (
-                <div key={src} className="img-frame" style={{ aspectRatio: "1/1" }}>
-                  <img src={src} alt="" className="img-cover" />
-                </div>
-              ))}
-            </div>
+
+            <p className="body-lg">{aptT.description}</p>
           </div>
 
-          <div style={{ paddingTop: 8 }}>
-            <div className="eyebrow" style={{ color: "var(--ochre-deep)", marginBottom: 18 }}>
-              № {apt.number} · {aptT.tagline}
-            </div>
-            <h3 className="display-md" style={{ marginBottom: 28 }}>{aptT.name}</h3>
-
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 28, rowGap: 12, paddingBlock: 20, borderTop: "1px solid var(--rule)", borderBottom: "1px solid var(--rule)", marginBottom: 28, fontSize: 13, color: "var(--ink-soft)" }}>
-              <span><strong style={{ color: "var(--ink)" }}>{apt.sleeps}</strong> {t.apt.guests}</span>
-              <span><strong style={{ color: "var(--ink)" }}>{apt.beds}</strong> {apt.beds > 1 ? t.apt.beds : t.apt.bed}</span>
-              <span><strong style={{ color: "var(--ink)" }}>{apt.baths}</strong> {apt.baths > 1 ? t.apt.baths : t.apt.bath}</span>
-              <span><strong style={{ color: "var(--ink)" }}>{apt.sqm}</strong> m²</span>
-            </div>
-
-            <p className="body-lg" style={{ marginBottom: 32 }}>{aptT.description}</p>
-
-            <ul style={{ listStyle: "none", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "10px 24px", marginBottom: 36 }}>
-              {aptT.features.map((f) => (
-                <li key={f} style={{ fontSize: 14, color: "var(--ink-soft)", display: "flex", alignItems: "baseline", gap: 10 }}>
-                  <span style={{ width: 4, height: 4, background: "var(--ochre)", transform: "rotate(45deg)", flexShrink: 0, marginTop: 8 }}></span>
-                  {f}
-                </li>
-              ))}
+          <div>
+            <ul className="vt-features">
+              {aptT.features.map((f) => <li key={f}>{f}</li>)}
             </ul>
 
-            <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", paddingTop: 28, borderTop: "1px solid var(--rule)" }}>
+            <div className="vt-apt-price">
               <div>
-                <div className="serif" style={{ fontSize: 36, lineHeight: 1 }}>€{apt.price}</div>
-                <div className="eyebrow" style={{ marginTop: 6, fontSize: 10 }}>{t.apt.perNight}</div>
+                {apt.price ? (
+                  <>
+                    <div className="vt-apt-price__amount">{vtEur(apt.price, lang)}</div>
+                    <div className="vt-apt-price__label">{t.apt.perNight}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="vt-apt-price__amount vt-apt-price__amount--note">{t.apt.onRequest}</div>
+                    <div className="vt-apt-price__label">{t.apt.onRequestNote}</div>
+                  </>
+                )}
               </div>
-              <button className="btn btn--primary" onClick={() => onBook(apt.id)}>
-                {t.apt.reserve} № {apt.number} <span className="arr"></span>
-              </button>
+              <button className="btn btn--primary" onClick={() => onBook(apt.id)}>{t.apt.reserve}</button>
             </div>
           </div>
         </div>
-      </div>
 
-      <style>{`
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-      `}</style>
+        <VTGallery t={t} />
+      </div>
     </section>
   );
 }
 
-Object.assign(window, {
-  VTNav, VTHero, VTStory, VTApartments, useReveal, SecHead
-});
+// ── PHOTOS ──────────────────────────────────────────────
+function VTGallery({ t }) {
+  const photos = VT_DATA.gallery;
+  const [photo, setPhoto] = useState(0);
+  return (
+    <div className="vt-gallery">
+      <h3 className="display-sm">{t.sec.photos}</h3>
+      <p className="vt-gallery__note">{t.photosNote}</p>
+      <div className="img-frame vt-gallery__main">
+        <img src={photos[photo]} alt={`${t.apt.photo} ${photo + 1} / ${photos.length}`} className="img-cover" loading="lazy" />
+      </div>
+      <div className="vt-gallery__thumbs">
+        {photos.map((src, i) => (
+          <button key={src} className="img-frame vt-apt-thumb" aria-pressed={photo === i}
+            aria-label={`${t.apt.photo} ${i + 1} / ${photos.length}`}
+            onClick={() => setPhoto(i)}>
+            <img src={src} alt="" loading="lazy" />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, { VTNav, VTHero, VTStory, VTApartments, VTGallery, SecTitle, VT_LANGS, VT_HTML_LANG, vtReadLang, vtWriteLang, useDialog, vtCount, vtFrom, vtName, vtEur });
