@@ -11,9 +11,17 @@ function App() {
   const [bookOpen, setBookOpen] = React.useState(false);
   const [initialApt, setInitialApt] = React.useState("");
 
-  React.useEffect(() => { document.documentElement.lang = VT_HTML_LANG[lang] || "en"; }, [lang]);
-
   const t = window.VT_I18N[lang] || window.VT_I18N.EN;
+
+  React.useEffect(() => { vtApplyPageMeta(lang, t.meta.title, t.hero.sub); }, [lang]);
+
+  // Section links (index.html#porto, ?lang=pt#stays) arrive before React has
+  // rendered the target, so scroll once after the first render.
+  React.useEffect(() => {
+    const id = window.location.hash && decodeURIComponent(window.location.hash.slice(1));
+    const el = id && document.getElementById(id);
+    if (el) el.scrollIntoView();
+  }, []);
 
   const openBooking = (aptId) => {
     setInitialApt(typeof aptId === "string" ? aptId : "");

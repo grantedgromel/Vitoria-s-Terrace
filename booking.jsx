@@ -5,7 +5,6 @@
 // then hands a pre-filled message to the guest's own email app or WhatsApp.
 // Nothing is sent until the guest presses send there, and the copy says so.
 
-const VT_DATE_LOCALES = { EN: "en-GB", PT: "pt-PT", ES: "es-ES", FR: "fr-FR", KR: "ko-KR", JA: "ja-JP" };
 // Porto municipal tourist tax: €3 per guest aged 13+ per night, capped at 7 nights
 // (in force since 1 Dec 2024, Câmara Municipal do Porto).
 const VT_CITY_TAX = { perNight: 3, maxNights: 7 };
@@ -40,11 +39,14 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
   }, [open, initialAptId]);
 
   // Move focus to the top of each new step so keyboard and screen-reader users start there.
+  const prevStep = React.useRef(0);
   useEffect(() => {
-    if (!open || !panelRef.current || step === 0) return;
+    const moved = prevStep.current !== step;
+    prevStep.current = step;
+    if (!open || !panelRef.current || !moved) return;
     const h = panelRef.current.querySelector("[data-step-focus]");
     if (h) h.focus();
-  }, [step]);
+  }, [step, open]);
 
   const apts = VT_DATA.apartments;
   const maxSleeps = Math.max(...apts.map((a) => a.sleeps));
@@ -58,11 +60,12 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
   const rate = apt && apt.price && datesOk ? apt.price * nights : null;
   const cityTax = guests * Math.min(Math.max(nights, 0), VT_CITY_TAX.maxNights) * VT_CITY_TAX.perNight;
 
-  const dateFmt = new Intl.DateTimeFormat(VT_DATE_LOCALES[lang] || "en-GB", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric" });
+  const dateFmt = new Intl.DateTimeFormat(VT_NUM_LOCALES[lang] || "en-GB", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric" });
   const showDate = (s) => dateFmt.format(new Date(s + "T00:00:00Z"));
   const nameOk = Boolean(first.trim() && last.trim());
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  const aptName = apt ? tx(apt).name : t.book.any;
+  // The host works in Portuguese and English, so a translated name also carries the English one.
+  const aptName = apt ? (lang === "EN" ? apt.i18n.EN.name : `${tx(apt).name} (${apt.i18n.EN.name})`) : t.book.any;
 
   const lines = [
     [t.book.checkin, showDate(checkin)],
@@ -109,6 +112,7 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
 
         {step === 0 && (
           <div className="vt-panel-body">
+            <h3 className="visually-hidden" tabIndex={-1} data-step-focus="">{t.book.stepDates}</h3>
             <div className="vt-form-row">
               <label className="vt-field">
                 <span className="vt-field__label">{t.book.checkin}</span>
@@ -155,7 +159,7 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
                   <button key={a.id} className="vt-choice" aria-pressed={aptId === a.id}
                     disabled={a.sleeps < guests} onClick={() => setAptId(a.id)}>
                     <span>
-                      <span className="serif" style={{ fontSize: 20, display: "block" }}>{vtName(tx(a).name)}</span>
+                      <span className="serif vt-choice__name">{vtName(tx(a).name)}</span>
                       <span style={{ fontSize: 14, color: "var(--granite)" }}>{vtCount(t, "guests", a.sleeps)} · {a.sqm} m²</span>
                     </span>
                     <span style={{ fontSize: 15, whiteSpace: "nowrap" }}>
@@ -184,7 +188,7 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
                 </>
               ) : (
                 <p style={{ fontSize: 15 }}>
-                  {datesOk ? `${nights} ${nights === 1 ? t.book.night : t.book.nights}. ` : ""}{t.book.estimateNone}
+                  {datesOk ? (t.book.nightsFmt ? t.book.nightsFmt.replace("{n}", nights) : `${nights} ${nights === 1 ? t.book.night : t.book.nights}. `) : ""}{t.book.estimateNone}
                 </p>
               )}
             </div>
@@ -230,6 +234,10 @@ function VTBookingModal({ open, onClose, t, lang, initialAptId }) {
               <textarea rows={3} className="vt-input" style={{ resize: "vertical" }} value={notes} onChange={(e) => setNotes(e.target.value)} />
             </label>
 
+            <p className="vt-summary__note" style={{ margin: "-8px 0 20px" }}>
+              {t.book.legalLabel} <a className="link-u" href={`privacy.html${lang === "PT" ? "#pt" : ""}`} target="_blank" rel="noopener">{t.footer.privacy}</a>
+              {" · "}<a className="link-u" href={`terms.html${lang === "PT" ? "#pt" : ""}`} target="_blank" rel="noopener">{t.footer.terms}</a>
+            </p>
             <div style={{ display: "flex", gap: 12 }}>
               <button className="btn" onClick={() => setStep(0)}>{t.book.back}</button>
               <button className="btn btn--primary" style={{ flex: 1 }} onClick={next1}>{t.book.confirm}</button>

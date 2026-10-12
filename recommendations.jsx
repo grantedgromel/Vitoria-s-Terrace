@@ -49,7 +49,7 @@ function VTRecDrawer({ item, subTags, lang, t, onClose }) {
 
   return ReactDOM.createPortal(
     <div className="vt-drawer-shade" onClick={onClose}>
-      <aside className="vt-drawer" role="dialog" aria-modal="true" aria-labelledby="vt-drawer-title"
+      <div className="vt-drawer" role="dialog" aria-modal="true" aria-labelledby="vt-drawer-title"
         ref={panelRef} tabIndex={-1} onClick={(e) => e.stopPropagation()}>
         <div className="vt-drawer__bar">
           <button onClick={onClose} className="vt-panel-close">{t.book.close}</button>
@@ -69,7 +69,7 @@ function VTRecDrawer({ item, subTags, lang, t, onClose }) {
             {tr(item.external ? VT_REC_LABELS.website : VT_REC_LABELS.directions, lang)}
           </a>
         </div>
-      </aside>
+      </div>
     </div>,
     document.body
   );
@@ -88,7 +88,7 @@ function VTRecCard({ item, subTags, lang, onOpen }) {
         <h3 className="vt-rec-card__name">{tr(item.name, lang)}</h3>
         <div className="vt-rec-card__meta">
           {meta}
-          {item.reserveAhead && <span className="vt-rec-card__reserve"> · {tr(VT_REC_LABELS.reserve, lang)}</span>}
+          {item.reserveAhead && <div className="vt-rec-card__reserve">{tr(VT_REC_LABELS.reserve, lang)}</div>}
         </div>
       </div>
     </button>
@@ -96,8 +96,9 @@ function VTRecCard({ item, subTags, lang, onOpen }) {
 }
 
 // ── TEXT LIST (no photos) ───────────────────────────────────
-// Used where a photo per item would mean repeating stock images.
-function VTPracticalList({ items, subTags, lang }) {
+// Restaurants, activities and practical addresses. Only the See section has
+// photos, because those show the actual places.
+function VTPlaceList({ items, subTags, lang }) {
   return (
     <ul className="vt-practical">
       {items.map((it) => {
@@ -111,7 +112,7 @@ function VTPracticalList({ items, subTags, lang }) {
             </div>
             <div className="vt-practical__meta">
               {[subTagLabel, walkText(it, lang)].filter(Boolean).join(" · ")}
-              {it.reserveAhead && <span className="vt-rec-card__reserve"> · {tr(VT_REC_LABELS.reserve, lang)}</span>}
+              {it.reserveAhead && <div className="vt-rec-card__reserve">{tr(VT_REC_LABELS.reserve, lang)}</div>}
               {note && <div className="vt-practical__note">{note}</div>}
             </div>
           </li>
@@ -122,7 +123,7 @@ function VTPracticalList({ items, subTags, lang }) {
 }
 
 // ── SECTION ─────────────────────────────────────────────────
-const VT_LIST_SECTIONS = new Set(["do", "practical"]);
+const VT_LIST_SECTIONS = new Set(["eat", "do", "practical"]);
 
 function VTRecSection({ section, subTags, lang, onOpen }) {
   return (
@@ -132,7 +133,7 @@ function VTRecSection({ section, subTags, lang, onOpen }) {
         <p className="vt-rec-section__kind">{tr(section.kind, lang)}</p>
       </div>
       {VT_LIST_SECTIONS.has(section.id) ? (
-        <VTPracticalList items={section.items} subTags={subTags} lang={lang} />
+        <VTPlaceList items={section.items} subTags={subTags} lang={lang} />
       ) : (
         <div className="vt-rec-section__grid">
           {section.items.map((item) => (

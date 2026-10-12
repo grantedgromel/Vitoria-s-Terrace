@@ -101,7 +101,7 @@ function VTReviews({ t }) {
                 <td className="vt-scores__platform">{s.platform}</td>
                 <td>
                   <span className="vt-scores__score">{s.score}</span>
-                  <span className="vt-scores__out"> / {s.outOf}</span>
+                  <span className="vt-scores__out">&nbsp;/&nbsp;{s.outOf}</span>
                 </td>
                 <td><a href={s.url} target="_blank" rel="noopener">{t.reviews.read}</a></td>
               </tr>
@@ -158,7 +158,8 @@ function VTFooter({ t, lang, onLang, onBook, currentPage }) {
             <div className="vt-footer__label" style={{ marginTop: 28 }}>{t.footer.language}</div>
             <div className="vt-lang-row">
               {VT_LANGS.map(([code]) => (
-                <button key={code} aria-pressed={code === lang} onClick={() => onLang(code)}>{code}</button>
+                <button key={code} aria-pressed={code === lang} lang={VT_HTML_LANG[code]} aria-label={VT_LANG_NAMES[code]}
+                  onClick={() => onLang(code)}>{VT_URL_LANG[code].toUpperCase()}</button>
               ))}
             </div>
           </div>

@@ -2,7 +2,7 @@
 // Globally exposes: VT_DATA, VT_I18N
 
 const VT_DATA = {
-  // Four apartment types. `price` is the published low-season nightly rate in euros;
+  // Four apartment layouts (six apartments). `price` is the published low-season nightly rate in euros;
   // null means no rate is published, and the site shows "rate on request" instead of a number.
   apartments: [
     {
@@ -90,7 +90,7 @@ const VT_DATA = {
           features: ["강 전망", "퀸 침대와 소파베드", "간이 주방", "거실"]
         },
         JA: {
-          name: "デラックスアパートメント · 川の眺め",
+          name: "デラックス · 川の眺め",
           tagline: "1ベッドルーム、通りの先に川",
           description: "独立したリビングと簡易キッチンのある1ベッドルームのアパートメントです。松材の格子の間仕切りは、建物にもともとある木工に倣ったものです。窓からは通りの先にドウロ川が見え、ソファベッドを使えば3人目の方も宿泊できます。",
           features: ["川の眺め", "クイーンベッドとソファベッド", "簡易キッチン", "リビング"]
@@ -270,7 +270,7 @@ const VT_DATA = {
 
   // Rita's guide in four sections. Each item: name + addr (plain, or per-locale where the name translates),
   // approximate coords, walking time,
-  // optional reserveAhead flag, optional translated note, image, subTag slug.
+  // optional reserveAhead flag, optional translated note, subTag slug, and an image for the See section only.
   // Walking-direction links start from Rua de São Miguel 15 (41.1428, -8.6155).
   recommendations: [
     {
@@ -291,8 +291,7 @@ const VT_DATA = {
           addr: "R. das Virtudes 32, 4050-630 Porto",
           coords: [41.1444, -8.6178],
           walk: "6 min",
-          subTag: "traditional",
-          image: "assets/recs/taberna-santo-antonio.jpg"
+          subTag: "traditional"
         },
         {
           id: "taberna-davo",
@@ -301,8 +300,7 @@ const VT_DATA = {
           coords: [41.1453, -8.6155],
           walk: "5 min",
           subTag: "traditional",
-          reserveAhead: true,
-          image: "assets/recs/taberna-davo.jpg"
+          reserveAhead: true
         },
         {
           id: "casa-braganca",
@@ -310,8 +308,7 @@ const VT_DATA = {
           addr: "R. do Arquitecto Nicolau Nasoni 16, 4050-423 Porto",
           coords: [41.1462, -8.6147],
           walk: "6 min",
-          subTag: "traditional",
-          image: "assets/recs/casa-braganca.jpg"
+          subTag: "traditional"
         },
         {
           id: "abadia-do-porto",
@@ -320,8 +317,7 @@ const VT_DATA = {
           coords: [41.1486, -8.6112],
           walk: "10 min",
           subTag: "traditional",
-          reserveAhead: true,
-          image: "assets/recs/abadia-do-porto.jpg"
+          reserveAhead: true
         },
         {
           id: "mistu",
@@ -330,8 +326,7 @@ const VT_DATA = {
           coords: [41.1416, -8.6148],
           walk: "8 min",
           subTag: "modern",
-          reserveAhead: true,
-          image: "assets/recs/mistu.jpg"
+          reserveAhead: true
         },
         {
           id: "cantinho-avillez",
@@ -340,8 +335,7 @@ const VT_DATA = {
           coords: [41.1426, -8.6131],
           walk: "6 min",
           subTag: "modern",
-          reserveAhead: true,
-          image: "assets/recs/cantinho-avillez.jpg"
+          reserveAhead: true
         },
         {
           id: "flow",
@@ -350,8 +344,7 @@ const VT_DATA = {
           coords: [41.1471, -8.6168],
           walk: "6 min",
           subTag: "modern",
-          reserveAhead: true,
-          image: "assets/recs/flow-porto.jpg"
+          reserveAhead: true
         },
         {
           id: "the-door",
@@ -360,8 +353,7 @@ const VT_DATA = {
           coords: [41.1452, -8.6162],
           walk: "3 min",
           subTag: "modern",
-          reserveAhead: true,
-          image: "assets/recs/the-door-porto.jpg"
+          reserveAhead: true
         },
         {
           id: "cafe-santiago",
@@ -369,8 +361,7 @@ const VT_DATA = {
           addr: "R. de Passos Manuel 226, 4000-382 Porto",
           coords: [41.1492, -8.6079],
           walk: "12 min",
-          subTag: "francesinha",
-          image: "assets/recs/cafe-santiago.jpg"
+          subTag: "francesinha"
         },
         {
           id: "brasao",
@@ -379,8 +370,7 @@ const VT_DATA = {
           coords: [41.1488, -8.6115],
           walk: "10 min",
           subTag: "francesinha",
-          reserveAhead: true,
-          image: "assets/recs/brasao.jpg"
+          reserveAhead: true
         },
         {
           id: "muralhas-olival",
@@ -388,8 +378,7 @@ const VT_DATA = {
           addr: "Campo dos Mártires da Pátria 117, 4050-367 Porto",
           coords: [41.1467, -8.6175],
           walk: "5 min",
-          subTag: "breakfast",
-          image: "assets/recs/muralhas-olival.jpg"
+          subTag: "breakfast"
         },
         {
           id: "padaria-ribeiro",
@@ -397,17 +386,15 @@ const VT_DATA = {
           addr: "P. de Guilherme Gomes Fernandes 21, 4050-526 Porto",
           coords: [41.1478, -8.6128],
           walk: "8 min",
-          subTag: "breakfast",
-          image: "assets/recs/padaria-ribeiro.jpg"
+          subTag: "breakfast"
         },
         {
           id: "time-out-market",
-          name: "Time-Out Market Porto",
+          name: "Time Out Market Porto",
           addr: "Ala Sul da Estação Ferroviária de São Bento, Praça de Almeida Garrett",
           coords: [41.1456, -8.6105],
           walk: "10 min",
-          subTag: "market",
-          image: "assets/recs/time-out-market.jpg"
+          subTag: "market"
         },
         {
           id: "pastel-bacalhau",
@@ -415,8 +402,7 @@ const VT_DATA = {
           addr: "Av. de Diogo Leite 122, 4400-111 Vila Nova de Gaia",
           coords: [41.139, -8.6097],
           walk: "15 min",
-          subTag: "gaia",
-          image: "assets/recs/pastel-bacalhau.jpg"
+          subTag: "gaia"
         }
       ]
     },
@@ -434,7 +420,14 @@ const VT_DATA = {
       items: [
         {
           id: "clerigos",
-          name: "Torre dos Clérigos",
+          name: {
+            EN: "Clérigos Tower",
+            PT: "Torre dos Clérigos",
+            ES: "Torre de los Clérigos",
+            FR: "Tour des Clérigos",
+            KR: "클레리구스 탑",
+            JA: "クレリゴスの塔"
+          },
           addr: "R. de São Filipe de Nery, 4050-546 Porto",
           coords: [41.1453, -8.6131],
           walk: "3 min",
@@ -443,7 +436,7 @@ const VT_DATA = {
         },
         {
           id: "lello",
-          name: "Livraria Lello",
+          name: { EN: "Livraria Lello", PT: "Livraria Lello", ES: "Livraria Lello", FR: "Livraria Lello", KR: "렐루 서점", JA: "レロ書店" },
           addr: "R. das Carmelitas 144, 4050-161 Porto",
           coords: [41.1466, -8.6149],
           walk: "5 min",
@@ -462,7 +455,7 @@ const VT_DATA = {
         },
         {
           id: "ribeira",
-          name: "Ribeira",
+          name: { EN: "Ribeira", PT: "Ribeira", ES: "Ribeira", FR: "Ribeira", KR: "히베이라", JA: "リベイラ" },
           addr: "Cais da Ribeira, 4050-510 Porto",
           coords: [41.141, -8.6131],
           walk: "8 min",
@@ -482,7 +475,7 @@ const VT_DATA = {
           name: {
             EN: "Dom Luís I Bridge",
             PT: "Ponte Dom Luís I",
-            ES: "Puente Don Luis I",
+            ES: "Puente Dom Luís I",
             FR: "Pont Dom Luís I",
             KR: "동 루이스 1세 다리",
             JA: "ドン・ルイス1世橋"
@@ -497,11 +490,11 @@ const VT_DATA = {
           id: "port-cellars",
           name: {
             EN: "Port wine cellars",
-            PT: "Caves do Vinho do Porto",
+            PT: "Caves do vinho do Porto",
             ES: "Bodegas de vino de Oporto",
             FR: "Caves de porto",
             KR: "포트 와인 셀러",
-            JA: "ポートワインのセラー"
+            JA: "ポートワインセラー"
           },
           addr: "Vila Nova de Gaia",
           coords: [41.1379, -8.6116],
@@ -511,7 +504,14 @@ const VT_DATA = {
         },
         {
           id: "sao-bento",
-          name: "Estação de São Bento",
+          name: {
+            EN: "São Bento Station",
+            PT: "Estação de São Bento",
+            ES: "Estación de São Bento",
+            FR: "Gare de São Bento",
+            KR: "상 벤투 역",
+            JA: "サン・ベント駅"
+          },
           addr: "Praça Almeida Garrett, 4000-069 Porto",
           coords: [41.1456, -8.6101],
           walk: "5 min",
@@ -520,7 +520,7 @@ const VT_DATA = {
         },
         {
           id: "carmo",
-          name: "Igreja do Carmo",
+          name: { EN: "Igreja do Carmo", PT: "Igreja do Carmo", ES: "Igreja do Carmo", FR: "Igreja do Carmo", KR: "카르무 성당", JA: "カルモ教会" },
           addr: "R. do Carmo, 4050-164 Porto",
           coords: [41.1474, -8.6142],
           walk: "5 min",
@@ -529,7 +529,7 @@ const VT_DATA = {
         },
         {
           id: "rua-flores",
-          name: "Rua das Flores",
+          name: { EN: "Rua das Flores", PT: "Rua das Flores", ES: "Rua das Flores", FR: "Rua das Flores", KR: "플로레스 거리", JA: "フローレス通り" },
           addr: "Rua das Flores, Porto",
           coords: [41.1444, -8.6118],
           walk: "5 min",
@@ -538,7 +538,14 @@ const VT_DATA = {
         },
         {
           id: "mouzinho",
-          name: "R. de Mouzinho da Silveira",
+          name: {
+            EN: "R. de Mouzinho da Silveira",
+            PT: "R. de Mouzinho da Silveira",
+            ES: "R. de Mouzinho da Silveira",
+            FR: "R. de Mouzinho da Silveira",
+            KR: "무지뉴 다 실베이라 거리",
+            JA: "ムジーニョ・ダ・シルヴェイラ通り"
+          },
           addr: "R. de Mouzinho da Silveira, Porto",
           coords: [41.1437, -8.6131],
           walk: "6 min",
@@ -547,7 +554,14 @@ const VT_DATA = {
         },
         {
           id: "aliados",
-          name: "Avenida dos Aliados",
+          name: {
+            EN: "Avenida dos Aliados",
+            PT: "Avenida dos Aliados",
+            ES: "Avenida dos Aliados",
+            FR: "Avenida dos Aliados",
+            KR: "알리아도스 대로",
+            JA: "アリアードス大通り"
+          },
           addr: "Avenida dos Aliados, 4000-066 Porto",
           coords: [41.1494, -8.6107],
           walk: "6 min",
@@ -556,7 +570,7 @@ const VT_DATA = {
         },
         {
           id: "bolhao",
-          name: "Mercado do Bolhão",
+          name: { EN: "Mercado do Bolhão", PT: "Mercado do Bolhão", ES: "Mercado do Bolhão", FR: "Mercado do Bolhão", KR: "볼량 시장", JA: "ボリャオン市場" },
           addr: "R. de Fernandes Tomás 506, 4000-211 Porto",
           coords: [41.1494, -8.6072],
           walk: "10 min",
@@ -565,7 +579,7 @@ const VT_DATA = {
         },
         {
           id: "majestic",
-          name: "Café Majestic",
+          name: { EN: "Café Majestic", PT: "Café Majestic", ES: "Café Majestic", FR: "Café Majestic", KR: "마제스틱 카페", JA: "カフェ・マジェスティック" },
           addr: "R. de Santa Catarina 112, 4000-442 Porto",
           coords: [41.1493, -8.6058],
           walk: "12 min",
@@ -594,7 +608,6 @@ const VT_DATA = {
           walk: "4 min",
           subTag: "fado",
           reserveAhead: true,
-          image: "assets/recs/fado.jpg",
           note: { EN: "With dinner.", PT: "Com jantar.", ES: "Con cena.", FR: "Avec dîner.", KR: "저녁 식사 포함.", JA: "ディナー付き。" }
         },
         {
@@ -605,7 +618,6 @@ const VT_DATA = {
           walk: "7 min",
           subTag: "fado",
           reserveAhead: true,
-          image: "assets/recs/fado.jpg",
           note: { EN: "With dinner.", PT: "Com jantar.", ES: "Con cena.", FR: "Avec dîner.", KR: "저녁 식사 포함.", JA: "ディナー付き。" }
         },
         {
@@ -616,7 +628,6 @@ const VT_DATA = {
           walk: "9 min",
           subTag: "fado",
           reserveAhead: true,
-          image: "assets/recs/fado.jpg",
           note: {
             EN: "Afternoon performance, no dinner.",
             PT: "Sessão à tarde, sem jantar.",
@@ -639,8 +650,7 @@ const VT_DATA = {
           addr: "civitatis.com",
           external: "https://www.civitatis.com/en/porto/",
           subTag: "walkingTour",
-          reserveAhead: true,
-          image: "assets/recs/walking-tours.jpg"
+          reserveAhead: true
         },
         {
           id: "guruwalk",
@@ -655,8 +665,7 @@ const VT_DATA = {
           addr: "guruwalk.com",
           external: "https://www.guruwalk.com/porto",
           subTag: "walkingTour",
-          reserveAhead: true,
-          image: "assets/recs/walking-tours.jpg"
+          reserveAhead: true
         },
         {
           id: "douro-cruise",
@@ -678,8 +687,7 @@ const VT_DATA = {
           },
           external: "https://www.getyourguide.com/s/?q=douro+valley+from+porto",
           subTag: "dayTrip",
-          reserveAhead: true,
-          image: "assets/recs/douro-valley.jpg"
+          reserveAhead: true
         }
       ]
     },
@@ -770,8 +778,7 @@ const VT_I18N = {
       beds: "beds",
       bath: "bathroom",
       baths: "bathrooms",
-      from: "from",
-      photo: "Photo"
+      from: "from"
     },
     storyCaption: "The doors at nº 15-17, restored to their original cobalt.",
     storyBody: [
@@ -793,7 +800,7 @@ const VT_I18N = {
       ["10 min", "Dom Luís I Bridge"],
       ["12 min", "Port wine cellars, Gaia"]
     ],
-    amenitiesIntro: "Included in the price.",
+    amenitiesIntro: "Included in the rate. The Porto city tax is paid separately.",
     amenities: [
       { label: "Concierge", note: "Daily, 8:00 to 20:00" },
       { label: "Welcome basket", note: "Port wine, pastéis de nata and fruit" },
@@ -806,7 +813,7 @@ const VT_I18N = {
     recs: {
       heading: "Recommendations from Rita",
       byline: "These are the places we send friends to, and where we go ourselves. Print the list, keep it on your phone, and ask us about anything on it.",
-      signature: "Rita",
+      signature: "Rita, your host",
       print: "Print this list",
       whatsappTitle: "During your stay, message us on WhatsApp.",
       whatsappBody: "We can book a table, suggest something for a rainy afternoon or lend you an umbrella.",
@@ -852,7 +859,7 @@ const VT_I18N = {
       nights: "nights",
       cityTax: "Porto city tax",
       total: "Estimated total",
-      estimateNote: "Estimate at the low-season rate; prices vary with the dates. City tax is €3 per guest aged 13 or over, per night, for up to 7 nights, and is not included in the rate. We confirm the final price in our reply.",
+      estimateNote: "Estimate at the low-season rate; prices vary with the dates. City tax is €3 per guest aged 13 or over, per night, for up to 7 nights, and is not included in the rate. The estimate counts every guest; children under 13 are exempt. We confirm the final price in our reply.",
       estimateNone: "We will quote a price in our reply.",
       first: "First name",
       last: "Last name",
@@ -873,11 +880,27 @@ const VT_I18N = {
       groupNote: "No single apartment sleeps more than 4. We will suggest two apartments for your group.",
       errName: "Add your first and last name.",
       errEmail: "Check the email address.",
-      errDates: "Check-out must be after check-in."
+      errDates: "Check-out must be after check-in.",
+      legalLabel: "Privacy and terms:"
     },
     photosNote: "Photos from across the house. Layouts and furnishings vary from one apartment to another.",
     arrivalLabel: "Arrival and house rules",
-    arrival: "Check-in 15:00 to 20:00 (later by arrangement; a fee may apply). Check-out by 11:00. No pets. No smoking inside."
+    arrival: "Check-in 15:00 to 20:00 (later by arrangement; a fee may apply). Check-out by 11:00. No pets. No smoking inside.",
+    galleryAlt: [
+      "Bedroom with a double bed, a sitting area and two windows",
+      "Sitting room with a sofa, armchairs and two tall windows",
+      "Armchair by a window over the old town",
+      "Two armchairs and a reading lamp",
+      "Open room divided by a slatted pine partition",
+      "Double bed behind a slatted pine partition",
+      "Corner sofa under a carved wall medallion",
+      "Dining table beside a fitted kitchen",
+      "Fitted kitchen with under-cabinet lighting",
+      "Kitchen with a patterned cement-tile floor",
+      "Bathroom with a glass shower and patterned tiles",
+      "Washbasin and towel rail in a white-tiled bathroom"
+    ],
+    meta: { title: "Vitória's Terrace Apartments, Porto" }
   },
 
   PT: {
@@ -917,8 +940,7 @@ const VT_I18N = {
       beds: "camas",
       bath: "casa de banho",
       baths: "casas de banho",
-      from: "desde",
-      photo: "Fotografia"
+      from: "desde"
     },
     storyCaption: "As portas dos n.º 15-17, restauradas no seu azul cobalto original.",
     storyBody: [
@@ -940,7 +962,7 @@ const VT_I18N = {
       ["10 min", "Ponte Dom Luís I"],
       ["12 min", "Caves do vinho do Porto, Gaia"]
     ],
-    amenitiesIntro: "Incluído no preço.",
+    amenitiesIntro: "Incluído no preço. A taxa turística do Porto é paga à parte.",
     amenities: [
       { label: "Acolhimento", note: "Todos os dias, das 8h00 às 20h00" },
       { label: "Cesto de boas-vindas", note: "Vinho do Porto, pastéis de nata e fruta" },
@@ -953,7 +975,7 @@ const VT_I18N = {
     recs: {
       heading: "Recomendações da Rita",
       byline: "São os sítios para onde mandamos os amigos e onde nós próprios vamos. Imprima a lista, guarde-a no telemóvel e pergunte-nos o que quiser sobre ela.",
-      signature: "Rita",
+      signature: "Rita, a sua anfitriã",
       print: "Imprimir esta lista",
       whatsappTitle: "Durante a estadia, envie-nos uma mensagem pelo WhatsApp.",
       whatsappBody: "Podemos reservar uma mesa, sugerir algo para uma tarde chuvosa ou emprestar-lhe um chapéu de chuva.",
@@ -999,7 +1021,7 @@ const VT_I18N = {
       nights: "noites",
       cityTax: "Taxa turística do Porto",
       total: "Total estimado",
-      estimateNote: "Estimativa com o preço de época baixa; os preços variam com as datas. A taxa turística é de 3 € por hóspede com 13 ou mais anos, por noite, até um máximo de 7 noites, e não está incluída no preço. Confirmamos o preço final na nossa resposta.",
+      estimateNote: "Estimativa com o preço de época baixa; os preços variam com as datas. A taxa turística é de 3 € por hóspede com 13 ou mais anos, por noite, até um máximo de 7 noites, e não está incluída no preço. A estimativa inclui todos os hóspedes; os menores de 13 anos estão isentos. Confirmamos o preço final na nossa resposta.",
       estimateNone: "Indicamos o preço na nossa resposta.",
       first: "Nome",
       last: "Apelido",
@@ -1020,11 +1042,27 @@ const VT_I18N = {
       groupNote: "Nenhum apartamento acolhe mais de 4 pessoas. Vamos sugerir dois apartamentos para o seu grupo.",
       errName: "Indique o nome e o apelido.",
       errEmail: "Verifique o endereço de email.",
-      errDates: "A data de saída tem de ser posterior à de entrada."
+      errDates: "A data de saída tem de ser posterior à de entrada.",
+      legalLabel: "Privacidade e termos:"
     },
     photosNote: "Fotografias de vários apartamentos da casa. A disposição e o mobiliário variam de apartamento para apartamento.",
     arrivalLabel: "Chegada e regras da casa",
-    arrival: "Check-in das 15h00 às 20h00 (mais tarde, mediante acordo; pode ter custo). Check-out até às 11h00. Não são aceites animais. Não é permitido fumar no interior."
+    arrival: "Check-in das 15h00 às 20h00 (mais tarde, mediante acordo; pode ter custo). Check-out até às 11h00. Não são aceites animais. Não é permitido fumar no interior.",
+    galleryAlt: [
+      "Quarto com cama de casal, zona de estar e duas janelas",
+      "Sala com sofá, cadeirões e duas janelas altas",
+      "Cadeirão junto a uma janela sobre o centro histórico",
+      "Dois cadeirões e um candeeiro de leitura",
+      "Espaço aberto dividido por um ripado de pinho",
+      "Cama de casal atrás de um ripado de pinho",
+      "Sofá de canto sob um medalhão de parede esculpido",
+      "Mesa de refeições junto a uma cozinha equipada",
+      "Cozinha equipada com luz sob os armários",
+      "Cozinha com chão de mosaico hidráulico",
+      "Casa de banho com duche de vidro e azulejos padronizados",
+      "Lavatório e toalheiro numa casa de banho de azulejo branco"
+    ],
+    meta: { title: "Vitória's Terrace, apartamentos no Porto" }
   },
 
   ES: {
@@ -1064,8 +1102,7 @@ const VT_I18N = {
       beds: "camas",
       bath: "baño",
       baths: "baños",
-      from: "desde",
-      photo: "Foto"
+      from: "desde"
     },
     storyCaption: "Las puertas del n.º 15-17, restauradas con su color cobalto original.",
     storyBody: [
@@ -1087,7 +1124,7 @@ const VT_I18N = {
       ["10 min", "Puente Dom Luís I"],
       ["12 min", "Bodegas de vino de Oporto, Gaia"]
     ],
-    amenitiesIntro: "Incluido en el precio.",
+    amenitiesIntro: "Incluido en la tarifa. La tasa turística de Oporto se paga aparte.",
     amenities: [
       { label: "Conserjería", note: "Todos los días, de 8:00 a 20:00" },
       { label: "Cesta de bienvenida", note: "Vino de Oporto, pastéis de nata y fruta" },
@@ -1100,7 +1137,7 @@ const VT_I18N = {
     recs: {
       heading: "Recomendaciones de Rita",
       byline: "Son los sitios a los que mandamos a nuestros amigos y a los que vamos nosotros. Imprime la lista, guárdala en el móvil y pregúntanos por cualquiera de ellos.",
-      signature: "Rita",
+      signature: "Rita, tu anfitriona",
       print: "Imprimir esta lista",
       whatsappTitle: "Durante tu estancia, escríbenos por WhatsApp.",
       whatsappBody: "Podemos reservarte una mesa, sugerirte algo para una tarde de lluvia o prestarte un paraguas.",
@@ -1146,7 +1183,7 @@ const VT_I18N = {
       nights: "noches",
       cityTax: "Tasa turística de Oporto",
       total: "Total estimado",
-      estimateNote: "Estimación con la tarifa de temporada baja; los precios varían según las fechas. La tasa turística es de 3 € por huésped de 13 años o más, por noche, hasta un máximo de 7 noches, y no está incluida en la tarifa. Confirmamos el precio final en nuestra respuesta.",
+      estimateNote: "Estimación con la tarifa de temporada baja; los precios varían según las fechas. La tasa turística es de 3 € por huésped de 13 años o más, por noche, hasta un máximo de 7 noches, y no está incluida en la tarifa. La estimación cuenta a todos los huéspedes; los menores de 13 años están exentos. Confirmamos el precio final en nuestra respuesta.",
       estimateNone: "Te indicaremos el precio en nuestra respuesta.",
       first: "Nombre",
       last: "Apellidos",
@@ -1167,11 +1204,27 @@ const VT_I18N = {
       groupNote: "Ningún apartamento admite más de 4 personas. Te propondremos dos apartamentos para tu grupo.",
       errName: "Indica tu nombre y apellidos.",
       errEmail: "Revisa la dirección de correo electrónico.",
-      errDates: "La salida debe ser posterior a la entrada."
+      errDates: "La salida debe ser posterior a la entrada.",
+      legalLabel: "Privacidad y condiciones:"
     },
     photosNote: "Fotos de varios apartamentos de la casa. La distribución y el mobiliario varían de un apartamento a otro.",
     arrivalLabel: "Llegada y normas de la casa",
-    arrival: "Entrada de 15:00 a 20:00 (más tarde, previo acuerdo; puede tener coste). Salida hasta las 11:00. No se admiten mascotas. No se permite fumar dentro."
+    arrival: "Entrada de 15:00 a 20:00 (más tarde, previo acuerdo; puede tener coste). Salida hasta las 11:00. No se admiten mascotas. No se permite fumar dentro.",
+    galleryAlt: [
+      "Dormitorio con cama doble, zona de estar y dos ventanas",
+      "Salón con sofá, butacas y dos ventanas altas",
+      "Butaca junto a una ventana sobre el casco antiguo",
+      "Dos butacas y una lámpara de lectura",
+      "Espacio abierto dividido por un tabique de listones de pino",
+      "Cama doble detrás de un tabique de listones de pino",
+      "Sofá rinconera bajo un medallón de pared tallado",
+      "Mesa de comedor junto a una cocina equipada",
+      "Cocina equipada con luz bajo los armarios",
+      "Cocina con suelo de baldosa hidráulica",
+      "Baño con ducha de cristal y azulejos estampados",
+      "Lavabo y toallero en un baño de azulejo blanco"
+    ],
+    meta: { title: "Vitória's Terrace, apartamentos en Oporto" }
   },
 
   FR: {
@@ -1211,10 +1264,9 @@ const VT_I18N = {
       beds: "lits",
       bath: "salle de bains",
       baths: "salles de bains",
-      from: "à partir de",
-      photo: "Photo"
+      from: "à partir de"
     },
-    storyCaption: "Les portes des nº 15-17, restaurées dans leur bleu cobalt d'origine.",
+    storyCaption: "Les portes du 15-17, restaurées dans leur bleu cobalt d'origine.",
     storyBody: [
       "Le propriétaire a grandi dans la Rua da Vitória, la rue qui a donné son nom à la maison. Acheter le bâtiment était un projet de longue date, et la restauration a pris près de trois ans.",
       "Les portes cobalt, la pierre de granit, les azulejos jaunes et blancs de l'entrée, les arches en bois au-dessus de l'escalier et l'ancienne rampe ont tous été conservés.",
@@ -1232,11 +1284,11 @@ const VT_I18N = {
       ["5 min", "Gare de São Bento"],
       ["8 min", "Ribeira et le fleuve"],
       ["10 min", "Pont Dom Luís I"],
-      ["12 min", "Caves de vin de Porto, Gaia"]
+      ["12 min", "Caves de porto, Gaia"]
     ],
-    amenitiesIntro: "Inclus dans le prix.",
+    amenitiesIntro: "Inclus dans le tarif. La taxe de séjour de Porto est payée à part.",
     amenities: [
-      { label: "Conciergerie", note: "Tous les jours, de 8h00 à 20h00" },
+      { label: "Conciergerie", note: "Tous les jours, de 8 h à 20 h" },
       { label: "Panier d'accueil", note: "Vin de Porto, pastéis de nata et fruits" },
       { label: "Linge de maison", note: "Coton portugais, changé à mi-séjour" },
       { label: "Chauffage et climatisation", note: "Réglables dans chaque appartement" },
@@ -1247,7 +1299,7 @@ const VT_I18N = {
     recs: {
       heading: "Les recommandations de Rita",
       byline: "Voici les adresses où nous envoyons nos amis, et où nous allons nous-mêmes. Imprimez la liste, gardez-la sur votre téléphone et n'hésitez pas à nous interroger sur chacune de ces adresses.",
-      signature: "Rita",
+      signature: "Rita, votre hôte",
       print: "Imprimer la liste",
       whatsappTitle: "Pendant votre séjour, écrivez-nous sur WhatsApp.",
       whatsappBody: "Nous pouvons vous réserver une table, vous proposer quelque chose à faire par un après-midi de pluie ou vous prêter un parapluie.",
@@ -1293,7 +1345,7 @@ const VT_I18N = {
       nights: "nuits",
       cityTax: "Taxe de séjour de Porto",
       total: "Total estimé",
-      estimateNote: "Estimation au tarif basse saison ; les prix varient selon les dates. La taxe de séjour est de 3 € par personne âgée de 13 ans ou plus et par nuit, dans la limite de 7 nuits, et n'est pas incluse dans le tarif. Nous confirmons le prix définitif dans notre réponse.",
+      estimateNote: "Estimation au tarif basse saison ; les prix varient selon les dates. La taxe de séjour est de 3 € par personne âgée de 13 ans ou plus et par nuit, dans la limite de 7 nuits, et n'est pas incluse dans le tarif. L'estimation compte tous les voyageurs ; les moins de 13 ans en sont exonérés. Nous confirmons le prix définitif dans notre réponse.",
       estimateNone: "Nous vous indiquerons un prix dans notre réponse.",
       first: "Prénom",
       last: "Nom",
@@ -1314,11 +1366,27 @@ const VT_I18N = {
       groupNote: "Aucun appartement n'accueille plus de 4 personnes. Nous vous proposerons deux appartements pour votre groupe.",
       errName: "Indiquez votre prénom et votre nom.",
       errEmail: "Vérifiez l'adresse e-mail.",
-      errDates: "Le départ doit être après l'arrivée."
+      errDates: "Le départ doit être après l'arrivée.",
+      legalLabel: "Confidentialité et conditions :"
     },
     photosNote: "Photos prises dans plusieurs appartements de la maison. L'agencement et le mobilier varient d'un appartement à l'autre.",
     arrivalLabel: "Arrivée et règles de la maison",
-    arrival: "Arrivée de 15 h à 20 h (plus tard sur accord préalable, avec un supplément possible). Départ avant 11 h. Animaux non admis. Il est interdit de fumer à l'intérieur."
+    arrival: "Arrivée de 15 h à 20 h (plus tard sur accord préalable, avec un supplément possible). Départ avant 11 h. Animaux non admis. Il est interdit de fumer à l'intérieur.",
+    galleryAlt: [
+      "Chambre avec lit double, coin salon et deux fenêtres",
+      "Salon avec canapé, fauteuils et deux hautes fenêtres",
+      "Fauteuil près d'une fenêtre donnant sur la vieille ville",
+      "Deux fauteuils et un lampadaire de lecture",
+      "Pièce ouverte séparée par une claustra en pin",
+      "Lit double derrière une claustra en pin",
+      "Canapé d'angle sous un médaillon mural sculpté",
+      "Table à manger à côté d'une cuisine équipée",
+      "Cuisine équipée avec éclairage sous les placards",
+      "Cuisine au sol en carreaux de ciment",
+      "Salle de bains avec douche vitrée et carreaux à motifs",
+      "Lavabo et porte-serviettes dans une salle de bains carrelée de blanc"
+    ],
+    meta: { title: "Vitória's Terrace, appartements à Porto" }
   },
 
   KR: {
@@ -1346,8 +1414,7 @@ const VT_I18N = {
       bath: "욕실",
       baths: "욕실",
       from: "최저",
-      fmt: { guests: "{n}명", bed: "침대 {n}개", beds: "침대 {n}개", bath: "욕실 {n}개", baths: "욕실 {n}개", from: "{p}부터" },
-      photo: "사진"
+      fmt: { guests: "{n}명", bed: "침대 {n}개", beds: "침대 {n}개", bath: "욕실 {n}개", baths: "욕실 {n}개", from: "{p}부터" }
     },
     storyCaption: "본래의 코발트색으로 복원한 15-17번지의 문.",
     storyBody: [
@@ -1362,7 +1429,7 @@ const VT_I18N = {
     portoWalkLabel: "현관에서 도보 소요 시간",
     openInMaps: "Google Maps에서 열기",
     walkingDistances: [["3분", "클레리구스 탑"], ["5분", "렐루 서점"], ["5분", "상 벤투 역"], ["8분", "히베이라와 도루 강"], ["10분", "동 루이스 1세 다리"], ["12분", "포트 와인 셀러, 가이아"]],
-    amenitiesIntro: "모두 요금에 포함되어 있습니다.",
+    amenitiesIntro: "객실 요금에 포함되어 있습니다. 포르투 관광세는 별도로 지불합니다.",
     amenities: [
       { label: "컨시어지", note: "매일 8:00부터 20:00까지" },
       { label: "웰컴 바스켓", note: "포트 와인, 파스텔 드 나타, 과일" },
@@ -1375,7 +1442,7 @@ const VT_I18N = {
     recs: {
       heading: "리타의 추천",
       byline: "저희가 친구들에게 권하고, 저희도 직접 가는 곳들입니다. 목록을 인쇄하거나 휴대폰에 저장해 두시고, 목록에 있는 곳에 대해 궁금한 점은 무엇이든 물어보세요.",
-      signature: "리타",
+      signature: "호스트 리타",
       print: "목록 인쇄",
       whatsappTitle: "숙박 중에는 WhatsApp으로 메시지를 보내주세요.",
       whatsappBody: "식당 예약을 해 드리거나, 비 오는 오후에 할 만한 일을 추천해 드리거나, 우산을 빌려 드릴 수 있습니다.",
@@ -1416,7 +1483,7 @@ const VT_I18N = {
       nights: "박",
       cityTax: "포르투 관광세",
       total: "예상 합계",
-      estimateNote: "비수기 요금 기준 예상 금액이며, 요금은 날짜에 따라 달라집니다. 관광세는 13세 이상 투숙객 1인 1박당 €3이며, 최대 7박까지 부과되고 객실 요금에 포함되어 있지 않습니다. 최종 요금은 답장에서 확정해 드립니다.",
+      estimateNote: "비수기 요금 기준 예상 금액이며, 요금은 날짜에 따라 달라집니다. 관광세는 13세 이상 투숙객 1인 1박당 €3이며, 최대 7박까지 부과되고 객실 요금에 포함되어 있지 않습니다. 예상 금액은 모든 투숙객 기준이며, 13세 미만은 면제됩니다. 최종 요금은 답장에서 확정해 드립니다.",
       estimateNone: "요금은 답장에서 안내해 드립니다.",
       first: "이름",
       last: "성",
@@ -1437,11 +1504,28 @@ const VT_I18N = {
       groupNote: "한 객실의 최대 인원은 4명입니다. 일행을 위해 객실 두 개를 제안해 드리겠습니다.",
       errName: "이름과 성을 입력해 주세요.",
       errEmail: "이메일 주소를 확인해 주세요.",
-      errDates: "체크아웃 날짜는 체크인 이후여야 합니다."
+      errDates: "체크아웃 날짜는 체크인 이후여야 합니다.",
+      nightsFmt: "{n}박. ",
+      legalLabel: "개인정보 및 이용약관:"
     },
     photosNote: "건물 내 여러 객실의 사진입니다. 객실마다 구조와 가구가 다릅니다.",
     arrivalLabel: "체크인 및 이용 규칙",
-    arrival: "체크인은 15:00부터 20:00까지입니다(이후 도착은 사전 협의가 필요하며 추가 요금이 있을 수 있습니다). 체크아웃은 11:00까지입니다. 반려동물은 동반할 수 없으며 실내는 금연입니다."
+    arrival: "체크인은 15:00부터 20:00까지입니다(이후 도착은 사전 협의가 필요하며 추가 요금이 있을 수 있습니다). 체크아웃은 11:00까지입니다. 반려동물은 동반할 수 없으며 실내는 금연입니다.",
+    galleryAlt: [
+      "더블 침대와 휴식 공간, 창문 두 개가 있는 침실",
+      "소파와 안락의자, 높은 창문 두 개가 있는 거실",
+      "구시가지가 보이는 창가의 안락의자",
+      "안락의자 두 개와 독서등",
+      "소나무 루버 칸막이로 나뉜 트인 공간",
+      "소나무 루버 칸막이 뒤의 더블 침대",
+      "조각 장식 메달리온 아래의 코너 소파",
+      "붙박이 주방 옆의 식탁",
+      "수납장 아래 조명이 있는 붙박이 주방",
+      "패턴 시멘트 타일 바닥의 주방",
+      "유리 샤워 부스와 패턴 타일이 있는 욕실",
+      "흰 타일 욕실의 세면대와 수건걸이"
+    ],
+    meta: { title: "Vitória's Terrace, 포르투 아파트" }
   },
 
   JA: {
@@ -1477,8 +1561,7 @@ const VT_I18N = {
       bath: "バスルーム",
       baths: "バスルーム",
       from: "より",
-      fmt: { guests: "{n}名様", bed: "ベッド{n}台", beds: "ベッド{n}台", bath: "バスルーム{n}室", baths: "バスルーム{n}室", from: "{p}から" },
-      photo: "写真"
+      fmt: { guests: "{n}名様", bed: "ベッド{n}台", beds: "ベッド{n}台", bath: "バスルーム{n}室", baths: "バスルーム{n}室", from: "{p}から" }
     },
     storyCaption: "15-17番地の扉。もとのコバルトブルーに修復しました。",
     storyBody: [
@@ -1493,7 +1576,7 @@ const VT_I18N = {
     portoWalkLabel: "玄関からの徒歩時間",
     openInMaps: "Google Mapsで開く",
     walkingDistances: [["3分", "クレリゴスの塔"], ["5分", "レロ書店"], ["5分", "サン・ベント駅"], ["8分", "リベイラと川"], ["10分", "ドン・ルイス1世橋"], ["12分", "ガイアのポートワインセラー"]],
-    amenitiesIntro: "すべて料金に含まれています。",
+    amenitiesIntro: "宿泊料金に含まれています。ポルトの観光税は別途お支払いいただきます。",
     amenities: [
       { label: "コンシェルジュ", note: "毎日8:00から20:00まで" },
       { label: "ウェルカムバスケット", note: "ポートワイン、パステル・デ・ナタ、果物" },
@@ -1506,7 +1589,7 @@ const VT_I18N = {
     recs: {
       heading: "リタのおすすめ",
       byline: "わたしたちが友人にすすめている場所で、自分たちもよく行くところです。リストは印刷しても、スマートフォンに保存してもかまいません。リストの場所について、何でもお尋ねください。",
-      signature: "リタ",
+      signature: "ホストのリタ",
       print: "このリストを印刷",
       whatsappTitle: "ご滞在中は、WhatsAppでメッセージをお送りください。",
       whatsappBody: "レストランの席を予約したり、雨の午後の過ごし方をご提案したり、傘をお貸ししたりできます。",
@@ -1547,7 +1630,7 @@ const VT_I18N = {
       nights: "泊",
       cityTax: "ポルト市観光税",
       total: "概算合計",
-      estimateNote: "オフシーズン料金での概算です。料金は日程によって異なります。観光税は、13歳以上の方1名につき1泊€3（最大7泊分）で、宿泊料金には含まれていません。最終料金は返信の際にお知らせします。",
+      estimateNote: "オフシーズン料金での概算です。料金は日程によって異なります。観光税は、13歳以上の方1名につき1泊€3（最大7泊分）で、宿泊料金には含まれていません。概算は全員分で計算しています。13歳未満の方は免除されます。最終料金は返信の際にお知らせします。",
       estimateNone: "料金のお見積りは、返信の際にお知らせします。",
       first: "名",
       last: "姓",
@@ -1568,11 +1651,28 @@ const VT_I18N = {
       groupNote: "1室の定員は最大4名です。グループの場合は2室をご提案します。",
       errName: "姓と名を入力してください。",
       errEmail: "メールアドレスをご確認ください。",
-      errDates: "チェックアウト日はチェックイン日より後にしてください。"
+      errDates: "チェックアウト日はチェックイン日より後にしてください。",
+      nightsFmt: "{n}泊。",
+      legalLabel: "プライバシーと利用規約："
     },
     photosNote: "館内の複数の客室の写真です。間取りや家具は客室ごとに異なります。",
     arrivalLabel: "チェックインとハウスルール",
-    arrival: "チェックインは15:00から20:00まで（それ以降は事前のご相談が必要で、追加料金がかかる場合があります）。チェックアウトは11:00まで。ペット不可、室内禁煙です。"
+    arrival: "チェックインは15:00から20:00まで（それ以降は事前のご相談が必要で、追加料金がかかる場合があります）。チェックアウトは11:00まで。ペット不可、室内禁煙です。",
+    galleryAlt: [
+      "ダブルベッドとくつろぎスペース、2つの窓がある寝室",
+      "ソファとアームチェア、背の高い2つの窓があるリビング",
+      "旧市街を望む窓辺のアームチェア",
+      "2脚のアームチェアと読書灯",
+      "松材のルーバーで仕切られたひと続きの空間",
+      "松材のルーバーの奥にあるダブルベッド",
+      "彫刻入りの壁飾りの下にあるコーナーソファ",
+      "システムキッチン横のダイニングテーブル",
+      "吊り戸棚の下に照明があるシステムキッチン",
+      "柄入りセメントタイルの床のキッチン",
+      "ガラス張りのシャワーと柄タイルのバスルーム",
+      "白いタイル張りのバスルームの洗面台とタオル掛け"
+    ],
+    meta: { title: "Vitória's Terrace, ポルトのアパートメント" }
   }
 };
 

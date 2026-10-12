@@ -7,6 +7,7 @@ const VT_LANGS = [
   ["EN", "English"], ["PT", "Português"], ["ES", "Español"],
   ["FR", "Français"], ["KR", "한국어"], ["JA", "日本語"]
 ];
+const VT_LANG_NAMES = Object.fromEntries(VT_LANGS);
 
 const VT_NUM_LOCALES = { EN: "en-GB", PT: "pt-PT", ES: "es-ES", FR: "fr-FR", KR: "ko-KR", JA: "ja-JP" };
 // Euro amounts in the reader's convention: "€100" in English, "100 €" in PT/ES/FR.
@@ -26,9 +27,14 @@ function vtFrom(t, price, lang) {
   return f ? f.replace("{p}", p) : `${t.apt.from} ${p}`;
 }
 
-// Apartment names read "Type · View". Bind the dot to the word before it so a
-// wrapped name never starts its second line with "·".
+// Apartment names read "Type · View". On screen they sit on two lines (type, then
+// view) so long names never break mid-word; the dot stays for screen readers.
 function vtName(s) { return s.replace(/ · /g, "\u00a0· "); }
+function VTAptName({ name }) {
+  const [type, view] = name.split(" · ");
+  if (!view) return name;
+  return <>{type}<span className="visually-hidden"> · </span><span className="vt-name-view">{view}</span></>;
+}
 
 // ── Language ───────────────────────────────────────────
 // The language comes from ?lang= first (so each language has a shareable URL),
@@ -53,6 +59,24 @@ function vtWriteLang(v) {
     if (v === "EN") u.searchParams.delete("lang"); else u.searchParams.set("lang", VT_URL_LANG[v]);
     history.replaceState(null, "", u);
   } catch (_) { /* no-op */ }
+}
+
+// Keep <html lang>, title, description, canonical and og:url in step with the
+// language, so each ?lang= URL describes itself (the static HTML holds English).
+function vtApplyPageMeta(lang, title, description) {
+  document.documentElement.lang = VT_HTML_LANG[lang] || "en";
+  document.title = title;
+  const set = (sel, attr, val) => { const el = document.querySelector(sel); if (el) el.setAttribute(attr, val); };
+  set('meta[name="description"]', "content", description);
+  set('meta[property="og:title"]', "content", title);
+  set('meta[property="og:description"]', "content", description);
+  const canon = document.querySelector('link[rel="canonical"]');
+  if (canon) {
+    const u = new URL(canon.getAttribute("href").split("?")[0]);
+    if (lang !== "EN") u.searchParams.set("lang", VT_URL_LANG[lang]);
+    canon.setAttribute("href", u.toString());
+    set('meta[property="og:url"]', "content", u.toString());
+  }
 }
 
 // ── Dialog behaviour ───────────────────────────────────
@@ -92,6 +116,8 @@ function VTNav({ t, lang, onLang, onBook, currentPage }) {
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const langRef = React.useRef(null);
+  const menuBtnRef = React.useRef(null);
+  const focusLangBtn = () => langRef.current && langRef.current.querySelector("button").focus();
   const isHome = currentPage !== "recs";
   const homePrefix = isHome ? "" : "index.html";
   const recsActive = currentPage === "recs";
@@ -101,13 +127,13 @@ function VTNav({ t, lang, onLang, onBook, currentPage }) {
     [`${homePrefix}#story`, t.nav.story, false],
     [`${homePrefix}#porto`, t.nav.porto, false],
     ["recommendations.html", t.nav.recs, recsActive],
-    [`${homePrefix}#contact`, t.nav.contact, false]
+    ["#contact", t.nav.contact, false]
   ];
 
   useEffect(() => {
     if (!langOpen) return;
     const onKey = (e) => {
-      if (e.key === "Escape") { setLangOpen(false); langRef.current && langRef.current.querySelector("button").focus(); }
+      if (e.key === "Escape") { setLangOpen(false); focusLangBtn(); }
     };
     const onDown = (e) => { if (langRef.current && !langRef.current.contains(e.target)) setLangOpen(false); };
     window.addEventListener("keydown", onKey);
@@ -129,15 +155,15 @@ function VTNav({ t, lang, onLang, onBook, currentPage }) {
 
           <div className="vt-nav__lang" ref={langRef}>
             <button className="vt-nav__lang-btn" onClick={() => setLangOpen(!langOpen)}
-              aria-label={`${t.footer.language}: ${lang}`} aria-expanded={langOpen}>
-              {lang}
+              aria-label={`${t.footer.language}: ${VT_LANG_NAMES[lang]}`} aria-expanded={langOpen}>
+              {VT_URL_LANG[lang].toUpperCase()}
             </button>
             {langOpen && (
               <div className="vt-nav__lang-menu">
                 {VT_LANGS.map(([code, name]) => (
-                  <button key={code} lang={code === "KR" ? "ko" : code.toLowerCase()}
+                  <button key={code} lang={VT_HTML_LANG[code]}
                     aria-current={code === lang ? "true" : undefined}
-                    onClick={() => { onLang(code); setLangOpen(false); }}>
+                    onClick={() => { onLang(code); setLangOpen(false); focusLangBtn(); }}>
                     {name}
                   </button>
                 ))}
@@ -150,7 +176,7 @@ function VTNav({ t, lang, onLang, onBook, currentPage }) {
           </button>
         </div>
 
-        <button className="vt-nav__menu-btn" onClick={() => setOpen(!open)} aria-expanded={open}>
+        <button className="vt-nav__menu-btn" ref={menuBtnRef} onClick={() => setOpen(!open)} aria-expanded={open}>
           {open ? t.book.close : t.nav.menu}
         </button>
       </div>
@@ -164,11 +190,12 @@ function VTNav({ t, lang, onLang, onBook, currentPage }) {
           <div className="eyebrow" style={{ margin: "24px 0 10px" }}>{t.footer.language}</div>
           <div className="vt-lang-row">
             {VT_LANGS.map(([code]) => (
-              <button key={code} aria-pressed={code === lang} onClick={() => { onLang(code); setOpen(false); }}>{code}</button>
+              <button key={code} aria-pressed={code === lang} lang={VT_HTML_LANG[code]} aria-label={VT_LANG_NAMES[code]}
+                onClick={() => { menuBtnRef.current.focus(); onLang(code); setOpen(false); }}>{VT_URL_LANG[code].toUpperCase()}</button>
             ))}
           </div>
 
-          <button className="btn btn--primary" onClick={() => { onBook(); setOpen(false); }}
+          <button className="btn btn--primary" onClick={() => { menuBtnRef.current.focus(); setOpen(false); onBook(); }}
             style={{ marginTop: 24, width: "100%" }}>
             {t.nav.book}
           </button>
@@ -257,7 +284,7 @@ function VTApartments({ t, lang, onBook }) {
               aria-selected={active === a.id}
               tabIndex={active === a.id ? 0 : -1}
               onClick={() => setActive(a.id)}>
-              <div className="vt-tab__name">{vtName(tx(a).name)}</div>
+              <div className="vt-tab__name"><VTAptName name={tx(a).name} /></div>
               <div className="vt-tab__meta">
                 {vtCount(t, "guests", a.sleeps)} · {a.sqm} m² · {rateLine(a)}
               </div>
@@ -268,7 +295,7 @@ function VTApartments({ t, lang, onBook }) {
         <div id="apt-panel" role="tabpanel" tabIndex={0} aria-labelledby={`tab-${apt.id}`} className="vt-apt-content">
           <div>
             <div className="eyebrow vt-apt-tagline">{aptT.tagline}</div>
-            <h3 className="display-md">{vtName(aptT.name)}</h3>
+            <h3 className="display-md"><VTAptName name={aptT.name} /></h3>
 
             <div className="vt-apt-specs">
               <span>{vtCount(t, "guests", apt.sleeps)}</span>
@@ -319,12 +346,12 @@ function VTGallery({ t }) {
       <h3 className="display-sm">{t.sec.photos}</h3>
       <p className="vt-gallery__note">{t.photosNote}</p>
       <div className="img-frame vt-gallery__main">
-        <img src={photos[photo]} alt={`${t.apt.photo} ${photo + 1} / ${photos.length}`} className="img-cover" loading="lazy" />
+        <img src={photos[photo]} alt={t.galleryAlt[photo]} className="img-cover" loading="lazy" />
       </div>
       <div className="vt-gallery__thumbs">
         {photos.map((src, i) => (
           <button key={src} className="img-frame vt-apt-thumb" aria-pressed={photo === i}
-            aria-label={`${t.apt.photo} ${i + 1} / ${photos.length}`}
+            aria-label={`${t.galleryAlt[i]} (${i + 1} / ${photos.length})`}
             onClick={() => setPhoto(i)}>
             <img src={src} alt="" loading="lazy" />
           </button>
@@ -334,4 +361,4 @@ function VTGallery({ t }) {
   );
 }
 
-Object.assign(window, { VTNav, VTHero, VTStory, VTApartments, VTGallery, SecTitle, VT_LANGS, VT_HTML_LANG, vtReadLang, vtWriteLang, useDialog, vtCount, vtFrom, vtName, vtEur });
+Object.assign(window, { VTNav, VTHero, VTStory, VTApartments, VTGallery, SecTitle, VT_LANGS, VT_LANG_NAMES, VT_URL_LANG, VT_NUM_LOCALES, VT_HTML_LANG, vtReadLang, vtWriteLang, vtApplyPageMeta, useDialog, vtCount, vtFrom, vtName, VTAptName, vtEur });

@@ -10,10 +10,15 @@ function AppRecommendations() {
 
   const t = window.VT_I18N[lang] || window.VT_I18N.EN;
 
+  React.useEffect(() => { vtApplyPageMeta(lang, `${t.recs.heading} · Vitória's Terrace`, t.recs.byline); }, [lang]);
+
+  // Section links (index.html#porto, ?lang=pt#stays) arrive before React has
+  // rendered the target, so scroll once after the first render.
   React.useEffect(() => {
-    document.documentElement.lang = VT_HTML_LANG[lang] || "en";
-    document.title = `${t.recs.heading} · Vitória's Terrace`;
-  }, [lang]);
+    const id = window.location.hash && decodeURIComponent(window.location.hash.slice(1));
+    const el = id && document.getElementById(id);
+    if (el) el.scrollIntoView();
+  }, []);
 
   const openBooking = (aptId) => {
     setInitialApt(typeof aptId === "string" ? aptId : "");
